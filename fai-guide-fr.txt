@@ -465,7 +465,7 @@ Writing file /srv/tftp/fai/pxelinux.cfg/C0A82164 for demohost
 Dans la section suivante, vous pouvez lire la planification de votre installation, adapter votre espace de configuration à vos besoins particuliers et étendre FAI à l'aide de crochets.
 Serveur personnalisé
 
-Le faiseur et sa configuration n'est nullement statique. Il est possible de personnaliser et d'étendre votre serveur. Pour cela, reportez-vous à la section [Personnalisation de votre installation du serveur d'installation] dans [avancé] .
+Le faiserveur et sa configuration n'est nullement statique. Il est possible de personnaliser et d'étendre votre serveur. Pour cela, reportez-vous à la section [Personnalisation de votre installation du serveur d'installation] dans [avancé] .
 
 Planifiez votre installation
 

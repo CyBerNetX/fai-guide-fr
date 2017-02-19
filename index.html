@@ -1822,22 +1822,15 @@ esac</code></pre>
 </div>
 <div class="sect2">
 <h3 id="_a_id_classvariables_a_defining_variables"><a id="classvariables"></a>Définition des Variables</h3>
-<div class="paragraph"><p>The task <em>defvar</em> defines the variables for the install
-client. Variables are defined by scripts in <em>class/*.var</em>. All global
-variables can be set in <em>DEFAULT.var</em>. For certain groups of hosts use
-a class file or for a single host use the file <code>$HOSTNAME</code> <em>.var</em>. Also
-here, it’s useful to study all the examples.</p></div>
-<div class="paragraph"><p>The following variables are used in the examples and may also be
-useful for your installation:</p></div>
+<div class="paragraph"><p>La Tache <em>defvar</em> definit les variables pour l'installation du client. Les variables sont définies par les scripts Dans la <em>class/*.var</em>. Toutes les variables Globales PEUVENT Être définies Dans <em>DEFAULT.var</em>. Pour certains groupes d'hôtes utiliser un Fichier de classe ou Pour un seul hôte utiliser le Fichier <code>$HOSTNAME</code> <em>.var</em> . Ici aussi, il est utile d'étudier Tous les exemples.</p></div>
+<div class="paragraph"><p>Les variables suivantes sont utilisées dans les exemples et peuvent etre aussi utiles pour votre installation:</p></div>
 <div class="dlist"><dl>
 <dt class="hdlist1">
 FAI_ACTION
 </dt>
 <dd>
 <p>
-Set the action FAI should perform. Normally this is done by
-<code>fai-chboot(8)</code>. If you can’t use this command, define this variable
-i.e. in the script <em>LAST.var</em>.
+Réglez les actions que doit éffectuer FAI. Normalement, ceci se fait par <code>fai-chboot(8)</code>. Si vous ne pouvez pas utiliser cette commande, définir la variable dans le script <em>LAST.var</em>.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -1845,8 +1838,7 @@ FAI_ALLOW_UNSIGNED
 </dt>
 <dd>
 <p>
-If set to 1, FAI allows the installation of packages from unsigned
-repositories.
+Si défini à 1, FAI Permet l'installation de de paquets à partir de référentiels non Signés.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -1854,28 +1846,22 @@ CONSOLEFONT
 </dt>
 <dd>
 <p>
-Is the font which is loaded during installation by <code>setfont(8)</code>.
+La police de qui est chargée lors de l'installation par <code>setfont(8)</code>.
 </p>
 </dd>
 <dt class="hdlist1">
 KEYMAP
 </dt>
 <dd>
-<p>
-Defines the keyboard map files in <em>/usr/share/keymaps</em> and
-<em>$FAI/files</em>. You need not specify the full path, since this file
-will be located automatically.
+<p>Définit les Fichiers de mappage du clavier Dans <em>/usr/share/keymaps</em> et <em>$FAI/files</em>. Vous ne Devez pas spécifier le chemin complet, puisque ce fichier sera localisé automatiquement.
 </p>
 </dd>
 <dt class="hdlist1">
-ROOTPW
+rootpw
 </dt>
 <dd>
 <p>
-The encrypted root password for the new system. You can use
-<code>crypt(3)</code>, md5 and other hash types for the password. Use
-<code>mkpasswd(1)</code> for creating the hash for a certain password.
-For example, to generate a md5 hash for the password use
+Le mot de passe root chiffré pour le nouveau système. Vous pouvez utiliser <code>crypt(3)</code>, md5 et d' Autres types de hachage pour le mot de passe. Utilisez <code>mkpasswd(1)</code> pour créer le hachage d'un certain mot de passe. Par exemple, pour Générer le hachage MD5 pour l'utilisation du mot de passe.
 </p>
 </dd>
 </dl></div>
@@ -1889,8 +1875,7 @@ UTC
 </dt>
 <dd>
 <p>
-Set hardware clock to UTC if <em>UTC=yes</em>. Otherwise set clock to local
-time. See <code>clock(8)</code> for more information.
+Réglez l'horloge du matériel à UTC si <em>UTC=yes</em>. Sinon, régler l'horloge à l'heure locale. Voir <code>clock(8)</code>pour en plus d'informations.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -1898,24 +1883,20 @@ TIMEZONE
 </dt>
 <dd>
 <p>
-Is the file relative to <em>/usr/share/zoneinfo/</em> which indicates your
-time zone. E.g.: <em>TIMEZONE=Europe/Berlin</em>.
-_
+Est-ce que le fichier d'initialisation par rapport à <em>/usr/share/zoneinfo/</em> indique votre fuseau horaire. Par exemple: <em>TIMEZONE=Europe/Berlin</em>.
 </p>
 </dd>
 <dt class="hdlist1">
 MODULESLIST
 </dt>
 <dd>
-<p>
-A list of kernel modules which are loaded during boot of the new system (written to
-/etc/modules).
+<p>Une liste des modules du Noyau qui sont chargés pendent Le démarrage du nouveau systême (Écrit dans /etc/modules).
 </p>
 </dd>
 </dl></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_diskconfig_a_hard_disk_configuration"><a id="diskconfig"></a>Hard disk configuration</h3>
+<h3 id="_a_id_diskconfig_a_hard_disk_configuration"><a id="diskconfig"></a>Configuration du disque dur</h3>
 <div class="paragraph"><p>The tool <code>setup-storage(8)</code> reads a file in <em>$FAI/disk_config</em> for the
 disk configuration. This file describes how
 all the local disks will be partitioned, which file systems types should be
