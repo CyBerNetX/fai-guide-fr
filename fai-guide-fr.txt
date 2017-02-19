@@ -550,13 +550,23 @@ Il existe différentes possibilités pour définir des classes:
 
 La dernière option est une fonctionnalité très intéressante, puisque ces scripts définiront des classes est un moyen très flexible. Par exemple, plusieurs classes peuvent être définies uniquement si certains matériels sont identifiés ou si une classe est définie en fonction des informations de sous-réseau du réseau.
 
-Tous les noms de classes, sauf le nom d'hôte, sont écrits en majuscules.ILs pas ne la doivent contain non trait d'union, hachage non, non Point-Virgule OÜ point de non, but PEUVENT contain des characters de soulignement et des Chiffres.
+Tous les noms de classes, sauf le nom d'hôte, sont écrits en majuscules.ILs ne doivent pas contenir un trait d'union, un dièse, un Point-Virgule OÜ un point, mais PEUVENT contenir des characters de soulignement et des Chiffres.
 
-La Tache defclass Appelle la commande fai-class(1)versez definir les classes. Directeur Tous les scripts correspondant ^ [0-9] [0-9] * (ILS Commencent Avec Deux Chiffres) Dans le sous - REPERTOIRE $ FAI / Classe exécutées de definir des Sont verser classes. Tout ce qui is imprimé à STDOUT is automatiquement definie Comme une classe. Versez Plus d ' informations sur La Classe définissant, Read les pages de manuel versent fai-class(1). Le manuscrit 50-host-cours (voir ci - juin dessous la version allégée) is used versez les définir des classes en fonction du nom d'hôte.
+La Tache defclass Appelle la commande fai-class(1) pour definir les classes. Tous les scripts correspondant ^[0-9][0-9]* (qui Commencent Avec Deux Chiffres) Dans le sous-repertoire $FAI/class sont exécutées afin de definir les classes. Tout ce qui is affiché sur STDOUT est automatiquement definie Comme une classe. pour Plus d'informations sur Les définisions de Classe , lire les pages de manuel versent fai-class(1). Le script 50-host-classes (voir ci - dessous la version allégée) est utilisé pour les définir des classes en fonction du nom d'hôte.
 
- # use a list of classes for our demo machines case $HOSTNAME in demohost) echo "FAIBASE GRUB DHCPC DEMO" ;; xfcehost) echo "FAIBASE GRUB DHCPC DEMO XORG XFCE";; faiserver) echo "FAIBASE DEBIAN DHCPC DEMO FAISERVER" ;; *) echo "FAIBASE GRUB DHCPC" ;; esac 
+ # use a list of classes for our demo machines
+case $HOSTNAME in
+    demohost)
+        echo "FAIBASE GRUB DHCPC DEMO" ;;
+    xfcehost)
+        echo "FAIBASE GRUB DHCPC DEMO XORG XFCE";;
+    faiserver)
+        echo "FAIBASE DEBIAN DHCPC DEMO FAISERVER" ;;
+    *)
+        echo "FAIBASE GRUB DHCPC" ;;
+esac
 
-Les EMNO d'hôtes doivent Rarement Être UTILISE Pour Les Fichiers de configuration dans l'Espace de configuration. Au lieu de l' ACDE, juin classe Doit Être definie et ensuite added Pour un hôte Donne. En effet, la Plupart du Temps les Données de configuration ne pas are Spécifiques d'ONU hôte, but can be shared Entre several hôtes.
+Les noms d'hôtes doivent Rarement Être utilisé Pour Les Fichiers de configuration dans l'Espace de configuration.à la place une classe Doit Être definie et ensuite ajouté Pour un hôte Donné. En effet, la Plupart du Temps les Données de configuration ne sont pas Spécifiques au d'nom hôte, mais peut etre partager entre differants hôtes.
 
 L'ordre des catégories is voiture Important Elle Définit la priority des cours de Faible à Élevé.
 Définition des Variables

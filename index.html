@@ -1782,39 +1782,27 @@ Les Fichiers utilisés par les scripts de personnalisation. La plupart des fichi
 </div>
 <div class="sect2">
 <h3 id="_a_id_defining_classes_a_defining_classes"><a id="defining classes"></a>Définition des classes</h3>
-<div class="paragraph"><p>There are different possibilities to define classes:</p></div>
+<div class="paragraph"><p>Il existe différentes possibilités pour définir des classes:</p></div>
 <div class="olist arabic"><ol class="arabic">
 <li>
 <p>
-Some default classes are defined for every host:     DEFAULT, LAST and its host name.
+Certaines classes par défaut sont définies pour chaque hôte: DEFAULT, LAST et son nom d'hôte.
 </p>
 </li>
 <li>
 <p>
-Classes may be listed within a file.
+Les classes peuvent être répertoriées dans un fichier.
 </p>
 </li>
 <li>
 <p>
-Classes may be dynamically defined by scripts.
+Les classes peuvent être dynamiquement définies par des scripts.
 </p>
 </li>
-</ol></div>
-<div class="paragraph"><p>The last option is a very nice feature, since these scripts will
-define classes is a very flexible way. For example, several classes
-may be defined only if certain hardware is identified or a class is
-defined depending on the network subnet information.</p></div>
-<div class="paragraph"><p>All names of classes, except the host name, are written in
-uppercase. They must not contain a hyphen, a hash, a semicolon or a
-dot, but may contain underscores and digits.</p></div>
-<div class="paragraph"><p>The task <em>defclass</em> calls the command <code>fai-class(1)</code> to define
-classes. All scripts matching <em>^[0-9][0-9]*</em> (they start with two
-digits) in the subdirectory
-<em>$FAI/class</em> are executed for defining classes. Everything that is printed
-to STDOUT is automatically defined as a class. For more
-information on defining class, read the manual pages for
-<code>fai-class(1)</code>. The script <em>50-host-classes</em> (see below a stripped
-version) is used to define classes depending on the host name.</p></div>
+</ol></div>La dernière option est une fonctionnalité très intéressante, puisque ces scripts définiront des classes est un moyen très flexible. Par exemple, plusieurs classes peuvent être définies uniquement si certains matériels sont identifiés ou si une classe est définie en fonction des informations de sous-réseau du réseau.</p></div>
+<div class="paragraph"><p>Tous les noms de classes, sauf le nom d'hôte, sont écrits en majuscules.ILs ne doivent pas contenir un trait d'union, un dièse, un Point-Virgule OÜ un point, mais PEUVENT contenir des characters de soulignement et des Chiffres.
+</p></div>
+<div class="paragraph"><p>La Tache <em>defclass</em> Appelle la commande <code>fai-class(1)</code> pour definir les classes. Tous les scripts correspondant <em>^[0-9][0-9]*</em> (qui Commencent Avec Deux Chiffres) Dans le sous-repertoire <em>$FAI/class</em> sont exécutées afin de definir les classes. Tout ce qui is affiché sur STDOUT est automatiquement definie Comme une classe. pour Plus d'informations sur Les définisions de Classe , lire les pages de manuel versent <code>fai-class(1)</code>. Le script <em>50-host-classes</em> (voir ci - dessous la version allégée) est utilisé pour les définir des classes en fonction du nom d'hôte.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code># use a list of classes for our demo machines
@@ -1829,16 +1817,11 @@ case $HOSTNAME in
         echo "FAIBASE GRUB DHCPC" ;;
 esac</code></pre>
 </div></div>
-<div class="paragraph"><p>Host names should rarely be used for the configuration files in the
-configuration space. Instead, a class should be defined and then added
-for a given host. This is because most of the time the configuration
-data is not specific for one host, but can be shared among several
-hosts.</p></div>
-<div class="paragraph"><p>The order of the classes is important because it defines the priority
-of the classes from low to high.</p></div>
+<div class="paragraph"><p>Les noms d'hôtes doivent Rarement Être utilisé Pour Les Fichiers de configuration dans l'Espace de configuration.à la place une classe Doit Être definie et ensuite ajouté Pour un hôte Donné. En effet, la Plupart du Temps les Données de configuration ne sont pas Spécifiques au d'nom hôte, mais peut etre partager entre differants hôtes./p></div>
+<div class="paragraph"><p>L'ordre des classes est important car Elle Définit la priorité des classes de Faible à Élevé.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_classvariables_a_defining_variables"><a id="classvariables"></a>Defining variables</h3>
+<h3 id="_a_id_classvariables_a_defining_variables"><a id="classvariables"></a>Définition des Variables</h3>
 <div class="paragraph"><p>The task <em>defvar</em> defines the variables for the install
 client. Variables are defined by scripts in <em>class/*.var</em>. All global
 variables can be set in <em>DEFAULT.var</em>. For certain groups of hosts use
