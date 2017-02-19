@@ -1634,104 +1634,83 @@ Writing file /srv/tftp/fai/pxelinux.cfg/C0A82164 for demohost</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_a_id_plan_a_plan_your_installation"><a id="plan"></a>Plan your installation</h2>
+<h2 id="_a_id_plan_a_plan_your_installation"><a id="plan"></a>Planifiez votre installation</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Before starting your installation, you should invest a lot of time into
-planning your installation. Once you’re happy with your installation
-concept, FAI can do all the boring and repetitive tasks to turn your
-plans into reality. FAI can’t do good installations if your concept is
-imperfect or lacks some important details. Start planning the
-installation by answering the following questions:</p></div>
+<div class="paragraph"><p>Avant de commencer votre installation, vous devriez investir beaucoup de temps dans la planification de votre installation. Une fois que vous êtes satisfait de votre concept d'installation, FAI peut faire toutes les tâches ennuyeuses et répétitives pour transformer vos plans en réalité. FAI ne peut pas faire de bonnes installations si votre concept est imparfait ou manque de quelques détails importants. Commencez à planifier l'installation en répondant aux questions suivantes:</p></div>
 <div class="ulist"><ul>
 <li>
 <p>
-Will I create a Beowulf cluster, or do I  have to install some desktop machines?
+Est-ce que je vais créer un cluster Beowulf ou dois-je installer des machines de bureau?
 </p>
 </li>
 <li>
 <p>
-What does my LAN topology look like?
+À quoi ressemble ma topologie LAN?
 </p>
 </li>
 <li>
 <p>
-Do I have uniform hardware?  Will the hardware stay uniform in the future?
+Ai-je un matériel uniforme? Le matériel sera-t-il uniforme à l'avenir?
 </p>
 </li>
 <li>
 <p>
-Does the hardware need a special kernel?
+Le matériel a-t-il besoin d'un noyau spécial?
 </p>
 </li>
 <li>
 <p>
-How should the hosts be named?
+Comment nommer les hôtes?
 </p>
 </li>
 <li>
 <p>
-How should the local hard disks be partitioned?
+Comment les disques durs locaux doivent-ils être partitionnés?
 </p>
 </li>
 <li>
 <p>
-Which applications will be run by the users?
+Quelles applications seront éxécuté par les utilisateurs?
 </p>
 </li>
 <li>
 <p>
-Do the users need a queuing system?
+Les utilisateurs ont-ils besoin d'un système de mise en file d'attente?
 </p>
 </li>
 <li>
 <p>
-What software should be installed?
+Quel logiciel doit être installé?
 </p>
 </li>
 <li>
 <p>
-Which daemons should be started, and what  should the configuration for these look like?
+Quels démons devraient être lancés, et à quoi devrait ressembler la configuration?
 </p>
 </li>
 <li>
 <p>
-Which remote file systems should be mounted?
+ Quels systèmes de fichiers distants doivent être montés?
 </p>
 </li>
 <li>
 <p>
-How should backups be performed?
+  Comment effectuer les sauvegardes? How should backups be performed?
 </p>
 </li>
 </ul></div>
-<div class="paragraph"><p>You also have to think about user accounts, printers, a mail system,
-cron jobs, graphic cards, dual boot, NIS, NTP, timezone, keyboard
-layout, exporting and mounting directories via NFS and many other
-things. So, there’s a lot to do before starting an installation. And
-remember that knowledge is power, and it’s up to you to use
-it. Installation and administration is a process, not a product. FAI
-can’t do things you don’t tell it to do.</p></div>
-<div class="paragraph"><p>But you need not start from scratch. Look at the files and scripts in
-the configuration space. There are a lot of things you can use for
-your own installation. A good paper called "Bootstrapping an
-Infrastructure" with more aspects of building an infrastructure is
-available at <a href="http://www.infrastructures.org/papers/bootstrap/bootstrap.html">http://www.infrastructures.org/papers/bootstrap/bootstrap.html</a></p></div>
+<div class="paragraph"><p>Vous devez également penser à des comptes d'utilisateur, des imprimantes, un système de courrier, des travaux de cron, des cartes graphiques, l'initialisation double, le NIS, le NTP, le fuseau horaire, la disposition de clavier, l'exportation et le montage des annuaires via NFS et beaucoup d'autres choses. Donc, il ya beaucoup à faire avant de commencer une installation. Et rappelez-vous que la connaissance est le pouvoir, et c'est à vous de l'utiliser. L'installation et l'administration sont un processus et non un produit. FAI ne peut pas faire les choses que vous ne lui dites pas de faire.</p></div>
+<div class="paragraph"><p>Mais vous ne devez pas commencer à partir de zéro. Examinez les fichiers et les scripts dans l'espace de configuration. Il ya beaucoup de choses que vous pouvez utiliser pour votre propre installation. Un bon article intitulé «Bootstrapping a Infrastructure» avec d'autres aspects de la construction d'une infrastructure est disponible sur <a href="http://www.infrastructures.org/papers/bootstrap/bootstrap.html">http://www.infrastructures.org/papers/bootstrap/bootstrap.html</a></p></div>
 <div class="sect2">
-<h3 id="_a_id_c3_a_the_configuration_space_and_its_subdirectories"><a id="c3"></a>The configuration space and its subdirectories</h3>
-<div class="paragraph"><p>The configuration space is the collection of information about how exactly
-to install a client. The central configuration space for all install
-clients is located on the install server in <em>/srv/fai/config</em> and its
-subdirectories. This will be mounted by the install clients to
-<em>/var/lib/fai/config</em>. The main installation command <code>fai(8)</code> uses all
-these subdirectories in the order listed except for hooks.</p></div>
+<h3 id="_a_id_c3_a_the_configuration_space_and_its_subdirectories"><a id="c3"></a>L'espace de configuration et ses sous-répertoires</h3>
+<div class="paragraph"><p>L'espace de configuration est la collection d'informations sur la façon exacte d'installer un client. L'espace de configuration central pour tous les clients d'installation se trouve sur le serveur d'installation dans <em>/srv/fai/config</em> et ses sous-répertoires. Cela sera monté par les clients d'installation dans <em>/var/lib/fai/config</em>. La commande d'installation principale <code>fai(8)</code> utilise tous ces sous-répertoires dans l'ordre indiqué sauf pour les hooks.</p></div>
 <div class="dlist"><dl>
 <dt class="hdlist1">
 <em>class/</em>
 </dt>
 <dd>
 <p>
-Scripts and files to
-define classes and variables.
+Scripts et fichiers pour définir des classes et des variables.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -1739,7 +1718,7 @@ define classes and variables.
 </dt>
 <dd>
 <p>
-Configuration files for disk partitioning, software RAID, LVM and file system creation.
+Fichiers de configuration pour le partitionnement de disque, RAID logiciel, LVM et création de système de fichiers. 
 </p>
 </dd>
 <dt class="hdlist1">
@@ -1747,38 +1726,25 @@ Configuration files for disk partitioning, software RAID, LVM and file system cr
 </dt>
 <dd>
 <p>
-Normally the file <em>base.tar.xz</em> (located inside the nfsroot) is extracted on the install
-client after the new file systems are created and before package are
-installed. This is a minimal base image, created right after calling
-debootstrap during the creation of the nfsroot on the install
-server. If you want to install another distribution than the nfsroot
-is, you can put a tar file into the subdirectory <em>basefiles/</em> and name
-it after a class. Then the command <code>ftar(8)</code> is used to extract the
-tar file based on the classes defined. Thus the file has to be named <em>CLASS.tar.xz</em> not <em>CLASS.base.tar.xz</em>. This is done in task
-<em>extrbase</em>. Use this if you want to install another distribution or
-version than that running during the installation.
+Normalement , le fichier <em>base.tar.xz</em> (situé à l' intérieur du nfsroot) est extrait sur le client d'installation après la création des nouveaux systèmes de fichiers et avant l'installation du package. Il s'agit d'une image de base minimale, créée juste après avoir appelé debootstrap lors de la création du nfsroot sur le serveur d'installation. Si vous voulez installer une autre distribution que la nfsroot, vous pouvez mettre un fichier tar dans le sous-répertoire <em>basefiles/</em> et le nommer après une classe. Ensuite, la commande <code>ftar(8)</code> est utilisée pour extraire le fichier tar en fonction des classes définies. Ainsi, le fichier doit être nommé <em>CLASS.tar.xz</em>et non <em>CLASS.base.tar.xz</em> . Cela se fait dans la tâche <em>extrbase</em>. Utilisez cette option si vous souhaitez installer une autre distribution ou une version différente de celle exécutée pendant l'installation.
 </p>
-<div class="paragraph"><p>This basefile can also be received based on FAI classes via HTTP or FTP
-by defining the variable FAI_BASEFILEURL. FAI will download a file
-CLASSNAME.tar.xz (or tgz, or tar.gz,…) from this URL, if CLASSNAME
-matches a FAI class.</p></div>
-<div class="paragraph"><p>Example:</p></div>
+<div class="paragraph"><p>Ce fichier de base peut également être reçu en fonction des classes FAI via HTTP ou FTP en définissant la variable FAI_BASEFILEURL. FAI téléchargera un fichier CLASSNAME.tar.xz (ou tgz, ou tar.gz, ...) à partir de cette URL, si CLASSNAME correspond à une classe FAI.</p></div>
+<div class="paragraph"><p>Exemple:</p></div>
 </dd>
 </dl></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>FAI_BASEFILEURL=http://fai-project.org/download/basefiles</code></pre>
 </div></div>
-<div class="paragraph"><p>The folder must support directory listing. FAI will not probe for potentially matching files.</p></div>
-<div class="paragraph"><p>See chapter <a href="#otherdists">[otherdists]</a> for how to install different distributions.</p></div>
+<div class="paragraph"><p>Le dossier doit prendre en charge la liste des répertoires. FAI ne recherchera pas de fichiers potentiellement correspondants.</p></div>
+<div class="paragraph"><p>Voir le chapitre <a href="#otherdists">[otherdists]</a> pour savoir comment installer différentes distributions.</p></div>
 <div class="dlist"><dl>
 <dt class="hdlist1">
 <em>debconf/</em>
 </dt>
 <dd>
 <p>
-This directory holds all <code>debconf(7)</code> data. The format is the same
-that is used by <code>debconf-set-selections(8)</code>.
+Ce répertoire contient toutes les données <code>debconf(7)</code>. Le format est le même que celui utilisé par <code>debconf-set-selections(8)</code>.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -1786,10 +1752,7 @@ that is used by <code>debconf-set-selections(8)</code>.
 </dt>
 <dd>
 <p>
-Files with class names contain lists of software packages to be
-installed or removed by <code>install_packages(8)</code>. Files named
-<em>&lt;CLASS&gt;.asc</em> are added to the list of keys used by apt (using
-<code>apt-key(8)</code>) for trusted package repositories.
+Les fichiers contenant des noms de classe contiennent des listes de progiciels à installer ou à désinstallé par <code>install_packages(8)</code>. Les fichiers nommés <em>&lt;CLASS&gt;.asc</em> sont ajoutés à la liste des clés utilisées par apt (à l'aide d'<code>apt-key(8)</code> ) pour les dépôts de paquets approuvés.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -1797,7 +1760,7 @@ installed or removed by <code>install_packages(8)</code>. Files named
 </dt>
 <dd>
 <p>
-Scripts for your local site customization. Used by <code>fai-do-scripts(1)</code>.
+Scripts pour la personnalisation de votre site local. Utilisé par <code>fai-do-scripts(1)</code>.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -1805,33 +1768,20 @@ Scripts for your local site customization. Used by <code>fai-do-scripts(1)</code
 </dt>
 <dd>
 <p>
-Files used by customization scripts.  Most files are located in a
-subtree structure which reflects the ordinary directory tree. For
-example, the templates for <em>nsswitch.conf</em> are located in
-<em>$FAI/files/etc/nsswitch.conf</em> and are named according to the classes
-that they should match: <em>$FAI/files/etc/nsswitch.conf/NIS</em> is the
-version of <em>/etc/nsswitch.conf</em> to use for the NIS class. Note that
-the contents of the files directory are not automatically copied to
-the target machine, rather they must be explicitly copied by
-customization scripts using the <code>fcopy(8)</code> command.
+Les Fichiers utilisés par les scripts de personnalisation. La plupart des fichiers se trouvent dans une structure de sous-arborescence qui reflète l'arborescence de répertoires ordinaire. Par exemple, les modèles de <em>nsswitch.conf</em> se trouvent dans <em>$FAI/files/etc/nsswitch.conf</em> et sont nommés en fonction des classes auxquelles ils doivent correspondre: <em>$FAI/files/etc/nsswitch.conf/NIS</em> est la version de <em>/etc/nsswitch.conf</em> à utiliser pour la classe NIS. Notez que le contenu du répertoire n'est pas automatiquement copié sur la machine cible, mais qu'il doit être explicitement copié par des scripts de personnalisation à l'aide de la commande <code>fcopy(8)</code> . 
 </p>
 </dd>
 <dt class="hdlist1">
 <em>hooks/</em>
 </dt>
 <dd>
-<p>
-Hooks are user defined programs or scripts, which are called during
-the installation process. The can extend or replace the default tasks.
-The file name must be of format <em>taskname.CLASSNAME[.sh]</em>.
-A hook called <code>updatebase.DEBIAN</code> is executed prior to the task <code>updatebase</code>
-and only if the install client belongs to the class DEBIAN.
+<p>Les hooks sont des programmes ou des scripts définis par l'utilisateur, qui sont appelés pendant le processus d'installation. cela peut étendre ou remplacer les tâches par défaut. Le nom du fichier doit être de format <em>taskname.CLASSNAME[.sh]</em>. Un hook appelé <code>updatebase.DEBIAN</code> est exécuté avant la mise à jour de la tâche <code>updatebase</code>et seulement si l'installation du client appartient à la classe DEBIAN. 
 </p>
 </dd>
 </dl></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_defining_classes_a_defining_classes"><a id="defining classes"></a>Defining classes</h3>
+<h3 id="_a_id_defining_classes_a_defining_classes"><a id="defining classes"></a>Définition des classes</h3>
 <div class="paragraph"><p>There are different possibilities to define classes:</p></div>
 <div class="olist arabic"><ol class="arabic">
 <li>

@@ -483,7 +483,7 @@ Avant de commencer votre installation, vous devriez investir beaucoup de temps d
 
     Comment les disques durs locaux doivent-ils être partitionnés?
 
-    Quelles applications seront gérées par les utilisateurs?
+    Quelles applications seront éxécuté par les utilisateurs?
 
     Les utilisateurs ont-ils besoin d'un système de mise en file d'attente?
 
@@ -495,7 +495,7 @@ Avant de commencer votre installation, vous devriez investir beaucoup de temps d
 
     Comment effectuer les sauvegardes? 
 
-Vous devez également penser à des comptes d'utilisateur, des imprimantes, un système de courrier, des travaux de cron, des cartes graphiques, l'initialisation double, le NIS, le NTP, le fuseau horaire, la disposition de clavier, l'exportation et le montage des annuaires via NFS et beaucoup d'autres choses. Donc, il ya beaucoup à faire avant de commencer une installation. Et rappelez-vous que la connaissance est le pouvoir, et c'est à vous de l'utiliser. L'installation et l'administration sont un processus et non un produit. La FAI ne peut pas faire les choses que vous ne lui dites pas de faire.
+Vous devez également penser à des comptes d'utilisateur, des imprimantes, un système de courrier, des travaux de cron, des cartes graphiques, l'initialisation double, le NIS, le NTP, le fuseau horaire, la disposition de clavier, l'exportation et le montage des annuaires via NFS et beaucoup d'autres choses. Donc, il ya beaucoup à faire avant de commencer une installation. Et rappelez-vous que la connaissance est le pouvoir, et c'est à vous de l'utiliser. L'installation et l'administration sont un processus et non un produit. FAI ne peut pas faire les choses que vous ne lui dites pas de faire.
 
 Mais vous ne devez pas commencer à partir de zéro. Examinez les fichiers et les scripts dans l'espace de configuration. Il ya beaucoup de choses que vous pouvez utiliser pour votre propre installation. Un bon article intitulé «Bootstrapping a Infrastructure» avec d'autres aspects de la construction d'une infrastructure est disponible sur http://www.infrastructures.org/papers/bootstrap/bootstrap.html
 L'espace de configuration et ses sous-répertoires
@@ -507,7 +507,7 @@ classe/
     Scripts et fichiers pour définir des classes et des variables. 
 Disk_config /
 
-    Fichiers de configuration pour partitionnement de disque, RAID logiciel, LVM et création de système de fichiers. 
+    Fichiers de configuration pour le partitionnement de disque, RAID logiciel, LVM et création de système de fichiers. 
 Basefiles /
 
     Normalement , le fichier base.tar.xz (situé à l' intérieur du nfsroot) est extrait sur le client d'installation après la création des nouveaux systèmes de fichiers et avant l'installation du package. Il s'agit d'une image de base minimale, créée juste après avoir appelé debootstrap lors de la création du nfsroot sur le serveur d'installation. Si vous voulez installer une autre distribution que la nfsroot, vous pouvez mettre un fichier tar dans le sous-répertoire basefiles / et le nommer après une classe. Ensuite, la commande ftar(8) est utilisée pour extraire le fichier tar en fonction des classes définies. Ainsi, le fichier doit être nommé CLASS.tar.xz et non CLASS.base.tar.xz . Cela se fait dans la tâche extrbase . Utilisez cette option si vous souhaitez installer une autre distribution ou une version différente de celle exécutée pendant l'installation.
@@ -522,21 +522,21 @@ Le dossier doit prendre en charge la liste des répertoires. FAI ne recherchera 
 
 Voir le chapitre [otherdists] pour savoir comment installer différentes distributions.
 
-Debconf /
+Debconf/
 
     Ce répertoire contient toutes les données debconf(7) . Le format est le même que celui utilisé par debconf-set-selections(8) . 
-Package_config /
+Package_config/
 
     Les fichiers contenant des noms de classe contiennent des listes de progiciels à installer ou à install_packages(8) par install_packages(8) . Les fichiers nommés <CLASS> .asc sont ajoutés à la liste des clés utilisées par apt (à l'aide d' apt-key(8) ) pour les dépôts de paquets approuvés. 
-Scripts /
+Scripts/
 
     Scripts pour la personnalisation de votre site local. Utilisé par fai-do-scripts(1) . 
-des dossiers/
+files/
 
-    Fichiers utilisés par les scripts de personnalisation. La plupart des fichiers se trouvent dans une structure de sous-arborescence qui reflète l'arborescence de répertoires ordinaire. Par exemple, les modèles de nsswitch.conf se trouvent dans $ FAI / files / etc / nsswitch.conf et sont nommés en fonction des classes auxquelles ils doivent correspondre: $ FAI / files / etc / nsswitch.conf / NIS est la version de /etc/nsswitch.conf à utiliser pour la classe NIS. Notez que le contenu du répertoire des fichiers n'est pas automatiquement copié sur la machine cible, mais qu'il doit être explicitement copié par des scripts de personnalisation à l'aide de la fcopy(8) . 
-Crochets
+    Les Fichiers utilisés par les scripts de personnalisation. La plupart des fichiers se trouvent dans une structure de sous-arborescence qui reflète l'arborescence de répertoires ordinaire. Par exemple, les modèles de nsswitch.conf se trouvent dans $ FAI / files / etc / nsswitch.conf et sont nommés en fonction des classes auxquelles ils doivent correspondre: $ FAI / files / etc / nsswitch.conf / NIS est la version de /etc/nsswitch.conf à utiliser pour la classe NIS. Notez que le contenu du répertoire n'est pas automatiquement copié sur la machine cible, mais qu'il doit être explicitement copié par des scripts de personnalisation à l'aide de la commande fcopy(8) . 
+hooks/
 
-    Les crochets sont des programmes ou des scripts définis par l'utilisateur, qui sont appelés pendant le processus d'installation. Le peut étendre ou remplacer les tâches par défaut. Le nom du fichier doit être de format taskname.CLASSNAME [.sh] . Un hook appelé updatebase.DEBIAN est exécuté avant la mise à jour de la tâche et updatebase si le client d' updatebase à la classe DEBIAN. 
+    Les hooks sont des programmes ou des scripts définis par l'utilisateur, qui sont appelés pendant le processus d'installation. cela peut étendre ou remplacer les tâches par défaut. Le nom du fichier doit être de format taskname.CLASSNAME [.sh] . Un hook appelé updatebase.DEBIAN est exécuté avant la mise à jour de la tâche et updatebase si le client d' updatebase à la classe DEBIAN. 
 
 Définition des classes
 
