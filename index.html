@@ -1934,22 +1934,13 @@ gpm xdm
 PACKAGES aptitude GRUB
 lilo- grub</code></pre>
 </div></div>
-<div class="paragraph"><p>Comments are starting with a hash (#) and are ending at the end of the
-line. Every package command begins with the word <em>PACKAGES</em> followed by a
-command name, which maps to a different package tool like apt-get,
-aptitude or yum for e.g. The command defines which command will be used to
-install the packages named after this command. The list of all
-available commands can be listed using <em>install_packages -H</em>.
-Supported package tools are: <em>aptitude, apt-get, smart, yast,
-yum, rpm, zypper</em></p></div>
+<div class="paragraph"><p>Commentaires Commencent par un Dièse et se terminent à la fin de la ligne. Chaqué commande de paquetage commence par Le mot <em>PACKAGES</em> Suivi par un nom de commande, Ce qui correspond à l'outil de package Comme apt-get, aptitude ou yum par exemple. la commande qui définit la commandent qui sera utilisé pour installer les paquets nommés après cette commande. La liste de toutes les commandes disponibles peuvent Être listé en utilisant <em>install_packages -H</em>. Les paquets d'outils pris en charges sont: <em>aptitude, apt-get, smart, yast, yum, rpm, zypper</em></p></div>
 <div class="dlist"><dl>
 <dt class="hdlist1">
 hold
 </dt>
 <dd>
-<p>
-Put a package on hold. This package will not be handled by dpkg, e.g
-not upgraded.
+<p>Mettez un paquet en attente. Ce Paquet ne sera pas pris en charges par dpkg, pas exemple non mis à niveau.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -1957,12 +1948,7 @@ install
 </dt>
 <dd>
 <p>
-Install all packages (using <code>apt-get</code>) that are specified in the following lines. If a
-hyphen is appended to the package name (with no intervening space),
-the package will be removed, not installed. All package names are
-checked for misspellings.  Any package which does not exist, will be
-removed from the list of packages to install. So be careful not to
-misspell any package names.
+Installez Tous les paquets (en utilisant <code>apt-get</code>) Qui sont précise dans les lignes Suivantes. Si un tiret est ajouté au nom du paquet (sans espace intermédiaire), le paquet sera supprimé, pas installé. Tous les noms de paquets sont vérifiées pour les fautes d'orthographe. Tout paquet qui n'existe pas, seront retiré de la liste des paquets à l'installation. Soyer donc prudentes de ne pas mal orthographier les noms de paquets.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -1970,7 +1956,7 @@ install-norec
 </dt>
 <dd>
 <p>
-Like install but without installing the recommended packages.
+Comme install,mais sans installer les paquets recommandés.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -1978,28 +1964,21 @@ remove
 </dt>
 <dd>
 <p>
-Remove all packages that are specified in the following lines. Append
-a + to the package name if the package should be installed.
+Supprimer tous les paquets qui sont péciser dans les lignes suivantes. Annexer un + au nom du paquet si le paquet doit Être installé.
 </p>
 </dd>
 <dt class="hdlist1">
 taskinst
 </dt>
 <dd>
-<p>
-Install all packages belonging to the tasks that are specified in the
-following lines using <code>tasksel(1)</code>. You can also use <em>aptitude</em> for
-installing tasks.
+<p>Installez tous les paquets appartenant aux tâches qui sont spécifiées dans les lignes suivantes à l'aide de <code>tasksel(1)</code>. Vous pouvez aussi utiliser <em>aptitude</em> pour installer les tâches.
 </p>
 </dd>
 <dt class="hdlist1">
 aptitude
 </dt>
 <dd>
-<p>
-Install all packages with the command <code>aptitude</code>. This will be the
-default in the future and may replace apt-get and taskinst. Aptitude
-can also install task packages.
+<p>Installez Ttus les paquets avec la commande <code>aptitude</code>. Ce sera la Valeur par défaut à l'avenir et pourra remplacer apt-get et taskinst. Aptitudes peut aussi installer les paquets
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2007,79 +1986,37 @@ aptitude-r
 </dt>
 <dd>
 <p>
-Same as aptitude with option <em>--with-recommends</em>.
+Idem aptitude avec l'option <em>--with-recommends</em>.
 </p>
 </dd>
 <dt class="hdlist1">
 unpack
 </dt>
 <dd>
-<p>
-Download package and unpack only. Do not configure the package.
+<p>Télécharge les paquets et décompresse seulement. Ne configure pas le paquet.
 </p>
 </dd>
 <dt class="hdlist1">
 dselect-upgrade
 </dt>
 <dd>
-<p>
-Set package selections using the following lines and install or remove
-the packages specified. These lines are the output of the command
-<em>dpkg --get-selections</em>. It’s not recommended to use this format,
-since you are also specifying all packages which are only installed
-because of a dependency or a recommends. It’s better just to specify
-the pacakge you like to have, and to let FAI (and apt-get) resolv the
-dependencies.
+<p>Defini la sélections des paquets en Utilisant les lignes suivantes et installe ou supprime les paquets précisés. Ces lignes sont le résultat de la commande <em>dpkg --get-selections</em>. Il est recommandé de ne pas utiliser ce format, puisque vous devez aussi specifiez tous les paquets qui ne sont pas installés en raison d'une dépendance ou recommandation. Il vaut mieux juste spécifier le paquet que vous voulez avoir, et de laisser FAI (et apt-get) résoudre les dépendances.
 </p>
 </dd>
 </dl></div>
-<div class="paragraph"><p>Multiple lines with lists of space separated names of packages follow
-the PACKAGES lines. All dependencies are resolved. Packages with
-suffix <em>-</em> (eg. <em>lilo-</em>) will be removed instead of installed. The
-order of the packages is of no matter.  If you like to install
-packages from another release than the default, you can append the
-release name to the package name like in
-<em>openoffice.org/etch-backports</em>. You can also specify a certain
-version like <em>apt=0.3.1</em>. More information on these features are
-described in <code>aptitude(8)</code>.</p></div>
-<div class="paragraph"><p>A line which contains the <em>PRELOADRM</em> commands, downloads a file using
-<code>wget(1)</code> into a directory before installing the packages. Using the
-<em>file:</em> URL, this file is copied from <code>$FAI_ROOT</code> to the download
-directory.  For example the package <code>realplayer</code> needs an archive to
-install the software, so this archive is downloaded to the directory
-<em>/root</em>. After installing the packages this file will be removed. If
-the file shouldn’t be removed, use the command <em>PRELOAD</em> instead.</p></div>
-<div class="paragraph"><p>It’s possible to append a list of class names after the command for
-apt-get. So this <em>PACKAGE</em> command will only be executed when the
-corresponding class is defined. So you can combine many small files
-into the file DEFAULT. WARNING! Use this feature only in the file
-DEFAULT to keep everything simple. See this file for some examples.</p></div>
-<div class="paragraph"><p>If you want to remove a package name from a certain class was part of
-this class before, you should not remove the package name from the
-class file, but instead append a dash (-) to it. This will make sure
-that the package is remove during a softupdate on hosts which were
-installed using the old class definition which included this package
-name.</p></div>
-<div class="paragraph"><p>If you specify a package that does not exist this package will be
-removed automatically from the installation list only if the command <em>install</em> is used.</p></div>
+<div class="paragraph"><p>Plusieurs lignes avec des listes de noms de paquets séparés par des espaces suivent les directive PACKAGES. Toutes les dépendances sont résolues. Les paquetages avec suffixe <em>-</em> (par exemple, <em>lilo-</em>) seront supprimés au lieu d'être installés. L'ordre des paquet n'a pas d'importance. Si vous souhaitez installer des paquets d'une autre version que la valeur par défaut, vous pouvez ajouter le nom de la version au nom du paquet comme dans <em>openoffice.org/etch-backports</em>. Vous pouvez également spécifier une certaine version comme <em>apt=0.3.1</em>. Plus d'informations sur ces fonctionnalités sont décrites dans <code>aptitude(8)</code>.</p></div>
+<div class="paragraph"><p>Une ligne qui contient la commande <em>PRELOADRM</em>, télécharge un fichier à l'aide de <code>wget(1)</code> dans un répertoire avant d'installer les packages. À l'aide du <em>file:</em> URL, ce fichier est copié de <code>$FAI_ROOT</code> vers le répertoire de téléchargement. Par exemple, le package <code>realplayer</code> a besoin d'une archive pour installer le logiciel, donc cette archive est téléchargée dans le répertoire <em>/root</em>. Après l'installation des paquets, ce fichier sera supprimé. Si le fichier ne doit pas être supprimé, utilisez plutôt la commande <em>PRELOAD</em>.</p></div>
+<div class="paragraph"><p>Il est possible d'ajouter une liste de noms de classes après la commande pour apt-get. Ainsi, cette commande <em>PACKAGE</em> ne sera exécutée que si la classe correspondante est définie. Ainsi, vous pouvez combiner de nombreux petits fichiers dans le fichier DEFAULT. ATTENTION! Utilisez cette fonctionnalité uniquement dans le fichier DEFAULT pour garder tout simple. Voir ce fichier pour quelques exemples.</p></div>
+<div class="paragraph"><p>Si vous souhaitez supprimer un nom de paquet d'une certaine classe faisait partie avant de cette classe , vous ne devez pas supprimer le nom du paquet classe, mais plutôt de lui ajouter un tiret (-). Cela garantira que le paquet est enlevé pendant une mise a jour sur des hôtes qui étaient Installé en utilisant l'ancienne définition de classe qui comprenait ce nom de paquet.</p></div>
+<div class="paragraph"><p>Si vous spécifiez un paquet qui n'existe pas, ce paquet sera supprimé automatiquement de la liste d'installation uniquement si la commande <em>install</em> est utilisée.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_cscripts_a_customization_scripts"><a id="cscripts"></a> Customization scripts</h3>
-<div class="paragraph"><p>The command <code>fai-do-scripts(1)</code> is called to execute all scripts in
-this directory. If a directory with a class name exists, all scripts
-matching <em>^[0-9][0-9]*</em> are executed in alphabetical order. So it’s
-possible to use scripts of different languages (shell, cfengine,
-Perl, Python, Ruby, expect,..) for one class.</p></div>
-<div class="paragraph"><p>Thoses scripts write their output to different log files, depending on
-the type of script. For e.g. all shell scripts write their log to
-<code>shell.log</code>.</p></div>
+<h3 id="_a_id_cscripts_a_customization_scripts"><a id="cscripts"></a> Scripts de personnalisation</h3>
+<div class="paragraph"><p>La commande <code>fai-do-scripts(1)</code> est appelée pour exécuter tous les scripts dans ce répertoire. Si un répertoire avec un nom de classe existe, tous les scripts correspondant à <em>^[0-9][0-9]*</em> sont exécutés par ordre alphabétique. Il est donc possible d'utiliser des scripts de différentes langues (shell, cfengine, Perl, Python, Ruby, expect,..) pour une classe.</p></div>
+<div class="paragraph"><p>Ces scripts écrivent leur sortie dans différents fichiers journaux, selon le type de script. Par exemple, Tous les scripts shell écrivent leur journal dans <code>shell.log</code>.</p></div>
 <div class="sect3">
-<h4 id="_a_id_shell_a_shell_scripts"><a id="shell"></a>Shell scripts</h4>
-<div class="paragraph"><p>Most scripts are Bourne shell scripts. Shell scripts are useful if the
-configuration task only needs to call some shell commands or create a
-file from scratch. In order not to write many short scripts, it’s
-possible to use the <code>ifclass</code> command for testing if certain classes
-are defined.</p></div>
+<h4 id="_a_id_shell_a_shell_scripts"><a id="shell"></a>Scripts shell </h4>
+<div class="paragraph"><p>La plupart des scripts sont des scripts Bourne shell. Les scripts shell sont utiles si la tâche de configuration ne doit seulement appeler certaines commandes shell ou créer un fichier à partir de zéro. Afin de ne pas écrire beaucoup de scripts courts, il est possible d'utiliser la commande <code>ifclass</code> pour tester si certaines classes sont définies.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>ifclass -o A B C</code></pre>
