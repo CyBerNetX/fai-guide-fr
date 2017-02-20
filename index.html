@@ -2021,26 +2021,15 @@ dselect-upgrade
 <div class="content">
 <pre><code>ifclass -o A B C</code></pre>
 </div></div>
-<div class="paragraph"><p>checks if one of classes A, B or C are defined. Using -a (logical
-AND) checks if all classes of a list are defined. The command <em>ifclass
-C</em> checks if only class C is defined.</p></div>
-<div class="paragraph"><p>For copying files with classes, use the command
-<code>fcopy(8)</code>. If you want to extract an archive using classes, use
-<code>ftar(8)</code>. For appending lines to a configuration file use <code>ainsl(1)</code>
-instead of just <code>echo string &gt;&gt; filename</code>.</p></div>
-<div class="paragraph"><p>FAI also supports <em>zsh(1)</em> scripts during the
-customization task. Within scripts, the variable <code>$classes</code> holds a space
-separated list with the names of all defined classes.</p></div>
+<div class="paragraph"><p>Vérifie si l'une des classes A, B ou C est définie. L'utilisation de -a (AND logique) vérifie si toutes les classes d'une liste sont définies. La commande <em>ifclass C</em> vérifie si seule la classe C est définie.</p></div>
+<div class="paragraph"><p>Pour copier des fichiers avec des classes, utilisez la commande <code>fcopy(8)</code>. Si vous voulez extraire une archive à l'aide de classes, utilisez <code>ftar(8)</code>. Pour ajouter des lignes à un fichier de configuration, utilisez <code>ainsl(1)</code> au lieu de simplement <code>echo string &gt;&gt; filename</code>..</p></div>
+<div class="paragraph"><p>FAI prend également en charge les scripts <em>zsh(1)</em> pendant la tâche de personnalisation. Dans les scripts, la variable <code>$classes</code> contient une liste séparée par des espaces avec les noms de toutes les classes définies.</p></div>
 </div>
 <div class="sect3">
-<h4 id="_a_id_cfengine_a_cfengine_scripts"><a id="cfengine"></a>Cfengine scripts</h4>
-<div class="paragraph"><p>CFEngine has a rich set of functions to edit existing configuration
-files, e.g <em>LocateLineMatching, ReplaceAll, InsertLine,
-AppendIfNoSuchLine, HashCommentLinesContaining</em>. But it can’t handle
-variables which are undefined. If a variable is undefined, the whole
-cfengine script will abort.</p></div>
-<div class="paragraph"><p>More information can be found in the manual page <code>cfengine(8)</code> or at
-the cfengine homepage <a href="http://www.cfengine.org/">http://www.cfengine.org</a>.</p></div>
+<h4 id="_a_id_cfengine_a_cfengine_scripts"><a id="cfengine"></a>Scripts cfengine</h4>
+<div class="paragraph"><p>CFEngine dispose d'un riche ensemble de fonctions pour modifier les fichiers de configuration existants, par exemple <em>LocateLineMatching, ReplaceAll, InsertLine,
+AppendIfNoSuchLine, HashCommentLinesContaining</em>. Mais il ne peut pas traiter les variables qui sont indéfinies. Si une variable n'est pas définie, l'ensemble du script cfengine s'arrêtera.</p></div>
+<div class="paragraph"><p>Plus d'informations peuvent être trouvées dans la page de manuel <code>cfengine(8)</code> ou sur la page d'accueil cfengine <a href="http://www.cfengine.org/">http://www.cfengine.org</a>.</p></div>
 </div>
 </div>
 <div class="sect2">
