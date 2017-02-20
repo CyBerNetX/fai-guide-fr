@@ -844,7 +844,7 @@ asciidoc.install(3);
 <div id="toc">
   <div id="toctitle">Table des matières</div>
   <noscript><p><b>JavaScript doit être activé dans votre navigateur pour afficher la table des matières.</b></p></noscript>
-<div class="toclevel1"><a href="#_abstract">Abstrait</a></div><div class="toclevel1"><a href="#_a_id_introduction_a_introduction">Introduction</a></div><div class="toclevel2"><a href="#_a_id_availability_a_availability">Disponibilité</a></div><div class="toclevel2"><a href="#_a_id_motivation_a_motivation">Motivation</a></div><div class="toclevel2"><a href="#_a_id_work_a_how_does_fai_work">Comment fonctionne FAI</a></div><div class="toclevel2"><a href="#_a_id_features_a_features">Caractéristiques</a></div><div class="toclevel2"><a href="#_installation_times">Le temps de l'installation</a></div><div class="toclevel1"><a href="#_a_id_impatient_a_quickstart_for_the_impatient_user">Quickstart - Pour l'utilisateur impatient</a></div><div class="toclevel2"><a href="#_a_id_first_a_my_first_installation">Ma première installation</a></div><div class="toclevel2"><a href="#_a_id_cdserver_a_my_first_server_installation">Mon premier serveur d'installation</a></div><div class="toclevel1"><a href="#_a_id_overview_a_overview_and_concepts">Vue d'ensemble et concepts</a></div><div class="toclevel2"><a href="#_a_id_terms_a_important_terms"> Conditions Générales</a></div><div class="toclevel2"><a href="#_a_id_classc_a_the_class_concept">Le concept de classe</a></div><div class="toclevel1"><a href="#_a_id_setup_a_setup_your_faiserver">Configurer votre faiserver</a></div><div class="toclevel2"><a href="#_install_the_fai_packages">Installer les paquetages FAI</a></div><div class="toclevel2"><a href="#_create_the_nfsroot">Créez le nfsroot</a></div><div class="toclevel2"><a href="#_creating_the_configuration_space">Création de l'espace de configuration</a></div><div class="toclevel2"><a href="#_configure_the_network_daemons">Configurer les démons réseau</a></div><div class="toclevel3"><a href="#_a_id_bootdhcp_a_configuration_of_the_dhcp_daemon">Configuration du démon DHCP</a></div><div class="toclevel3"><a href="#_adding_a_host_entry_to_dhcp">Ajout d'une entrée d'hôte au DHCP</a></div><div class="toclevel3"><a href="#_tftp">TFTP</a></div><div class="toclevel3"><a href="#_nfs">NFS</a></div><div class="toclevel2"><a href="#_creating_the_pxelinux_configuration">Créer la configuration PXELINUX</a></div><div class="toclevel2"><a href="#_a_id_custom_server_a_custom_server">Serveur personnalisé</a></div><div class="toclevel1"><a href="#_a_id_plan_a_plan_your_installation">Planifiez votre installation</a></div><div class="toclevel2"><a href="#_a_id_c3_a_the_configuration_space_and_its_subdirectories">L'espace de configuration et ses sous-répertoires</a></div><div class="toclevel2"><a href="#_a_id_defining_classes_a_defining_classes">Définition des classes</a></div><div class="toclevel2"><a href="#_a_id_classvariables_a_defining_variables">Définition des variables</a></div><div class="toclevel2"><a href="#_a_id_diskconfig_a_hard_disk_configuration">Configuration du disque dur</a></div><div class="toclevel2"><a href="#_a_id_extrbase_a_extract_base_file">Extraction du fichier de base</a></div><div class="toclevel2"><a href="#_a_id_debconf_a_debconf_preseeding">Présélection Debconf</a></div><div class="toclevel2"><a href="#_a_id_repository_a_access_to_the_package_repository">Accès au référentiel de paquets</a></div><div class="toclevel2"><a href="#_a_id_packageconfig_a_software_package_configuration">Configuration des paquets logiciel</a></div><div class="toclevel2"><a href="#_a_id_cscripts_a_customization_scripts"> Scripts de personnalisation</a></div><div class="toclevel3"><a href="#_a_id_shell_a_shell_scripts">Scripts shell</a></div><div class="toclevel3"><a href="#_a_id_cfengine_a_cfengine_scripts">Scripts cfengine</a></div><div class="toclevel2"><a href="#_a_id_hooks_a_hooks">Hooks</a></div><div class="toclevel2"><a href="#_a_id_faiflags_a_fai_flags">Drapeaux FAI</a></div><div class="toclevel1"><a href="#_a_id_install_a_fai_installs_your_plan"> FAI installe votre planification</a></div><div class="toclevel2"><a href="#_the_early_part_of_an_installation">La première partie d'une installation</a></div><div class="toclevel2"><a href="#_a_id_bootmesg_a_boot_messages">Messages de boot</a></div><div class="toclevel2"><a href="#_a_id_reboot_a_rebooting_the_computer_into_the_new_system">Redémarrage de l'ordinateur dans le nouveau système</a></div><div class="toclevel2"><a href="#_a_id_isetup_a_starting_fai_task_confdir">Démarrage de FAI (tâche confdir)</a></div><div class="toclevel2"><a href="#_a_id_iclass_a_defining_classes_and_variables_tasks_defclass_and_defvar">Définition de classes et de variables (tâches defclass et defvar)</a></div><div class="toclevel2"><a href="#_a_id_ipartition_a_partitioning_local_disks_creating_file_systems_task_partition">Partitionnement de disques locaux, création de systèmes de fichiers (tâches de partitionnement)</a></div><div class="toclevel2"><a href="#_a_id_ipreseed_a_debconf_preseeding_task_debconf">Préréglage Debconf (tâche debconf)</a></div><div class="toclevel2"><a href="#_a_id_ipackages_a_installing_software_packages_task_instsoft">Installation de progiciels (tâche instsoft)</a></div><div class="toclevel2"><a href="#_a_id_icscripts_a_site_specific_customization_task_configure">Personnalisation spécifique au site (task configure)</a></div><div class="toclevel2"><a href="#_a_id_isavelog_a_saving_log_files_task_savelog">Enregistrement des fichiers journaux (tâche savelog)</a></div><div class="toclevel2"><a href="#_a_id_ireboot_a_reboot_the_new_installed_system">Redémarrez le nouveau système installé</a></div><div class="toclevel1"><a href="#_a_id_advanced_a_advanced_fai_topics">Chapitre avancés de FAI</a></div><div class="toclevel2"><a href="#_a_id_checkbootp_a_checking_parameters_received_from_dhcp_servers">Vérification des paramètres reçus des serveurs DHCP</a></div><div class="toclevel2"><a href="#_a_id_fai_monitor_a_monitoring_multiple_client_installations">Surveillance de plusieurs installations clientes</a></div><div class="toclevel2"><a href="#_a_id_mac_a_collecting_ethernet_addresses_for_multiple_hosts">Collecte d'adresses Ethernet pour plusieurs hôtes</a></div><div class="toclevel3"><a href="#_debugging_the_network_traffic">Débogage du trafic réseau</a></div><div class="toclevel2"><a href="#_a_id_pxeboot_a_details_of_pxe_booting">Détails du démarrage PXE</a></div><div class="toclevel2"><a href="#_a_id_customizing_your_install_server_setup_a_customizing_your_install_server_setup">Personnalisation de la configuration de votre serveur d'installation</a></div><div class="toclevel2"><a href="#_a_id_cdboot_a_creating_a_fai_cd_or_and_usb_stick">Création d'un CD FAI ou d'une clé USB</a></div><div class="toclevel2"><a href="#_a_id_diskimage_a_creating_vm_disk_images_using_fai">Création d'images de disque VM à l'aide de FAI</a></div><div class="toclevel2"><a href="#_a_id_sysinfo_a_fai_rescue_system">Système de sauvetage FAI</a></div><div class="toclevel2"><a href="#_a_id_nonfs_a_fai_without_nfs">FAI sans NFS</a></div><div class="toclevel2"><a href="#_a_id_otherdists_a_installing_other_distributions_using_a_debian_nfsroot">Installation d'autres distributions à l'aide d'un nfsroot Debian/a></div><div class="toclevel2"><a href="#_a_id_dirinstall_a_creating_chroot_and_virtualization_environments">Création d'environnements chrooter et virtualiser</a></div><div class="toclevel2"><a href="#_a_id_softupdate_a_using_fai_for_updates">Utilisation de FAI pour les mises à jour</a></div><div class="toclevel2"><a href="#_a_id_archcross_a_how_to_install_32bit_os_from_a_64bit_os">Comment installer un système d'exploitation 32 bits à partir d'un système d'exploitation 64 bits</a></div><div class="toclevel1"><a href="#_a_id_hints_a_various_hints_and_details">Divers conseils et détails</a></div><div class="toclevel2"><a href="#_a_id_tasks_a_the_list_of_tasks">La liste des tâches</a></div><div class="toclevel2"><a href="#_a_id_itests_a_automated_tests">Tests automatisés</a></div><div class="toclevel2"><a href="#_a_id_autodiscover_a_autodiscover"> Découvrir automatiquement</a></div><div class="toclevel2"><a href="#_a_id_changeboot_a_changing_the_boot_device">Modification du périphérique d'amorçage</a></div><div class="toclevel2"><a href="#_a_id_debian_mirror_a_how_to_create_a_local_debian_mirror">Comment créer un miroir Debian local</a></div><div class="toclevel2"><a href="#_small_hints">Petits conseils</a></div><div class="toclevel2"><a href="#_flag_reboot_fai_flags">flag_reboot (FAI_FLAGS)</a></div><div class="toclevel2"><a href="#_centos_reboot">CentOS reboot</a></div><div class="toclevel2"><a href="#_a_id_logfiles_a_log_files">Fichiers journaux</a></div><div class="toclevel2"><a href="#_how_to_use_http_for_pxe_boot">Comment utiliser HTTP pour le démarrage PXE</a></div><div class="toclevel1"><a href="#_a_id_troubleshoot_a_troubleshooting">Dépannage</a></div><div class="toclevel2"><a href="#_a_id_booterror_a_boot_errors">Erreurs d'amorçage</a></div></div>
+<div class="toclevel1"><a href="#_abstract">Abstrait</a></div><div class="toclevel1"><a href="#_a_id_introduction_a_introduction">Introduction</a></div><div class="toclevel2"><a href="#_a_id_availability_a_availability">Disponibilité</a></div><div class="toclevel2"><a href="#_a_id_motivation_a_motivation">Motivation</a></div><div class="toclevel2"><a href="#_a_id_work_a_how_does_fai_work">Comment fonctionne FAI</a></div><div class="toclevel2"><a href="#_a_id_features_a_features">Caractéristiques</a></div><div class="toclevel2"><a href="#_installation_times">Le temps de l'installation</a></div><div class="toclevel1"><a href="#_a_id_impatient_a_quickstart_for_the_impatient_user">Quickstart - Pour l'utilisateur impatient</a></div><div class="toclevel2"><a href="#_a_id_first_a_my_first_installation">Ma première installation</a></div><div class="toclevel2"><a href="#_a_id_cdserver_a_my_first_server_installation">Mon premier serveur d'installation</a></div><div class="toclevel1"><a href="#_a_id_overview_a_overview_and_concepts">Vue d'ensemble et concepts</a></div><div class="toclevel2"><a href="#_a_id_terms_a_important_terms"> Conditions Générales</a></div><div class="toclevel2"><a href="#_a_id_classc_a_the_class_concept">Le concept de classe</a></div><div class="toclevel1"><a href="#_a_id_setup_a_setup_your_faiserver">Configurer votre faiserver</a></div><div class="toclevel2"><a href="#_install_the_fai_packages">Installer les paquetages FAI</a></div><div class="toclevel2"><a href="#_create_the_nfsroot">Créez le nfsroot</a></div><div class="toclevel2"><a href="#_creating_the_configuration_space">Création de l'espace de configuration</a></div><div class="toclevel2"><a href="#_configure_the_network_daemons">Configurer les démons réseau</a></div><div class="toclevel3"><a href="#_a_id_bootdhcp_a_configuration_of_the_dhcp_daemon">Configuration du démon DHCP</a></div><div class="toclevel3"><a href="#_adding_a_host_entry_to_dhcp">Ajout d'une entrée d'hôte au DHCP</a></div><div class="toclevel3"><a href="#_tftp">TFTP</a></div><div class="toclevel3"><a href="#_nfs">NFS</a></div><div class="toclevel2"><a href="#_creating_the_pxelinux_configuration">Créer la configuration PXELINUX</a></div><div class="toclevel2"><a href="#_a_id_custom_server_a_custom_server">Serveur personnalisé</a></div><div class="toclevel1"><a href="#_a_id_plan_a_plan_your_installation">Planifiez votre installation</a></div><div class="toclevel2"><a href="#_a_id_c3_a_the_configuration_space_and_its_subdirectories">L'espace de configuration et ses sous-répertoires</a></div><div class="toclevel2"><a href="#_a_id_defining_classes_a_defining_classes">Définition des classes</a></div><div class="toclevel2"><a href="#_a_id_classvariables_a_defining_variables">Définition des variables</a></div><div class="toclevel2"><a href="#_a_id_diskconfig_a_hard_disk_configuration">Configuration du disque dur</a></div><div class="toclevel2"><a href="#_a_id_extrbase_a_extract_base_file">Extraction du fichier de base</a></div><div class="toclevel2"><a href="#_a_id_debconf_a_debconf_preseeding">Présélection Debconf</a></div><div class="toclevel2"><a href="#_a_id_repository_a_access_to_the_package_repository">Accès au référentiel de paquets</a></div><div class="toclevel2"><a href="#_a_id_packageconfig_a_software_package_configuration">Configuration des paquets logiciel</a></div><div class="toclevel2"><a href="#_a_id_cscripts_a_customization_scripts"> Scripts de personnalisation</a></div><div class="toclevel3"><a href="#_a_id_shell_a_shell_scripts">Scripts shell</a></div><div class="toclevel3"><a href="#_a_id_cfengine_a_cfengine_scripts">Scripts cfengine</a></div><div class="toclevel2"><a href="#_a_id_hooks_a_hooks">Hooks</a></div><div class="toclevel2"><a href="#_a_id_faiflags_a_fai_flags">FAI flags</a></div><div class="toclevel1"><a href="#_a_id_install_a_fai_installs_your_plan"> FAI installe votre planification</a></div><div class="toclevel2"><a href="#_the_early_part_of_an_installation">La première partie d'une installation</a></div><div class="toclevel2"><a href="#_a_id_bootmesg_a_boot_messages">Messages de boot</a></div><div class="toclevel2"><a href="#_a_id_reboot_a_rebooting_the_computer_into_the_new_system">Redémarrage de l'ordinateur dans le nouveau système</a></div><div class="toclevel2"><a href="#_a_id_isetup_a_starting_fai_task_confdir">Démarrage de FAI (tâche confdir)</a></div><div class="toclevel2"><a href="#_a_id_iclass_a_defining_classes_and_variables_tasks_defclass_and_defvar">Définition de classes et de variables (tâches defclass et defvar)</a></div><div class="toclevel2"><a href="#_a_id_ipartition_a_partitioning_local_disks_creating_file_systems_task_partition">Partitionnement de disques locaux, création de systèmes de fichiers (tâches de partitionnement)</a></div><div class="toclevel2"><a href="#_a_id_ipreseed_a_debconf_preseeding_task_debconf">Préréglage Debconf (tâche debconf)</a></div><div class="toclevel2"><a href="#_a_id_ipackages_a_installing_software_packages_task_instsoft">Installation de progiciels (tâche instsoft)</a></div><div class="toclevel2"><a href="#_a_id_icscripts_a_site_specific_customization_task_configure">Personnalisation spécifique au site (task configure)</a></div><div class="toclevel2"><a href="#_a_id_isavelog_a_saving_log_files_task_savelog">Enregistrement des fichiers journaux (tâche savelog)</a></div><div class="toclevel2"><a href="#_a_id_ireboot_a_reboot_the_new_installed_system">Redémarrez le nouveau système installé</a></div><div class="toclevel1"><a href="#_a_id_advanced_a_advanced_fai_topics">Chapitre avancés de FAI</a></div><div class="toclevel2"><a href="#_a_id_checkbootp_a_checking_parameters_received_from_dhcp_servers">Vérification des paramètres reçus des serveurs DHCP</a></div><div class="toclevel2"><a href="#_a_id_fai_monitor_a_monitoring_multiple_client_installations">Surveillance de plusieurs installations clientes</a></div><div class="toclevel2"><a href="#_a_id_mac_a_collecting_ethernet_addresses_for_multiple_hosts">Collecte d'adresses Ethernet pour plusieurs hôtes</a></div><div class="toclevel3"><a href="#_debugging_the_network_traffic">Débogage du trafic réseau</a></div><div class="toclevel2"><a href="#_a_id_pxeboot_a_details_of_pxe_booting">Détails du démarrage PXE</a></div><div class="toclevel2"><a href="#_a_id_customizing_your_install_server_setup_a_customizing_your_install_server_setup">Personnalisation de la configuration de votre serveur d'installation</a></div><div class="toclevel2"><a href="#_a_id_cdboot_a_creating_a_fai_cd_or_and_usb_stick">Création d'un CD FAI ou d'une clé USB</a></div><div class="toclevel2"><a href="#_a_id_diskimage_a_creating_vm_disk_images_using_fai">Création d'images de disque VM à l'aide de FAI</a></div><div class="toclevel2"><a href="#_a_id_sysinfo_a_fai_rescue_system">Système de sauvetage FAI</a></div><div class="toclevel2"><a href="#_a_id_nonfs_a_fai_without_nfs">FAI sans NFS</a></div><div class="toclevel2"><a href="#_a_id_otherdists_a_installing_other_distributions_using_a_debian_nfsroot">Installation d'autres distributions à l'aide d'un nfsroot Debian/a></div><div class="toclevel2"><a href="#_a_id_dirinstall_a_creating_chroot_and_virtualization_environments">Création d'environnements chrooter et virtualiser</a></div><div class="toclevel2"><a href="#_a_id_softupdate_a_using_fai_for_updates">Utilisation de FAI pour les mises à jour</a></div><div class="toclevel2"><a href="#_a_id_archcross_a_how_to_install_32bit_os_from_a_64bit_os">Comment installer un système d'exploitation 32 bits à partir d'un système d'exploitation 64 bits</a></div><div class="toclevel1"><a href="#_a_id_hints_a_various_hints_and_details">Divers conseils et détails</a></div><div class="toclevel2"><a href="#_a_id_tasks_a_the_list_of_tasks">La liste des tâches</a></div><div class="toclevel2"><a href="#_a_id_itests_a_automated_tests">Tests automatisés</a></div><div class="toclevel2"><a href="#_a_id_autodiscover_a_autodiscover"> Découvrir automatiquement</a></div><div class="toclevel2"><a href="#_a_id_changeboot_a_changing_the_boot_device">Modification du périphérique d'amorçage</a></div><div class="toclevel2"><a href="#_a_id_debian_mirror_a_how_to_create_a_local_debian_mirror">Comment créer un miroir Debian local</a></div><div class="toclevel2"><a href="#_small_hints">Petits conseils</a></div><div class="toclevel2"><a href="#_flag_reboot_fai_flags">flag_reboot (FAI_FLAGS)</a></div><div class="toclevel2"><a href="#_centos_reboot">CentOS reboot</a></div><div class="toclevel2"><a href="#_a_id_logfiles_a_log_files">Fichiers journaux</a></div><div class="toclevel2"><a href="#_how_to_use_http_for_pxe_boot">Comment utiliser HTTP pour le démarrage PXE</a></div><div class="toclevel1"><a href="#_a_id_troubleshoot_a_troubleshooting">Dépannage</a></div><div class="toclevel2"><a href="#_a_id_booterror_a_boot_errors">Erreurs d'amorçage</a></div></div>
 </div>
 <div id="content">
 <div class="sect1">
@@ -2034,40 +2034,11 @@ AppendIfNoSuchLine, HashCommentLinesContaining</em>. Mais il ne peut pas traiter
 </div>
 <div class="sect2">
 <h3 id="_a_id_hooks_a_hooks"><a id="hooks"></a>Hooks</h3>
-<div class="paragraph"><p>Hooks let you specify functions or programs which are run at certain
-steps of the installation process. Before a task is called,
-FAI searches for existing hooks for this task and executes them. As
-you might expect, classes are also used when calling hooks. Hooks are
-executed for every defined class. You only have to create the hook
-with the name for the desired class and it will be used.  If several
-hooks for a task exists, they are called in the order defined by the
-classes.  If <em>debug</em> is included in <code>$FAI_FLAG</code> the option <em>-d</em> is
-passed to all hooks, so you can debug your own hooks.  If some default
-tasks should be skipped, use the subroutine <em>skiptask</em> and a list of
-default tasks as parameters. In the examples provided, the hooks of
-the class CENTOS skips some Debian specific tasks.</p></div>
-<div class="paragraph"><p>The directory <em>$FAI/hooks/</em> contains all hooks. A hook is an executable
-file following the naming scheme <em>taskname.CLASSNAME[.sh]</em> (e.g.
-<em>repository.CENTOS</em> or <em>savelog.LAST.sh), a task name and a
-class name separated by a dot, optionally followed by '.sh</em>. The
-task name specifies which task to precede executing this hook, if the
-specified class is defined for the installing client.  See section
-<a href="#tasks">[tasks]</a> for a complete list of default tasks that can be used.</p></div>
-<div class="paragraph"><p>A hook of the form <em>hookprefix.classname</em> can’t define variables for
-the installation script, because it’s a subprocess. But you can use
-any binary executable or any script you wrote. Hooks that have the
-suffix <em>.sh</em> (e.g. 'partition.DEFAULT.sh) must be Bourne
-shell scripts and are sourced. So it’s possible to redefine variables
-for the installation scripts.</p></div>
-<div class="paragraph"><p>In the first part of FAI, all hooks with prefix <em>confdir</em> are called.
-Those hooks can not be located in the config space, since it’s not yet
-available. Therefore these hooks are the only hooks located in
-<code>$nfsroot</code><em>/$FAI/hooks</em> on the install server. All other hooks are
-found in <em>$FAI_CONFIGDIR/hooks</em> on the install server.</p></div>
-<div class="paragraph"><p>All hooks that are called before classes are defined can only use the
-following classes: <em>DEFAULT $HOSTNAME LAST</em>. If a hook for class
-<em>DEFAULT</em> should only be called if no hook for class <code>$HOSTNAME</code> is
-available, insert these lines to the default hook:</p></div>
+<div class="paragraph"><p>Les Hooks vous permettent de spécifier des fonctions ou des programmes qui sont exécutés à certaines étapes du processus d'installation. Avant qu'une tâche soit appelée, FAI recherche les hooks existants pour cette tâche et les exécute. Comme on peut s'y attendre, les classes sont également utilisées lors de l'appel de hooks. Les hooks sont exécutés pour chaque classe définie. Vous n'avez qu'à créer le hook avec le nom de la classe désirée et il sera utilisé. Si plusieurs hooks pour une tâche existent, ils sont appelés dans l'ordre défini par les classes. Si <em>debug</em> est inclus dans <code>$FAI_FLAG</code> l'option <em>-d</em> est passée à tous les hooks, donc vous pouvez déboguer vos propres hooks. Si certaines tâches par défaut doivent être ignorées, utilisez la sous-routine <em>skiptask</em> et une liste de tâches par défaut comme paramètres. Dans les exemples fournis, les hooks de la classe CENTOS ignorent certaines tâches spécifiques de Debian.</p></div>
+<div class="paragraph"><p>Le répertoire <em>$FAI/hooks/</em> contient tous les hooks. Un hook est un fichier exécutable qui suit le nom de tâche <em>taskname.CLASSNAME[.sh]</em> (par exemple, <em>repository.CENTOS</em> ou <em>savelog.LAST.sh), un nom de tâche et un nom de classe séparés par un point, éventuellement suivi de '.sh</em>. Le nom de la tâche spécifie la tâche devant précéder l'exécution de ce hook, si la classe spécifiée est définie pour le client d'installation. Voir la section <a href="#tasks">[tasks]</a> pour une liste complète des tâches par défaut pouvant être utilisées.</p></div>
+<div class="paragraph"><p>Un hook du formulaire <em>hookprefix.classname</em> ne peut pas définir de variables pour le script d'installation, car il s'agit d'un sous-processus. Mais vous pouvez utiliser n'importe quel exécutable binaire ou n'importe quel script que vous avez écrit. Les hooks qui ont le suffixe <em>.sh</em> (par exemple, 'partition.DEFAULT.sh) doivent être des scripts Bourne shell et sont sourcé. Il est donc possible de redéfinir des variables pour les scripts d'installation.</p></div>
+<div class="paragraph"><p>Dans la première partie de FAI, tous les hooks avec le préfixe <em>confdir</em> sont appelés. Ces hooks ne peuvent pas être localisés dans l'espace de configuration, car il n'est pas encore disponible. Par conséquent, ces hooks sont les seuls hooks situés dans <code>$nfsroot</code><em>/$FAI/hooks</em> sur le serveur d'installation. Tous les autres hooks se trouvent dans <em>$FAI_CONFIGDIR/hooks</em> sur le serveur d'installation.</p></div>
+<div class="paragraph"><p>Tous les hooks appelés avant la définition des classes ne peuvent utiliser que les classes suivantes: <em>DEFAULT $HOSTNAME LAST</em>. Si un hook pour la classe <em>DEFAULT</em> doit être appelé uniquement si aucun hook pour la classe <code>$HOSTNAME</code> n'est disponible, insérez ces lignes sur le hook par défaut:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>hookexample.DEFAULT:
@@ -2081,43 +2052,38 @@ scriptname=$(basename $0 .DEFAULT)
 .
 .</code></pre>
 </div></div>
-<div class="paragraph"><p>Some examples for what hooks could be used:</p></div>
+<div class="paragraph"><p>Quelques exemples de ce que les hooks pourraient être utilisés:</p></div>
 <div class="ulist"><ul>
 <li>
-<p>
-Load kernel modules before classes are defined in <em>$FAI/class</em>.
+<p>Charger les modules du noyau avant que les classes soient définies dans <em>$FAI/class</em>.
 </p>
 </li>
 <li>
 <p>
-Send an email to the administrator if the installation is finished.
+     Envoyez un courriel à l'administrateur si l'installation est terminée.
 </p>
 </li>
 <li>
 <p>
-Install a diskless client and skip local disk partitioning.
+     Installez un client sans disque et sautez le partitionnement de disque local.
 </p>
 </li>
 <li>
 <p>
-Have a look at <code>hooks/debconf.IMAGE</code> for how to clone a machine using a file system image.
+     Jetez un oeil à <code>hooks/debconf.IMAGE</code> pour savoir comment cloner une machine en utilisant une image de système de fichiers.
 </p>
 </li>
 </ul></div>
 </div>
 <div class="sect2">
 <h3 id="_a_id_faiflags_a_fai_flags"><a id="faiflags"></a>FAI flags</h3>
-<div class="paragraph"><p>The variable <code>$FAI_FLAGS</code> contains a space separated list of
-flags. The following flags are known:</p></div>
+<div class="paragraph"><p>La variable <code>$FAI_FLAGS</code> contient une liste de flags séparés par des espaces. Les flags suivants sont connus:</p></div>
 <div class="dlist"><dl>
 <dt class="hdlist1">
 verbose
 </dt>
 <dd>
-<p>
-Create verbose output during installation. This should always be the
-first flag, so consecutive definitions of flags will be verbosely
-displayed.
+<p>Créez une sortie verbeuse pendant l'installation. Cela doit toujours être le premier flag, de sorte que les définitions consécutives des flags seront affichées verbeusement.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2125,11 +2091,7 @@ debug
 </dt>
 <dd>
 <p>
-Create debug output. No unattended installation is performed. During
-package installation you have to answer all questions of the
-postinstall scripts on the client’s console. A lot of debug
-information will be printed out. This flag is only useful for FAI
-developers.
+Créer une sortie de débogage. Aucune installation sans assistance n'est effectuée. Pendant l'installation du paquet, vous devez répondre à toutes les questions des scripts postinstall sur la console du client. Beaucoup d'informations de débogage seront imprimées. Ce flag n'est utile que pour les développeurs FAI.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2137,11 +2099,7 @@ sshd
 </dt>
 <dd>
 <p>
-Start the ssh daemon to enable remote logins.
-You can then log in as <em>root</em> to all install clients during the
-installation. The default password is <em>fai</em> and can be changed by
-setting <code>FAI_ROOTPW</code> in <code>nfsroot.conf(5)</code>. To log in from your server
-to the install client (named demohost in this example) use:
+Démarrez le démon ssh pour activer les connexions à distance. Vous pouvez ensuite vous connecter en tant que <em>root</em> à tous les clients d'installation pendant l'installation. Le mot de passe par défaut est <em>fai</em> et peut être modifié en définissant <code>FAI_ROOTPW</code> dans <code>nfsroot.conf(5)</code>. Pour vous connecter à partir de votre serveur vers le client d'installation (nommé demohost dans cet exemple), utilisez:
 </p>
 </dd>
 </dl></div>
@@ -2151,21 +2109,13 @@ to the install client (named demohost in this example) use:
 Warning: Permanently added 'demohost,192.168.33.100' to the list of known hosts.
 root@demohost's password:</code></pre>
 </div></div>
-<div class="paragraph"><p>This is only the root password during the
-installation process, not for the new installed system. You can also
-log in without a password when using <code>$SSH_IDENTITY</code>.</p></div>
+<div class="paragraph"><p>Ce n'est que le mot de passe root pendant le processus d'installation, pas pour le nouveau système installé. Vous pouvez également vous connecter sans mot de passe lorsque vous utilisez <code>$SSH_IDENTITY</code>.</p></div>
 <div class="dlist"><dl>
 <dt class="hdlist1">
 createvt
 </dt>
 <dd>
-<p>
-Create two virtual terminals and execute a bash if <em>ctrl-c</em> is typed
-in the console terminal. The additional terminals can be accessed by
-typing <em>Alt-F2</em> or <em>Alt-F3</em>. Otherwise, no terminals are available and
-typing <em>ctrl-c</em> will reboot the install client. Setting this flag is
-useful for debugging. If you want an installation which should not be
-interruptible, do not set this flag.
+<p>Créez deux terminaux virtuels et exécutez un bash si <em>ctrl-c</em> est tapé dans le terminal de console. Vous pouvez accéder aux terminaux supplémentaires en tapant <em>Alt-F2</em> ou <em>Alt-F3</em>. Sinon, aucun terminal n'est disponible et la saisie <em>ctrl-c</em> va redémarrer le client d'installation. La définition de ce flag est utile pour le débogage. Si vous voulez une installation qui ne devrait pas être interruptible, ne définissez pas ce flag.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2173,8 +2123,7 @@ menu
 </dt>
 <dd>
 <p>
-This enables a user menu for selecting a profile. All files
-<code>class/*.profile</code> are read and a curses based menu will be created.
+Cela permet à un menu utilisateur de sélectionner un profil. Tous les fichiers <code>class/*.profile</code> sont lus et un menu basé sur des curses sera créé.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2182,11 +2131,7 @@ reboot
 </dt>
 <dd>
 <p>
-Reboot the install client after installation is finished without
-typing RETURN on the console. If this flag is not set, and error.log
-contains anything, the install client will stop and wait that you
-press RETURN. If no errors occurred, the client will always reboot
-automatically.
+Redémarrez le client d'installation une fois l'installation terminée sans taper RETURN sur la console. Si ce drapeau n'est pas défini, et que error.log contient quelque chose, le client d'installation s'arrêtera et attendra que vous appuyez sur RETURN. Si aucune erreur ne s'est produite, le client redémarre automatiquement automatiquement.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2194,8 +2139,7 @@ halt
 </dt>
 <dd>
 <p>
-Halt the install client at the end of the installation, instead of
-rebooting into the new system.
+Arrêtez le client d'installation à la fin de l'installation, au lieu de redémarrer dans le nouveau système.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2203,9 +2147,7 @@ initial
 </dt>
 <dd>
 <p>
-Used by <code>setup-storage(8)</code>. Partitions marked with <code>preserve_reinstall</code>
-are preserved unless this flag is set. Often, this flag is set in a
-file <em>class/*.var</em> by using setting <em>flag_initial=1</em>.
+Utilisé par <code>setup-storage(8)</code>. Les partitions marquées avec <code>preserve_reinstall</code> sont préservées à moins que ce flag ne soit défini. Souvent, ce drapeau est placé dans un fichier<em>class/*.var</em> en utilisant le paramètre <em>flag_initial=1</em>.
 </p>
 </dd>
 </dl></div>
@@ -2213,7 +2155,7 @@ file <em>class/*.var</em> by using setting <em>flag_initial=1</em>.
 </div>
 </div>
 <div class="sect1">
-<h2 id="_a_id_install_a_fai_installs_your_plan"><a id="install"></a> FAI installs your plan</h2>
+<h2 id="_a_id_install_a_fai_installs_your_plan"><a id="install"></a> FAI installe votre planification</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_the_early_part_of_an_installation">The early part of an installation</h3>
