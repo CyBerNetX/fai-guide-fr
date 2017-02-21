@@ -2237,22 +2237,16 @@ Utilisé par <code>setup-storage(8)</code>. Les partitions marquées avec <code>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_the_early_part_of_an_installation">La première partie d'une installation</h3>
-<div class="paragraph"><p>After the kernel has booted, it mounts the root file system via NFS
-from the install server and starts the script
-<em>/usr/sbin/fai</em> <span class="footnote" data-note="Since the root file system on the clients is mounted via
+<div class="paragraph"><p>Après le démarrage du noyau, il monte le système de fichiers racine via NFS à partir du serveur d'installation et démarre le script <em>/usr/sbin/fai</em><span class="footnote" data-note="Since the root file system on the clients is mounted via
 NFS, &lt;code&gt;fai&lt;/code&gt; is located in
 &lt;em&gt;/srv/fai/nfsroot/usr/sbin&lt;/em&gt; on the install
-server.">[<a id="_footnoteref_10" href="#_footnote_10" title="View footnote" class="footnote">10</a>]</span>. This script controls the sequence of the
-installation. No other scripts in <em>/etc/init.d/</em> are used.</p></div>
-<div class="paragraph"><p>The configuration space is made available via the configured method
-(an NFS mount by default) from the install server to the path defined
-in <em>$FAI</em> <span class="footnote" data-note="&lt;em&gt;$FAI&lt;/em&gt; is an internal variable used by the FAI
-scripts. By default the path is &lt;em&gt;/var/lib/fai/config&lt;/em&gt;.">[<a id="_footnoteref_11" href="#_footnote_11" title="View footnote" class="footnote">11</a>]</span></p></div>
+server.">[<a id="_footnoteref_10" href="#_footnote_10" title="View footnote" class="footnote">10</a>]</span>. Ce script contrôle la séquence de l'installation. Aucun autre script dans <em>/etc/init.d/</em> n'est utilisé.</p></div>
+<div class="paragraph"><p>L'espace de configuration est rendu disponible via la méthode configurée (un montage NFS par défaut) du serveur d'installation au chemin défini dans <em>$FAI</em> <span class="footnote" data-note="&lt;em&gt;$FAI&lt;/em&gt; is an internal variable used by the FAI
+scripts. By default the path is &lt;em&gt;/var/lib/fai/config&lt;/em&gt;.">[<a id="_footnoteref_11" href="#_footnote_11" title="View footnote" class="footnote">11</a>]</span>.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_bootmesg_a_boot_messages"><a id="bootmesg"></a>Boot messages</h3>
-<div class="paragraph"><p>When booting the install client from network card with PXE you will some
-messages like this:</p></div>
+<h3 id="_a_id_bootmesg_a_boot_messages"><a id="bootmesg"></a>Messages de boot</h3>
+<div class="paragraph"><p>Lorsque vous démarrez le client d'installation à partir de la carte réseau avec PXE, vous obtiendrez des messages comme ceci:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>Managed PC Boot Agent (MBA) v4.00
@@ -2278,12 +2272,8 @@ Trying to load pxelinux.cfg/C0A82164
 Loading vmlinuz-3.16.0-4-amd64..................
 Loading initrd.img-3.16.0-4-amd64......................ready.</code></pre>
 </div></div>
-<div class="paragraph"><p>At this point the install client has successfully received the network
-config via DHCP and the kernel and initrd via TFTP. It now boots the
-Linux kernel and the initrd. If everything went right, the initrd
-mounts the nfsroot <span class="footnote" data-note="&lt;em&gt;/srv/fai/nfsroot&lt;/em&gt; from the install
-server via NFS">[<a id="_footnoteref_12" href="#_footnote_12" title="View footnote" class="footnote">12</a>]</span> and the FAI scripts are started. The first
-thing you see is the red FAI copyright message.</p></div>
+<div class="paragraph"><p>À ce stade, le client d'installation a réussi à recevoir le réseau
+Config via DHCP et le noyau et initrd via TFTP. Il démarre maintenant Le noyau Linux et l'initrd. Si tout allait bien, l'initrd Monte nfsroot<span class="footnote" data-note="&lt;em&gt;/srv/fai/nfsroot&lt;/em&gt; from the install server via NFS">[<a id="_footnoteref_12" href="#_footnote_12" title="View footnote" class="footnote">12</a>]</span> Et les scripts FAI sont lancés. La première chose que vous voyez est le message en rouge de copyright FAI.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>             -------------------------------------------------
@@ -2320,23 +2310,23 @@ Executing /var/lib/fai/config/class/50-host-classes.
 50-host-classes      OK.
 List of all classes: DEFAULT LINUX AMD64 FAIBASE DHCPC DEMO GRUB client01 LAST</code></pre>
 </div></div>
-<div class="paragraph"><p>You can also see the list of FAI classes, that are defined for this
-host. This list is very important for the rest of the installation.</p></div>
-<div class="paragraph"><p>The first task is called <em>confdir</em>, which is responsible for getting
-access to the config space. Here, we use an NFS mount from the install
-server as you can see on the console (and later in the logs).</p></div>
+<div class="paragraph"><p>Vous pouvez également voir la liste des classes FAI, qui sont définies pour ce
+hôte. Cette liste est très importante pour le reste de l'installation.</p></div>
+<div class="paragraph"><p>La première tâche est appelée <em>confdir</em>, qui est chargée de
+Accès à l'espace de configuration. Ici, nous utilisons un montage NFS à partir de l'installation
+Comme vous pouvez le voir sur la console (et plus tard dans les journaux).</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>FAI_CONFIG_SRC is set to nfs://faiserver/srv/fai/config
 Configuration space faiserver:/srv/fai/config mounted to /var/lib/fai/config</code></pre>
 </div></div>
-<div class="paragraph"><p>Before the installation is started (<code>$FAI_ACTION=install</code>) the computer
-beeps three times. So, be careful when you hear three beeps but you do
-not want to perform an installation and let FAI erase all yout data on
-the local disk!</p></div>
+<div class="paragraph"><p>Avant de lancer l'installation (<code>$FAI_ACTION=install</code>), l'ordinateur
+Bip trois fois. Donc, faites attention quand vous entendez trois bips mais vous
+Ne voulez pas effectuer une installation et laisser FAI effacer toutes vos données sur
+Le disque local!</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_reboot_a_rebooting_the_computer_into_the_new_system"><a id="reboot"></a>Rebooting the computer into the new system</h3>
+<h3 id="_a_id_reboot_a_rebooting_the_computer_into_the_new_system"><a id="reboot"></a>Redémarrage de l'ordinateur dans le nouveau système</h3>
 <div class="paragraph"><p>For rebooting the computer during or at the end of the installation you
 should use the command <code>faireboot</code> in favour of the normal reboot command.
 Use <code>faireboot</code> also if logged in from remote. If the installation
