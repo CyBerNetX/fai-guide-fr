@@ -2327,94 +2327,44 @@ Le disque local!</p></div>
 </div>
 <div class="sect2">
 <h3 id="_a_id_reboot_a_rebooting_the_computer_into_the_new_system"><a id="reboot"></a>Redémarrage de l'ordinateur dans le nouveau système</h3>
-<div class="paragraph"><p>For rebooting the computer during or at the end of the installation you
-should use the command <code>faireboot</code> in favour of the normal reboot command.
-Use <code>faireboot</code> also if logged in from remote. If the installation
-hasn’t finished, use <em>faireboot -s</em>, so the log files are also copied
-to the install server.</p></div>
-<div class="paragraph"><p>If the installation has finished successfully, the computer should boot a
-small Debian system. You can login as user <em>demo</em> or <em>root</em> with password <em>fai</em>.</p></div>
+<div class="paragraph"><p>Pour redémarrer l'ordinateur pendant ou à la fin de l'installation, vous devez utiliser la commande <code>faireboot</code> en faveur de la commande de redémarrage normal. Utilisez aussi <code>faireboot</code> si vous êtes connecté depuis la télécommande. Si l'installation n'est pas terminée, utilisez <em>faireboot -s</em>, donc les fichiers journaux sont également copiés sur le serveur d'installation.</p></div>
+<div class="paragraph"><p>Si l'installation est terminée, l'ordinateur doit démarrer un petit système Debian. Vous pouvez vous connecter en tant que <em>demo</em> ou <em>root</em> avec le mot de passe <em>fai</em>.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_isetup_a_starting_fai_task_confdir"><a id="isetup"></a>Starting FAI (task confdir)</h3>
-<div class="paragraph"><p>After the install client has booted only the script <em>/usr/sbin/fai</em> is
-executed. It will do some minimal initialization. The variable
-<code>$FAI_CONFIG_SRC</code> <span class="footnote" data-note="It it defined on the kernel command line">[<a id="_footnoteref_13" href="#_footnote_13" title="View footnote" class="footnote">13</a>]</span>
-is used to get access to the FAI configuration space which is then
-available in the directory <code>$FAI</code> <span class="footnote" data-note="/var/lib/fai/config">[<a id="_footnoteref_14" href="#_footnote_14" title="View footnote" class="footnote">14</a>]</span>. FAI
-will not proceed without the config space.</p></div>
+<h3 id="_a_id_isetup_a_starting_fai_task_confdir"><a id="isetup"></a>Démarrage de FAI (tâche confdir)</h3>
+<div class="paragraph"><p>Une fois le client d'installation démarré, seul le script <em>/usr/sbin/fai</em> est exécuté. Il effectuera une initialisation minimale. La variable <code>$FAI_CONFIG_SRC</code> <span class="footnote" data-note="It it defined on the kernel command line">[<a id="_footnoteref_13" href="#_footnote_13" title="View footnote" class="footnote">13</a>]</span> est utilisée pour accéder à l'espace de configuration FAI qui est alors disponible dans le répertoire <code>$FAI</code> <span class="footnote" data-note="/var/lib/fai/config">[<a id="_footnoteref_14" href="#_footnote_14" title="View footnote" class="footnote">14</a>]</span>. FAI ne se déroulera pas sans l'espace de configuration.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_iclass_a_defining_classes_and_variables_tasks_defclass_and_defvar"><a id="iclass"></a>Defining classes and variables (tasks defclass and defvar)</h3>
-<div class="paragraph"><p>The command <code>fai-class(1)</code> executes scripts in <em>$FAI/class</em> for defining
-classes. If the scripts write a string to stdout, this will be defined
-as a class. Read all the details in the man page of <code>fai-class(1)</code>.</p></div>
-<div class="paragraph"><p>After defining the classes, every file matching <em>.var</em> with a prefix
-which matches a defined class is sourced to define variables. It must
-contain vaild shell code.</p></div>
+<h3 id="_a_id_iclass_a_defining_classes_and_variables_tasks_defclass_and_defvar"><a id="iclass"></a>Définition de classes et de variables (tâches defclass et defvar)</h3>
+<div class="paragraph"><p>La commande <code>fai-class(1)</code> exécute des scripts dans <em>$FAI/class</em> pour définir des classes. Si les scripts écrivent une chaîne sur stdout, cela sera défini comme une classe. Lisez tous les détails dans la page de manuel de <code>fai-class(1)</code>.</p></div>
+<div class="paragraph"><p>Après avoir défini les classes, chaque fichier correspondant à <em>.var</em> avec un préfixe qui correspond à une classe définie provient de variables définies. Il doit contenir le code shell vaild.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_ipartition_a_partitioning_local_disks_creating_file_systems_task_partition"><a id="ipartition"></a>Partitioning local disks, creating file systems (task partition)</h3>
-<div class="paragraph"><p>For the disk partitioning exactly one disk configuration file from
-<em>$FAI/disk_config</em> is selected using classes.</p></div>
-<div class="paragraph"><p>The format of the disk configuration is similar to a fstab file.</p></div>
-<div class="paragraph"><p>The partitioning tool <code>setup-storage(8)</code> performs all commands
-necessary for creating the disk partition layout, software RAID, LVM
-and for creating the file systems. Read the manual page of
-<code>setup-storage(8)</code> for a detailed description and some examples of the
-format.</p></div>
+<h3 id="_a_id_ipartition_a_partitioning_local_disks_creating_file_systems_task_partition"><a id="ipartition"></a>Partitionnement de disques locaux, création de systèmes de fichiers (tâches de partitionnement)</h3>
+<div class="paragraph"><p>Pour le partitionnement du disque, un fichier de configuration de disque de <em>$FAI/disk_config</em> est sélectionné à l'aide de classes.</p></div>
+<div class="paragraph"><p>Le format de la configuration du disque est similaire à un fichier fstab.</p></div>
+<div class="paragraph"><p>L'outil de partitionnement <code>setup-storage(8)</code> exécute toutes les commandes nécessaires à la création de la disposition de la partition du disque, du RAID logiciel, du LVM et de la création des systèmes de fichiers. Lisez la page de manuel de <code>setup-storage(8)</code> pour une description détaillée et quelques exemples du format.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_ipreseed_a_debconf_preseeding_task_debconf"><a id="ipreseed"></a>Debconf preseeding (task debconf)</h3>
-<div class="paragraph"><p>Files in <em>$FAI/debconf</em> are used for the usual <code>debconf(7)</code> presseding
-if the file names match a class name.</p></div>
+<h3 id="_a_id_ipreseed_a_debconf_preseeding_task_debconf"><a id="ipreseed"></a>Préréglage Debconf (tâche debconf)</h3>
+<div class="paragraph"><p>Les fichiers dans <em>$FAI/debconf</em> sont utilisés par <code>debconf(7)</code> habituel en présselectionnant si les noms de fichier correspondent à un nom de classe.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_ipackages_a_installing_software_packages_task_instsoft"><a id="ipackages"></a>Installing software packages (task instsoft)</h3>
-<div class="paragraph"><p>The command <code>install_packages(8)</code> reads the config files from
-<em>$FAI/package_config</em> in a class based manner and installs software
-packages on the new file system.</p></div>
-<div class="paragraph"><p>It installs the packages using <code>apt-get(8)</code>, <code>aptitude(1)</code>, <code>yum</code> or other
-package tools without any manual interaction needed. Package
-dependecies are also resolved by the package tools.</p></div>
-<div class="paragraph"><p>The format of the configuration files is described in <a href="#packageconfig">[packageconfig]</a>.</p></div>
+<h3 id="_a_id_ipackages_a_installing_software_packages_task_instsoft"><a id="ipackages"></a>Installation de progiciels (tâche instsoft)</h3>
+<div class="paragraph"><p>La commande <code>install_packages(8)</code> lit les fichiers de configuration à partir de <em>$FAI/package_config</em> en classe et installe des progiciels sur le nouveau système de fichiers.</p></div>
+<div class="paragraph"><p>Il installe les paquets en utilisant <code>apt-get(8)</code>, <code>aptitude(1)</code>, <code>yum</code> ou d'autres outils de paquetage sans aucune interaction manuelle nécessaire. Les paquets sont également résolus par les outils de paquets.</p></div>
+<div class="paragraph"><p>Le format des fichiers de configuration est décrit dans <a href="#packageconfig">[packageconfig]</a>.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_icscripts_a_site_specific_customization_task_configure"><a id="icscripts"></a>Site specific customization (task configure)</h3>
-<div class="paragraph"><p>Often the default configurations of the software packages will not
-meet your site-specific needs. You can call arbitrary scripts which
-adjust the system configuration. Therefore the command
-<code>fai-do-scripts(1)</code> executes scripts in <em>$FAI/scripts</em> in a class
-based manner. It is possible to have several scripts of different
-types (shell, cfengine, …) to be executed for one class.</p></div>
-<div class="paragraph"><p>The default set of scripts in <em>$FAI/scripts</em> include examples for
-installing Debian and CentOS machines. They set the root password, add
-a demo user account, set the timezone, configure the network for DHCP
-or using a fixed IP address, setup grub and more.
-They should do a reasonable job for your installation. You can edit
-them or add new scripts to match your local needs.</p></div>
-<div class="paragraph"><p>More information about these scripts are described in <a href="#cscripts">[cscripts]</a>.</p></div>
+<h3 id="_a_id_icscripts_a_site_specific_customization_task_configure"><a id="icscripts"></a>Personnalisation spécifique au site (task configure)</h3>
+<div class="paragraph"><p>Souvent, les configurations par défaut des progiciels ne répondent pas à vos besoins spécifiques au site. Vous pouvez appeler des scripts arbitraires qui ajustent la configuration du système. Par conséquent, la commande <code>fai-do-scripts(1)</code> exécute des scripts dans <em>$FAI/scripts</em> d'une manière basée sur la classe. Il est possible d'avoir plusieurs scripts de différents types (shell, cfengine, ...) à exécuter pour une classe.</p></div>
+<div class="paragraph"><p>L'ensemble de scripts par défaut dans <em>$FAI/scripts</em> inclut des exemples d'installation de machines Debian et CentOS. Ils définissent le mot de passe root, ajoutent un compte utilisateur démo, paramétrent le fuseau horaire, configurent le réseau pour DHCP ou utilisent une adresse IP fixe,la configuration grub et plus encore. Ils devraient faire un travail raisonnable pour votre installation. Vous pouvez les modifier ou ajouter de nouveaux scripts pour répondre à vos besoins locaux.</p></div>
+<div class="paragraph"><p>Plus d'informations sur ces scripts sont décrits dans <a href="#cscripts">[cscripts]</a>.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_isavelog_a_saving_log_files_task_savelog"><a id="isavelog"></a>Saving log files (task savelog)</h3>
-<div class="paragraph"><p>When all tasks are finished, the log files are written to
-<em>/var/log/fai/$HOSTNAME/install/</em>
-<span class="footnote" data-note="&lt;em&gt;/var/log/fai/localhost/install/&lt;/em&gt; is a link to this
-directory.">[<a id="_footnoteref_15" href="#_footnote_15" title="View footnote" class="footnote">15</a>]</span> on the new system and to the account on the install server
-if <code>$LOGUSER</code> is defined. It is also possible to specify
-another host as log saving destination through the variable
-<code>$LOGSERVER</code>. If <code>$LOGSERVER</code> is not defined, FAI uses the variable
-<code>$SERVER</code> which is only defined during an initial installation (by
-get-boot-info). Make sure to set <code>$LOGSERVER</code> in a <em>class/*.var</em> script
-if you are using the action <em>softupdate</em>.</p></div>
-<div class="paragraph"><p>Additionally, two symlinks will be created to indicated the last
-directory written to. The symlink <em>last</em> points to the log directory
-of the last FAI action performed. The symlinks <em>last-install</em> and
-<em>last-sysinfo</em> point to the directory with of the last corresponding
-action. By default log files will be copied to the log
-server using scp. You can use the variable <code>$FAI_LOGPROTO</code> in file
-<em>fai.conf(5)</em> to choose another method for saving logs to the remote
-server. Here’s an example of the symlink structure:</p></div>
+<h3 id="_a_id_isavelog_a_saving_log_files_task_savelog"><a id="isavelog"></a>Enregistrement des fichiers journaux (tâche savelog)</h3>
+<div class="paragraph"><p>Lorsque toutes les tâches sont terminées, les fichiers journaux sont écrits dans <em>/var/log/fai/$HOSTNAME/install/</em><span class="footnote" data-note="&lt;em&gt;/var/log/fai/localhost/install/&lt;/em&gt; is a link to this directory.">[<a id="_footnoteref_15" href="#_footnote_15" title="View footnote" class="footnote">15</a>]</span> sur le nouveau système et sur le compte sur le serveur d'installation si <code>$LOGUSER</code> est défini. Il est également possible de spécifier un autre hôte comme enregistrement en enregistrant la destination via la variable <code>$LOGSERVER</code>. Si <code>$LOGSERVER</code> n'est pas défini, FAI utilise la variable <code>$SERVER</code> qui n'est définie que lors d'une installation initiale (par get-boot-info). Assurez-vous de définir <code>$LOGSERVER</code> dans un script <em>class/*.var</em> si vous utilisez l'action <em>softupdate</em>.</p></div>
+<div class="paragraph"><p>De plus, deux liens symboliques seront créés pour indiquer le dernier répertoire écrit. Le <em>last</em> lien symbolique pointe vers le répertoire journal de la dernière action FAI exécutée. Les liens symboliques <em>last-install</em> et <em>last-sysinfo</em> pointent vers le répertoire avec la dernière action correspondante. Par défaut, les fichiers journaux seront copiés sur le serveur de journal à l'aide de scp. Vous pouvez utiliser la variable <code>$FAI_LOGPROTO</code> dans le fichier <em>fai.conf(5)</em> pour choisir une autre méthode d'enregistrement des journaux sur le serveur distant. Voici un exemple de structure de lien symbolique:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>lrwxrwxrwx   1 fai fai   23 Dec  2  2013 last-sysinfo -&gt; sysinfo-20131202_161237
@@ -2425,46 +2375,32 @@ lrwxrwxrwx   1 fai fai   23 Dec  4 13:22 last-install -&gt; install-20141204_131
 lrwxrwxrwx   1 fai fai   23 Dec  4 13:22 last -&gt; install-20141204_131351
 drwxr-xr-x   2 fai fai 4096 Dec  4 13:22 install-20141204_131351</code></pre>
 </div></div>
-<div class="paragraph"><p>Examples of the log files can be found at <a href="http://fai-project.org/logs">http://fai-project.org/logs</a>.</p></div>
+<div class="paragraph"><p>Vous trouverez des exemples de fichiers journaux à l'adresse <a href="http://fai-project.org/logs">http://fai-project.org/logs</a>.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_ireboot_a_reboot_the_new_installed_system"><a id="ireboot"></a>Reboot the new installed system</h3>
-<div class="paragraph"><p>Before rebooting, the install client calls <code>fai-chboot -d &lt;hostname&gt;</code>
-on the install server, to disable its own PXELINUX
-configuration. Otherwise, it would restart the installation during the
-next boot. Normally this should boot the new installed system from
-its second boot device, the local hard disk.</p></div>
-<div class="paragraph"><p>At the end, the system is automatically rebooted if "reboot" was added to
-<code>$FAI_FLAGS</code>.</p></div>
+<h3 id="_a_id_ireboot_a_reboot_the_new_installed_system"><a id="ireboot"></a>Redémarrez le nouveau système installé</h3>
+<div class="paragraph"><p>Avant de redémarrer, le client d'installation appelle <code>fai-chboot -d &lt;hostname&gt;</code> sur le serveur d'installation, pour désactiver sa propre configuration PXELINUX. Sinon, il redémarrera l'installation lors de la prochaine initialisation. Normalement, cela devrait démarrer le nouveau système installé à partir de son second périphérique d'amorçage, le disque dur local.</p></div>
+<div class="paragraph"><p>À la fin, le système est automatiquement redémarré si "reboot" a été ajouté à <code>$FAI_FLAGS</code>.</p></div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_a_id_advanced_a_advanced_fai_topics"><a id="advanced"></a>Advanced FAI topics</h2>
+<h2 id="_a_id_advanced_a_advanced_fai_topics"><a id="advanced"></a>Chapitre avancés de FAI</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_a_id_checkbootp_a_checking_parameters_received_from_dhcp_servers"><a id="checkbootp"></a>Checking parameters received from DHCP servers</h3>
-<div class="paragraph"><p>If the install client boots you can check
-if all information from the DHCP daemon are received
-correctly. The received information is written to
-<em>/tmp/fai/boot.log</em>. An example of the result of a DHCP request can be
-found in the sample log files.</p></div>
+<h3 id="_a_id_checkbootp_a_checking_parameters_received_from_dhcp_servers"><a id="checkbootp"></a>Vérification des paramètres reçus des serveurs DHCP</h3>
+<div class="paragraph"><p>Si le client d'installation démarre, vous pouvez vérifier si toutes les informations provenant du démon DHCP sont correctement reçues. Les informations reçues sont écrites dans <em>/tmp/fai/boot.log</em>. Un exemple de résultat d'une requête DHCP peut être trouvé dans les fichiers journaux d'exemple.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_fai_monitor_a_monitoring_multiple_client_installations"><a id="fai-monitor"></a>Monitoring multiple client installations</h3>
-<div class="paragraph"><p>You can monitor the installation of all install clients with the
-command <code>fai-monitor(8)</code>. All clients check if this daemon is running
-on the install server (or the machine defined by the variable
-<code>$monserver</code>). Each time a task starts or ends, a message is sent. The
-FAI monitor daemon prints this messages to standard output. There’s
-also a graphical frontend available, called <code>fai-monitor-gui(1)</code>.</p></div>
+<h3 id="_a_id_fai_monitor_a_monitoring_multiple_client_installations"><a id="fai-monitor"></a>Surveillance de plusieurs installations clientes</h3>
+<div class="paragraph"><p>Vous pouvez surveiller l'installation de tous les clients d'installation avec la commande <code>fai-monitor(8)</code>. Tous les clients vérifient si ce démon est en cours d'exécution sur le serveur d'installation (ou sur l'ordinateur défini par la variable <code>$monserver</code>). Chaque fois qu'une tâche démarre ou se termine, un message est envoyé. Le démon du moniteur FAI imprime ces messages à la sortie standard. Il ya aussi un frontend graphique disponible, appelé <code>fai-monitor-gui(1)</code>.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>$  fai-monitor | fai-monitor-gui - &amp;</code></pre>
 </div></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_mac_a_collecting_ethernet_addresses_for_multiple_hosts"><a id="mac"></a>Collecting Ethernet addresses for multiple hosts</h3>
+<h3 id="_a_id_mac_a_collecting_ethernet_addresses_for_multiple_hosts"><a id="mac"></a>Collecte d'adresses Ethernet pour plusieurs hôtes</h3>
 <div class="paragraph"><p>You have to collect all Ethernet (MAC) addresses of the install
 clients and assign a host name and IP address to each client. To
 collect the MAC addresses, boot your install clients.
