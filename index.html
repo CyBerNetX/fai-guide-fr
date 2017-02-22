@@ -2401,38 +2401,22 @@ drwxr-xr-x   2 fai fai 4096 Dec  4 13:22 install-20141204_131351</code></pre>
 </div>
 <div class="sect2">
 <h3 id="_a_id_mac_a_collecting_ethernet_addresses_for_multiple_hosts"><a id="mac"></a>Collecte d'adresses Ethernet pour plusieurs hôtes</h3>
-<div class="paragraph"><p>You have to collect all Ethernet (MAC) addresses of the install
-clients and assign a host name and IP address to each client. To
-collect the MAC addresses, boot your install clients.
-You can already do this before any DHCP daemon is running in your
-subnet. They will fail to boot (because of the missing DHCP or missing TFTP),
-but you can still collect the MAC addresses.</p></div>
-<div class="paragraph"><p>While the install clients are booting, they send broadcast packets to the
-LAN. You can log the MAC addresses of these hosts by running the
-following command simultaneously on the server:</p></div>
+<div class="paragraph"><p>Vous devez collecter toutes les adresses Ethernet (MAC) des clients à l'installation et affecter un nom d'hôte et une adresse IP à chaque client. Pour collecter les adresses MAC, démarrez vos clients pour l'installation. Vous pouvez déjà le faire avant que n'importe quel démon DHCP s'exécute dans votre sous-réseau. Ils échoueront à démarrer (en raison du manque de DHCP ou de TFTP manquant), mais vous pouvez toujours collecter les adresses MAC.</p></div>
+<div class="paragraph"><p>Pendant que les clients d'installation démarrent, ils envoient des paquets de diffusion au LAN. Vous pouvez enregistrer les adresses MAC de ces hôtes en exécutant simultanément la commande suivante sur le serveur:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>faiserver# tcpdump -qtel broadcast and port bootpc &gt;/tmp/mac.list</code></pre>
 </div></div>
-<div class="paragraph"><p>After the hosts have been sent some broadcast packets abort <code>tcpdump</code>
-by typing <em>ctrl-c</em>. You get a list of all
-unique MAC addresses with these commands:</p></div>
+<div class="paragraph"><p>Une fois que les hôtes ont été envoyés, certains paquets de diffusion annule <code>tcpdump</code> en tapant <em>ctrl-c</em>. Vous obtenez une liste de toutes les adresses MAC uniques avec ces commandes:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>faiserver$ perl -ane 'print "\U$F[0]\n"' /tmp/mac.list|sort|uniq</code></pre>
 </div></div>
-<div class="paragraph"><p>After that, you only have to assign these MAC addresses to host names
-and IP addresses (<em>/etc/ethers</em> and <em>/etc/hosts</em> or corresponding NIS
-maps). With this information you can configure your <code>DHCP</code>
-daemon (see the section <a href="#bootdhcp">[bootdhcp]</a>). <span class="footnote" data-note="I recommend to write the MAC
-addresses (last three bytes will suffice if you have network cards
+<div class="paragraph"><p>Après cela, vous n'avez qu'à assigner ces adresses MAC aux noms d'hôte et aux adresses IP (<em>/etc/ethers</em> et <em>/etc/hosts</em> ou aux cartes NIS correspondantes). Avec ces informations, vous pouvez configurer votre démon DHCP (voir la section <a href="#bootdhcp">[bootdhcp]</a>). <span class="footnote" data-note="I recommend to write the MAC addresses (last three bytes will suffice if you have network cards
 from the same vendor) and the host name in the front of each chassis.">[<a id="_footnoteref_16" href="#_footnote_16" title="View footnote" class="footnote">16</a>]</span></p></div>
 <div class="sect3">
-<h4 id="_debugging_the_network_traffic">Debugging the network traffic</h4>
-<div class="paragraph"><p>If the client can’t successfully boot from the network card, use
-<code>tcpdump(8)</code> to look for Ethernet packets between the install server
-and the client. Search also for entries in several log files made by
-<code>tftpd(8)</code> and <code>dhcpd(8)</code> :</p></div>
+<h4 id="_debugging_the_network_traffic">Débogage du trafic réseau</h4>
+<div class="paragraph"><p>Si le client ne peut démarrer correctement à partir de la carte réseau, utilisez <code>tcpdump(8)</code> pour rechercher des paquets Ethernet entre le serveur d'installation et le client. Recherchez également les entrées de plusieurs fichiers journaux effectués par <code>tftpd(8)</code> et <code>dhcpd(8)</code> :</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>faiserver$ egrep "tftpd|dhcpd" /var/log/*</code></pre>
@@ -2440,7 +2424,7 @@ and the client. Search also for entries in several log files made by
 </div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_pxeboot_a_details_of_pxe_booting"><a id="pxeboot"></a>Details of PXE booting</h3>
+<h3 id="_a_id_pxeboot_a_details_of_pxe_booting"><a id="pxeboot"></a>Détails du démarrage PXE</h3>
 <div class="paragraph"><p>Here we describe the details of PXE booting, which are only needed if
 you have problems when booting your install clients.</p></div>
 <div class="paragraph"><p>Almost all modern bootable network cards support the PXE boot environment.
