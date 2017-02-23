@@ -2685,42 +2685,33 @@ Si vous devez appeler le code en fonction de l'action FAI effectuée, vous pouve
 </div>
 <div class="sect2">
 <h3 id="_a_id_archcross_a_how_to_install_32bit_os_from_a_64bit_os"><a id="archcross"></a>Comment installer un système d'exploitation 32 bits à partir d'un système d'exploitation 64 bits</h3>
-<div class="paragraph"><p>To install a computer with a 32bit OS, you need an i386 nfsroot.
-Creating this 32bit nfsroot on an install server running amd64 is
-quite simple. Install and set up the FAI packages. Then copy your FAI
-config files to a new subdirectory.</p></div>
+<div class="paragraph"><p>Pour installer un ordinateur avec un système d'exploitation 32 bits, vous avez besoin d'un nfsroot i386. La création de cette nfsroot 32 bits sur un serveur d'installation exécutant amd64 est assez simple. Installez et configurez les paquets FAI. Copiez ensuite vos fichiers de configuration FAI dans un nouveau sous-répertoire.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>faiserver# cp -a /etc/fai /etc/fai-i386</code></pre>
 </div></div>
-<div class="paragraph"><p>Edit the variable <code>$FAI_DEBOOTSTRAP_OPTS</code> in
-<em>/etc/fai-i386/nfsroot.conf</em> and add the option <code>--arch
-i386</code>. Also choose a different directory for your new nfsroot. Here
-are the two lines after editing.</p></div>
+<div class="paragraph"><p>Modifiez la variable <code>$FAI_DEBOOTSTRAP_OPTS</code> dans <em>/etc/fai-i386/nfsroot.conf</em> et ajoutez l'option <code>--arch i386</code>. Choisissez également un répertoire différent pour votre nouveau nfsroot. Voici les deux lignes après l'édition.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>NFSROOT=/srv/fai/nfsroot-i386
 FAI_DEBOOTSTRAP_OPTS="--arch i386 --exclude=info --include=aptitude""</code></pre>
 </div></div>
-<div class="paragraph"><p>Now call fai-make-nfsroot which creates the 32bit nfsroot in
-<em>/srv/fai/nfsroot-i386</em></p></div>
+<div class="paragraph"><p>Appelez maintenant fai-make-nfsroot qui crée le nfsroot 32 bits dans <em>/srv/fai/nfsroot-i386</em></p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>faiserver# fai-make-nfsroot -v -C/etc/fai-i386</code></pre>
 </div></div>
-<div class="paragraph"><p>Creating a partitial mirror using <code>fai-mirror(1)</code> that is needed for
-a bootable CD or USB stick is also possible on a different architecture.
-You have to specify the architecture when calling fai-mirror.</p></div>
+<div class="paragraph"><p>La création d'un miroir partiel utilisant <code>fai-mirror(1)</code> nécessaire à un CD amorçable ou une clé USB est également possible sur une architecture différente. Vous devez spécifier l'architecture lors de l'appel de fai-mirror.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>$ fai-mirror -m800 -B -a i386 -v -cDEFAULT,DEBIAN,FAIBASE,I386 /srv/mirror-i386</code></pre>
 </div></div>
-<div class="paragraph"><p>That’s all!</p></div>
+<div class="paragraph"><p>C'est tout!</p></div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_a_id_hints_a_various_hints_and_details"><a id="hints"></a>Various hints and details</h2>
+<h2 id="_a_id_hints_a_various_hints_and_details"><a id="hints"></a>Divers conseils et détails</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_a_id_tasks_a_the_list_of_tasks"><a id="tasks"></a>The list of tasks</h3>
