@@ -2485,35 +2485,28 @@ append initrd=initrd.img-3.16.0-4-amd64 ip=dhcp  root=/srv/fai/nfsroot aufs  FAI
 <div class="ulist"><ul>
 <li>
 <p>
-local/faster package mirror
+Miroir de paquetage local/plus rapide
 </p>
 </li>
 <li>
 <p>
-different loguser
+  Loguser différent
 </p>
 </li>
 <li>
 <p>
-local root pw inside nfsroot
+Local root password dans nfsroot
 </p>
 </li>
 </ul></div>
-<div class="paragraph"><p>The configuration for the FAI package (not the configuration data for
-the install clients) is defined in <em>fai.conf(5)</em>. Definitions that are
-only used for creating the nfsroot are located in
-<em>nfsroot.conf(5)</em>. Check these important variables in <em>nfsroot.conf</em>
-before calling <em>fai-setup</em> or <em>fai-make-nfsroot</em>.</p></div>
+<div class="paragraph"><p>La configuration du paquet FAI (et non les données de configuration pour les clients d'installation) est définie dans <em>fai.conf(5)</em>. Les définitions qui sont utilisées uniquement pour créer le nfsroot sont situées dans <em>nfsroot.conf(5)</em>. Vérifiez ces variables importantes dans <em>nfsroot.conf</em> avant d'appeler <em>fai-setup</em> ou <em>fai-make-nfsroot</em>.</p></div>
 <div class="dlist"><dl>
 <dt class="hdlist1">
 FAI_DEBOOTSTRAP
 </dt>
 <dd>
 <p>
-Building the nfsroot uses the command debootstrap(8)`. It needs the location of a Debian mirror and the
-name of the distribution (wheezy, jessie, stretch, sid) for which the basic Debian
-system should be built. Do not use different distributions here and in
-<em>/etc/fai/apt/sources.list</em>. This will create a broken nfsroot.
+La construction de nfsroot utilise la commande <em>debootstrap(8)</em>. Il a besoin de l'emplacement d'un miroir Debian et du nom de la distribution (wheezy, jessie, stretch, sid) pour lequel le système Debian de base devrait être construit. N'utilisez pas de distributions différentes ici et dans <em>/etc/fai/apt/sources.list</em>. Cela créera un nfsroot brisé.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2521,95 +2514,45 @@ NFSROOT_ETC_HOSTS
 </dt>
 <dd>
 <p>
-This variable is only needed if the clients do not have access to a DNS server.
-This multiline variable is added to /etc/hosts inside the
-nfsroot. Then the install clients can access those hosts by name
-without using DNS.
+Cette variable n'est nécessaire que si les clients n'ont pas accès à un serveur DNS. Cette variable multiligne est ajoutée à /etc/hosts dans le nfsroot. Ensuite, les clients d'installation peuvent accéder à ces hôtes par leur nom sans utiliser DNS.
 </p>
 </dd>
 </dl></div>
-<div class="paragraph"><p>The content of <em>/etc/fai/apt/sources.list</em> is
-used by the install server and also by the clients. If your install
-server has multiple network cards and different host names for each
-card (as for a Beowulf server), use the install server name which is
-known by the install clients.</p></div>
-<div class="paragraph"><p>If you have problems running <code>fai-setup</code>, they usually stem from
-<code>fai-make-nfsroot(8)</code> which is called by former command. Adding <em>-v</em>
-gives you a more verbose output which helps you pinpoint the
-error. The output is written to
-<em>/var/log/fai/fai-make-nfsroot.log</em>. <span class="footnote" data-note="For debugging purpose
+<div class="paragraph"><p>Le contenu de <em>/etc/fai/apt/sources.list</em> est utilisé par le serveur d'installation et par les clients. Si votre serveur d'installation a plusieurs cartes réseau et différents noms d'hôte pour chaque carte (comme pour un serveur Beowulf), utilisez le nom du serveur d'installation qui est connu des clients d'installation.</p></div>
+<div class="paragraph"><p>Si vous avez des problèmes lors de l'exécution de <code>fai-setup</code>, ils proviennent habituellement de <code>fai-make-nfsroot(8)</code> qui est appelé par la commande précédente. L'ajout de <em>-v</em> vous donne une sortie plus détaillée qui vous aide à repérer l'erreur. La sortie est écrite dans <em>/var/log/fai/fai-make-nfsroot.log</em>. <span class="footnote" data-note="For debugging purpose
 it may help to enter the chroot environment manually using this
 command.  &lt;em&gt;faiserver# chroot /srv/fai/nfsroot bash&lt;/em&gt;">[<a id="_footnoteref_17" href="#_footnote_17" title="View footnote" class="footnote">17</a>]</span></p></div>
-<div class="paragraph"><p>The setup also creates the account <em>fai</em> (defined by <code>$LOGUSER</code>) if
-not already available. So you can add a user before calling
-<code>fai-setup(8)</code> using the command <code>adduser(8)</code> and use this as your
-local account for saving log files. The log files of all install
-clients are saved to the home directory of this account. You should
-change the primary group of this
-account, so this account has write permissions to <em>/srv/tftp/fai</em> in
-order to call fai-chboot for creating the PXE configuration for the hosts.</p></div>
-<div class="paragraph"><p>When you make changes to <em>fai.conf</em>, <em>nfsroot.conf</em> the
-nfsroot has to be rebuilt by calling <code>fai-make-nfsroot(8)</code>. If you
-only like to install a new kernel package to the nfsroot add the flags <em>-k</em> or
-<em>-K</em> to <code>fai-make-nfsroot</code>. This will not recreate your nfsroot, but
-only updates your kernel and kernel modules inside the nfsroot or add
-additional packages into the nfsroot.</p></div>
+<div class="paragraph"><p>L'installation crée également le compte <em>fai</em> (défini par <code>$LOGUSER</code>) s'il n'est pas déjà disponible. Vous pouvez donc ajouter un utilisateur avant d'appeler <code>fai-setup(8)</code> à l'aide de la commande <code>adduser(8)</code> et utiliser ce compte local pour enregistrer des fichiers journaux. Les fichiers journaux de tous les clients d'installation sont enregistrés dans le répertoire de base de ce compte. Vous devriez changer le groupe principal de ce compte, donc ce compte a des droits d'écriture sur <em>/srv/tftp/fai</em> pour appeler fai-chboot pour créer la configuration PXE pour les hôtes.</p></div>
+<div class="paragraph"><p>Lorsque vous apportez des modifications à <em>fai.conf</em>, <em>nfsroot.conf</em>, le nfsroot doit être reconstruit en appelant <code>fai-make-nfsroot(8)</code>. Si vous souhaitez uniquement installer un nouveau paquet kernel sur nfsroot, ajoutez les flags <em>-k</em> ou <em>-K</em> à <code>fai-make-nfsroot</code>. Cela ne recréera pas votre nfsroot, mais ne mettra à jour que vos noyaux et les modules du noyau dans le nfsroot ou ajoutera des paquets supplémentaires dans le nfsroot.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_cdboot_a_creating_a_fai_cd_or_and_usb_stick"><a id="cdboot"></a>Creating a FAI CD or and USB stick</h3>
-<div class="paragraph"><p>You can easily create an installation CD (or USB stick) of your
-network installation setup. This will perform the same installation
-and configuration from CD without the need of the install server.
-Therefore you need to create a partitial mirror of all Debian packages
-needed for your FAI classes (using <code>fai-mirror(1)</code>). Then the command
-<code>fai-cd(8)</code> will put this mirror, the nfsroot and the config space
-onto a bootable CD. That’s it!</p></div>
-<div class="paragraph"><p>This installation CD contains all data needed for the
-installation. The command <code>fai-cd(8)</code> puts the nfsroot, the
-configuration space and a subset of the Debian mirror onto a
-CD-ROM. A partial package mirror is created using the command
-<code>fai-mirror(1)</code> which contains all packages that are used by the
-classes used in your configuration space.  A sample ISO image is
-available at <a href="http://fai-project.org/fai-cd">http://fai-project.org/fai-cd</a>.</p></div>
-<div class="paragraph"><p>Using the command <code>dd(1)</code> you can also create a bootable USB
-stick by just writing the content of the ISO file to your USB stick
-(here the stick is <em>/dev/sdf</em>).</p></div>
+<h3 id="_a_id_cdboot_a_creating_a_fai_cd_or_and_usb_stick"><a id="cdboot"></a>Création d'un CD FAI ou d'une clé USB</h3>
+<div class="paragraph"><p>Vous pouvez facilement créer un CD d'installation (ou clé USB) pour votre installation réseau. Cela permettra d'effectuer la même installation et la même configuration à partir du CD sans avoir besoin du serveur d'installation. Par conséquent, vous devez créer un miroir partiel de tous les paquets Debian nécessaires à vos classes FAI (à l'aide de <code>fai-mirror(1)</code>). Ensuite, la commande <code>fai-cd(8)</code> mettra ce miroir, le nfsroot et l'espace de configuration sur un CD amorçable. C'est tout!</p></div>
+<div class="paragraph"><p>Ce CD d'installation contient toutes les données nécessaires à l'installation. La commande <code>fai-cd(8)</code> place le nfsroot, l'espace de configuration et un sous-ensemble du miroir Debian sur un CD-ROM. Un miroir de paquets partiel est créé à l'aide de la commande <code>fai-mirror(1)</code> qui contient tous les paquetages utilisés par les classes utilisées dans votre espace de configuration. Un échantillon d'image ISO est disponible à l'adresse <a href="http://fai-project.org/fai-cd">http://fai-project.org/fai-cd</a>.</p></div>
+<div class="paragraph"><p>Avec la commande <code>dd(1)</code>, vous pouvez également créer une clé USB bootable en écrivant simplement le contenu du fichier ISO sur votre clé USB (ici le stick est <em>/dev/sdf</em>).</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code> faiserver# dd if=fai-cd.iso of=/dev/sdf bs=1M</code></pre>
 </div></div>
-<div class="paragraph"><p>This is no live CD of the install server.</p></div>
+<div class="paragraph"><p>Il ne s'agit pas d'un live CD du serveur d'installation.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_diskimage_a_creating_vm_disk_images_using_fai"><a id="diskimage"></a>Creating VM disk images using FAI</h3>
-<div class="paragraph"><p>Using the command <code>fai-diskimage(8)</code> you can create Linux machine disk
-images, which can be used with a virtual machine like KVM, VMware,
-VirtualBox or a cloud service like OpenStack, GCE, EC2 and others. The
-installation process performs the normal FAI tasks on a raw disk
-image. After the installation you can boot the disk image and have a
-running system. The disk image can also be converted to qcow2 format.</p></div>
+<h3 id="_a_id_diskimage_a_creating_vm_disk_images_using_fai"><a id="diskimage"></a>Création d'images de disque VM à l'aide de FAI</h3>
+<div class="paragraph"><p>En utilisant la commande <code>fai-diskimage(8)</code>, vous pouvez créer des images de disques de machines Linux qui peuvent être utilisées avec une machine virtuelle comme KVM, VMware, VirtualBox ou un service cloud comme OpenStack, GCE, EC2 et autres. Le processus d'installation exécute les tâches FAI normales sur une image de disque brut. Après l'installation, vous pouvez démarrer l'image disque et avoir un système en cours d'exécution. L'image disque peut également être convertie au format qcow2.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code> faiserver# export FAI_BASEFILEURL=http://fai-project.org/download/basefiles/
  faiserver# fai-diskimage -u cloud3 -S 2G -cDEBIAN,JESSIE64,AMD64,FAIBASE,GRUB_PC,CLOUD,GCE disk.raw</code></pre>
 </div></div>
-<div class="paragraph"><p>Creates the file disk.raw for a host called cloud3, with a small set
-of software packages.</p></div>
+<div class="paragraph"><p>Crée le fichier disk.raw pour un hôte appelé cloud3, avec un petit ensemble de progiciels.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code> # export FAI_BASEFILEURL=http://fai-project.org/download/basefiles/
  # cl=DEFAULT,DHCPC,DEBIAN,AMD64,FAIBASE,GRUB_PC,UBUNTU,XENIAL,XENIAL64,XORG
  # fai-diskimage -v -u foobar -S5G -c$cl ubuntu.qcow2</code></pre>
 </div></div>
-<div class="paragraph"><p>Creates a disk image called ubuntu.qcow2 for a Ubuntu 16.04 desktop
-with hostname set to foobar.</p></div>
-<div class="paragraph"><p>You do not neet to setup the nfsroot when only using
-fai-diskimage. But you need a basefile in your configuration
-space. You can download a Debian base image from
-<a href="http://fai-project.org/download/basefile">http://fai-project.org/download/basefile</a> and copy this into your
-config space. If you already have set up the nfsroot you can copy the
-Debian basefile from the nfsroot into your config space by using this
-command:</p></div>
+<div class="paragraph"><p>Crée une image de disque appelée ubuntu.qcow2 pour un bureau Ubuntu 16.04 avec un nom d'hôte défini sur foobar.</p></div>
+<div class="paragraph"><p>Vous ne devez pas configurer le nfsroot lorsque vous utilisez uniquement fai-diskimage. Mais vous avez besoin d'un fichier de base dans votre espace de configuration. Vous pouvez télécharger une image de base Debian à partir de <a href="http://fai-project.org/download/basefile">http://fai-project.org/download/basefile</a> et copier ceci dans votre espace de configuration. Si vous avez déjà configuré le nfsroot, vous pouvez copier le fichier de base Debian depuis le nfsroot dans votre espace de configuration à l'aide de cette commande:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code> $ cp /srv/fai/nfsroot/var/tmp/base.tar.xz
@@ -2617,7 +2560,7 @@ command:</p></div>
 </div></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_sysinfo_a_fai_rescue_system"><a id="sysinfo"></a>FAI rescue system</h3>
+<h3 id="_a_id_sysinfo_a_fai_rescue_system"><a id="sysinfo"></a>Système de sauvetage FAI</h3>
 <div class="paragraph"><p>If you set the variable <code>$FAI_ACTION</code> to <em>sysinfo</em> (for e.g. by using
 <code>fai-chboot -S</code>), the client will not install a new system, but will
 collect a lot of system information.
