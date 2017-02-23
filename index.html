@@ -2425,58 +2425,51 @@ from the same vendor) and the host name in the front of each chassis.">[<a id="_
 </div>
 <div class="sect2">
 <h3 id="_a_id_pxeboot_a_details_of_pxe_booting"><a id="pxeboot"></a>Détails du démarrage PXE</h3>
-<div class="paragraph"><p>Here we describe the details of PXE booting, which are only needed if
-you have problems when booting your install clients.</p></div>
-<div class="paragraph"><p>Almost all modern bootable network cards support the PXE boot environment.
-PXE is the Preboot Execution Environment.
-This requires the PXELINUX bootloader and a special version of the <em>TFTP</em>
-daemon, which is available in the Debian packages <code>pxelinux</code> and
-<code>tftpd-hpa</code>. PXE booting also needs a DHCP server, so that the network
-card can configure its IP parameters. This is the sequence of a PXE boot:</p></div>
+<div class="paragraph"><p>Ici, nous décrivons les détails du démarrage PXE, qui ne sont nécessaires que si vous avez des problèmes lors du démarrage de vos clients d'installation.</p></div>
+<div class="paragraph"><p>Presque toutes les cartes réseau modernes prennent en charge l'environnement de démarrage PXE. PXE est l'environnement d'exécution de pré-lancement. Cela nécessite le chargeur de démarrage PXELINUX et une version spéciale du démon<em>TFTP</em>, disponible dans les paquets Debian <code>pxelinux</code> et <code>tftpd-hpa</code>. Le démarrage PXE nécessite également un serveur DHCP, afin que la carte réseau puisse configurer ses paramètres IP. Il s'agit de la séquence d'une amorce PXE:</p></div>
 <div class="ulist"><ul>
 <li>
 <p>
-Network card of the client sends its MAC address
+La carte réseau du client envoie son adresse MAC
 </p>
 </li>
 <li>
 <p>
-DHCP server replies with IP configuration for the client
+Le serveur DHCP répond à la configuration IP du client
 </p>
 </li>
 <li>
 <p>
-Network card configures IP
+  La carte réseau configure son IP
 </p>
 </li>
 <li>
 <p>
-Install client gets the pxelinux.0 binary via TFTP
+  Le client d'installation obtient le binaire pxelinux.0 via TFTP
 </p>
 </li>
 <li>
 <p>
-Get the pxelinux.cfg/C0A8210C configuration file via TFTP
+  Obtenez le fichier de configuration pxelinux.cfg/C0A8210C via TFTP
 </p>
 </li>
 <li>
 <p>
-C0A8210C is the IP address of the client in hexadecimal
+  C0A8210C est l'adresse IP du client en hexadécimal
 </p>
 </li>
 <li>
 <p>
-This configuration contains kernel, initrd and additional kernel
-command line parameters, which was created by <code>fai-chboot</code>.
+  Cette configuration contient le noyau, initrd et les paramètres de ligne de commande supplémentaires du noyau, qui a été créé par <code>fai-chboot</code>.
 </p>
 </li>
 <li>
 <p>
-Get the kernel and initrd via TFTP.
+  Obtenez le noyau et initrd via TFTP.
 </p>
 </li>
 </ul></div>
-<div class="paragraph"><p>Example of a pxelinux.cfg file:</p></div>
+<div class="paragraph"><p>Exemple d'un fichier pxelinux.cfg:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>default fai-generated
@@ -2485,13 +2478,10 @@ label fai-generated
 kernel vmlinuz-3.16.0-4-amd64
 append initrd=initrd.img-3.16.0-4-amd64 ip=dhcp  root=/srv/fai/nfsroot aufs  FAI_FLAGS=verbose,sshd,createvt FAI_CONFIG_SRC=nfs://faiserver/srv/fai/config FAI_ACTION=install</code></pre>
 </div></div>
-<div class="paragraph"><p>See <em>/usr/share/doc/syslinux/pxelinux.doc</em> for more detailed
-information about PXELINUX. There’s a new lpxelinux binary which also
-support loading the kernel and initrd via FTP or HTTP. The command
-<em>fai-chboot(8)</em> supports this with the option <em>-U</em>.</p></div>
+<div class="paragraph"><p>Voir <em>/usr/share/doc/syslinux/pxelinux.doc</em> pour des informations plus détaillées sur PXELINUX. Il existe un nouveau binaire lpxelinux qui prend également en charge le chargement du noyau et de l'initrd via FTP ou HTTP. La commande <em>fai-chboot(8)</em> prend en charge cette option avec l'option <em>-U</em>.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_customizing_your_install_server_setup_a_customizing_your_install_server_setup"><a id="Customizing your install server setup"></a>Customizing your install server setup</h3>
+<h3 id="_a_id_customizing_your_install_server_setup_a_customizing_your_install_server_setup"><a id="Customizing your install server setup"></a>Personnalisation de la configuration de votre serveur d'installation</h3>
 <div class="ulist"><ul>
 <li>
 <p>
