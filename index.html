@@ -2561,25 +2561,10 @@ command.  &lt;em&gt;faiserver# chroot /srv/fai/nfsroot bash&lt;/em&gt;">[<a id="
 </div>
 <div class="sect2">
 <h3 id="_a_id_sysinfo_a_fai_rescue_system"><a id="sysinfo"></a>Système de sauvetage FAI</h3>
-<div class="paragraph"><p>If you set the variable <code>$FAI_ACTION</code> to <em>sysinfo</em> (for e.g. by using
-<code>fai-chboot -S</code>), the client will not install a new system, but will
-collect a lot of system information.
-If you set <code>$FAI_ACTION</code> to <em>inventory</em> you will only get a few
-hardware information.
-Both actions can be used for FAI as a rescue system.</p></div>
-<div class="paragraph"><p>Type <em>ctrl-c</em> to get a shell or use <em>Alt-F2</em> or <em>Alt-F3</em> and you will get
-another console terminal, if you have added <em>createvt</em> to <code>$FAI_FLAGS</code>.</p></div>
-<div class="paragraph"><p>You now have a running Linux system on the install client without
-using the local hard disk. Use this as a rescue system if your local
-disk is damaged or the computer can’t boot properly from hard
-disk. You will get a shell and you can execute various commands
-(<code>dmesg</code>, <code>lsmod</code>, <code>df</code>, <code>lspci</code>, …). Look at the log file in
-<em>/tmp/fai</em>. There you can find much information about the boot
-process.</p></div>
-<div class="paragraph"><p>FAI mounts all file systems it finds on the local disks read only. It
-also tells you on which partition a file <em>/etc/fstab</em> exists. When
-only one file system table is found, the partitions are mounted
-according to this information. Here’s an example:</p></div>
+<div class="paragraph"><p>Si vous définissez la variable <code>$FAI_ACTION</code> sur <em>sysinfo</em> (par exemple en utilisant <code>fai-chboot -S</code>), le client n'installera pas de nouveau système, mais collectera beaucoup d'informations système. Si vous définissez <code>$FAI_ACTION</code> sur <em>inventory</em>, vous ne recevrez que quelques informations sur le matériel. Les deux actions peuvent être utilisées pour FAI comme un système de sauvetage.</p></div>
+<div class="paragraph"><p>Tapez <em>ctrl-c</em> pour obtenir un shell ou utilisez <em>Alt-F2</em> ou <em>Alt-F3</em> et vous obtiendrez un autre terminal de console, si vous avez ajouté <em>createvt</em> à <code>$FAI_FLAGS</code>.</p></div>
+<div class="paragraph"><p>Vous avez maintenant un système Linux en cours d'exécution sur le client d'installation sans utiliser le disque dur local. Utilisez-le comme système de secours si votre disque local est endommagé ou si l'ordinateur ne peut pas démarrer correctement à partir du disque dur. Vous obtiendrez un shell et vous pouvez exécuter diverses commandes (<code>dmesg</code>, <code>lsmod</code>, <code>df</code>, <code>lspci</code>, ...). Regardez le fichier journal dans <em>/tmp/fai</em>. Vous y trouverez de nombreuses informations sur le processus d'amorçage.</p></div>
+<div class="paragraph"><p>FAI monte tous les systèmes de fichiers qu'il trouve sur les disques locaux en lecture seule. Il vous indique également sur quelle partition un fichier <em>/etc/fstab</em> existe. Lorsqu'une seule table de système de fichiers est trouvée, les partitions sont montées selon ces informations. Voici un exemple:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>demohost:~# df
@@ -2598,75 +2583,43 @@ aufs              4099064    414088   3645296  11% /
 /dev/sda8         2221628    275936   1832840  14% /target/usr
 /dev/sda6          577096    172924    374856  32% /target/var</code></pre>
 </div></div>
-<div class="paragraph"><p><strong>This method can be used as a rescue environment!</strong> If you need a file
-system with read-write access use the <code>rwmount</code> command:</p></div>
+<div class="paragraph"><p><strong>Cette méthode peut être utilisée comme un environnement de secours!</strong> Si vous avez besoin d'un système de fichiers avec accès en lecture/écriture, utilisez la commande <code>rwmount</code>:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>demohost# rwmount /target/home</code></pre>
 </div></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_nonfs_a_fai_without_nfs"><a id="nonfs"></a>FAI without NFS</h3>
-<div class="paragraph"><p>To boot into FAI and begin the installation sequence
-without using the NFS protocol. You boot the client machine using PXE as
-usual and then retrieve an image containing the nfsroot via http.</p></div>
-<div class="paragraph"><p>To create an image, use fai-cd’s -S argument</p></div>
+<h3 id="_a_id_nonfs_a_fai_without_nfs"><a id="nonfs"></a>FAI sans NFS</h3>
+<div class="paragraph"><p>Pour démarrer dans FAI et commencer la séquence d'installation sans utiliser le protocole NFS. Vous démarrez la machine cliente en utilisant PXE comme d'habitude, puis récupérez une image contenant le nfsroot via http.</p></div>
+<div class="paragraph"><p>Pour créer une image, utilisez l'argument -S de fai-cd</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>faiserver# fai-cd -S squash.img</code></pre>
 </div></div>
-<div class="paragraph"><p>Move this image to a directory from which it can be requested via http
-(usually a directory served by the webserver)</p></div>
-<div class="paragraph"><p>To now request the squashfs image, add the following to your kernel
-command line, e.g. in your pxelinux configuration file for the client.</p></div>
+<div class="paragraph"><p>Déplacez cette image vers un répertoire à partir duquel elle peut être demandée via http (généralement un répertoire desservi par le serveur web)</p></div>
+<div class="paragraph"><p>Pour demander maintenant l'image squashfs, ajoutez ce qui suit à votre ligne de commande du noyau, p. Dans votre fichier de configuration pxelinux pour le client.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>root=live:http://faiserver/cskoeln/squash.img</code></pre>
 </div></div>
-<div class="paragraph"><p>Replace faiserver with the domain name or IP of the machine your
-squash image is served from.</p></div>
+<div class="paragraph"><p>Remplacez faiserver par le nom de domaine ou IP de la machine à laquelle votre image de squash est servie.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_otherdists_a_installing_other_distributions_using_a_debian_nfsroot"><a id="otherdists"></a>Installing other distributions using a Debian nfsroot</h3>
-<div class="paragraph"><p>You can install all sorts of Linux distributions from a single Debian
-nfsroot. Therefore you have to create a base.tar.xz of the distribution
-you like to install and place it info the <code>basefiles</code> directory. Then
-name it UBUNTU1404.tar.xz for example. An install client which belongs
-to the class UBUNTU1404 then extracts this base file into its empty
-file system. Additionally you have to adjust the <em>sources.list</em> or
-similar configuration files which are needed for specifying the
-location of the package repository.</p></div>
-<div class="paragraph"><p>The tool <code>rinse(8)</code> is used for creating base files for distribution
-like CentOS, openSUSE, Scientific Linux Cern or Fedora.
-Some basefiles can be downloaded from
-<a href="http://fai-project.org/download/basefiles/">http://fai-project.org/download/basefiles/</a>.</p></div>
-<div class="paragraph"><p>The script <code>mk-basefile</code> in
-<em>/usr/share/doc/fai-doc/examples/simple/basefiles/</em> helps creating
-this base files.</p></div>
+<h3 id="_a_id_otherdists_a_installing_other_distributions_using_a_debian_nfsroot"><a id="otherdists"></a>Installation d'autres distributions à l'aide d'un nfsroot Debian</h3>
+<div class="paragraph"><p>Vous pouvez installer toutes sortes de distributions Linux à partir d'un seul nfsroot Debian. Par conséquent, vous devez créer un fichier base.tar.xz de la distribution que vous souhaitez installer et le placer dans le répertoire  <code>basefiles</code>. Puis nommez-le UBUNTU1404.tar.xz par exemple. Un client d'installation appartenant à la classe UBUNTU1404 extrait ensuite ce fichier de base dans son système de fichiers vide. De plus, vous devez ajuster les <em>sources.list</em> ou les fichiers de configuration similaires nécessaires pour spécifier l'emplacement du référentiel de paquets.</p></div>
+<div class="paragraph"><p>L'outils <code>rinse(8)</code> est utilisé pour créer des fichiers de base pour la distribution comme CentOS, openSUSE, Scientific Linux Cern ou Fedora. Certains fichiers de base peuvent être téléchargés à partir de <a href="http://fai-project.org/download/basefiles/">http://fai-project.org/download/basefiles/</a>.</p></div>
+<div class="paragraph"><p>Le script <code>mk-basefile</code> dans <em>/usr/share/doc/fai-doc/examples/simple/basefiles/</em> aide à créer ces fichiers de base.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_dirinstall_a_creating_chroot_and_virtualization_environments"><a id="dirinstall"></a>Creating chroot and virtualization environments</h3>
-<div class="paragraph"><p>If you have to create some chroot environments, or a virtualization
-environment where you neither can nor want to run a normal Debian
-Installer in to get to a working system (for example, Xen guest
-domains), there is the FAI action <em>dirinstall</em>.
-By calling</p></div>
+<h3 id="_a_id_dirinstall_a_creating_chroot_and_virtualization_environments"><a id="dirinstall"></a>Création d'environnements chrooter et virtualiser</h3>
+<div class="paragraph"><p>Si vous devez créer certains environnements chroot, ou un environnement de virtualisation où vous ne pouvez ni ne voulez exécuter un programme d'installation Debian normal pour accéder à un système opérationnel (par exemple, les domaines hôtes Xen), il ya l'action FAI <em>dirinstall</em>. En appelant</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>faiserver# fai &lt;options&gt; dirinstall &lt;target-directory&gt;</code></pre>
 </div></div>
-<div class="paragraph"><p>and using either the option <em>-c &lt;classes&gt;</em> or <em>-N</em> you get a FAI
-installation, without the partitioning action, right into the target
-directory. The host name for the target installation can be specified
-using <em>-u &lt;host-name&gt;</em></p></div>
-<div class="paragraph"><p>This, for example, can be used to combine FAI with the tool
-<em>xen-tools</em>, which helps you to build Xen guest domains. <em>xen-tools</em>
-are very nice for generating configuration files and block devices for
-new guests based on simple commands and/or configuration files, but
-they can only assign one role per installation for customization.
-FAI-users need and want more, as they are used to have the class
-system.  They get them even in xen-tools installations, by using the
-following code as a xen-tools role script:</p></div>
+<div class="paragraph"><p>Et en utilisant l'option  <em>-c &lt;classes&gt;</em> ou <em>-N</em> vous obtenez une installation FAI, sans l'action de partitionnement, directement dans le répertoire cible. Le nom d'hôte de l'installation cible peut être spécifié à l'aide de <em>-u &lt;host-name&gt;</em></p></div>
+<div class="paragraph"><p>Ceci, par exemple, peut être utilisé pour combiner FAI avec l'outil <em>xen-tools</em>, qui vous aide à construire des domaines invités Xen. <em>xen-tools</em> est très agréable pour générer des fichiers de configuration et bloquer des périphériques pour de nouveaux invités basés sur des commandes simples et/ou des fichiers de configuration, mais ils ne peuvent assigner qu'un seul rôle par installation pour la personnalisation. Les FAI-utilisateurs ont besoin et veulent plus, car ils sont utilisés pour avoir le système de classe. Ils les obtiennent même dans les installations xen-tools, en utilisant le code suivant en tant que rôle xen-tools script:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>#!/bin/sh
@@ -2675,55 +2628,33 @@ CMD="fai -N  -v -u ${hostname} dirinstall $TARGET"
 echo running $CMD
 $CMD</code></pre>
 </div></div>
-<div class="paragraph"><p>Then, you will want to set the variable <em>install=0</em> the xen-tools
-config for that host.</p></div>
+<div class="paragraph"><p>Ensuite, vous voulez définir la variable <em>install=0</em> de la configuration xen-tools pour cet hôte.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_softupdate_a_using_fai_for_updates"><a id="softupdate"></a>Using FAI for updates</h3>
-<div class="paragraph"><p>FAI can also do updates of already running systems, without a
-re-installation from scratch.
-This is called softupdate. A FAI softupdate skips the tasks which are
-not suitable for updating a running system, like partitioning the
-hard disks and creating file systems. Instead, it only executes the
-tasks for updating and installing software packages and calling the
-customization scripts.</p></div>
-<div class="paragraph"><p>To run a softupdate call:</p></div>
+<h3 id="_a_id_softupdate_a_using_fai_for_updates"><a id="softupdate"></a>Utilisation de FAI pour les mises à jour</h3>
+<div class="paragraph"><p>FAI peut également effectuer des mises à jour de systèmes déjà en cours d'exécution, sans réinstallation à partir de zéro. C'est ce qu'on appelle softupdate. Un FAI softupdate ignore les tâches qui ne sont pas adaptées à la mise à jour d'un système en cours d'exécution, comme le partitionnement des disques durs et la création de systèmes de fichiers. Au lieu de cela, il exécute uniquement les tâches de mise à jour et d'installation des progiciels et de l'appel des scripts de personnalisation.</p></div>
+<div class="paragraph"><p>Pour exécuter un appel softupdate:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code># fai -v -s nfs://faiserver/srv/fai/config softupdate</code></pre>
 </div></div>
-<div class="paragraph"><p>By default, a softupdate uses the list of classes defined during the
-initial installation. Make sure to set the variable <code>$LOGSERVER</code> (done
-in a <em>class/*.var</em> file) if FAI should save the log files to a remote
-machine.</p></div>
-<div class="paragraph"><p>It’s up to you, how to start a softupdate on a bigger number of hosts.
-You may do the softupdate on a regular basis via cron or you can use tools
-like <code>clusterssh(1)</code> to start a softupdate via a push on a list of
-hosts.</p></div>
-<div class="paragraph"><p>Keep in mind, that the customization scripts are run every time you do
-a softupdate. That means, they have to be <strong>idempotent</strong> i.e. the result
-of their operation should always produce the same result, even when
-they run more than once.</p></div>
-<div class="paragraph"><p>For example appending a line to a file must not done via this code:</p></div>
+<div class="paragraph"><p>Par défaut, un softupdate utilise la liste des classes définies lors de l'installation initiale. Assurez-vous de définir la variable <code>$LOGSERVER</code> (effectuée dans un fichier <em>class/*.var</em>) si FAI doit enregistrer les fichiers journaux sur une machine distante.</p></div>
+<div class="paragraph"><p>C'est à vous, comment démarrer un softupdate sur un plus grand nombre d'hôtes. Vous pouvez faire le softupdate sur une base régulière via cron ou vous pouvez utiliser des outils comme <code>clusterssh(1)</code> pour démarrer un softupdate via un push sur une liste d'hôtes.</p></div>
+<div class="paragraph"><p>Gardez à l'esprit que les scripts de personnalisation sont exécutés chaque fois que vous faites un softupdate. Cela signifie qu'ils doivent être <strong>idempotents</strong>, c'est-à-dire que le résultat de leur fonctionnement doit toujours produire le même résultat, même lorsqu'ils fonctionnent plus d'une fois.</p></div>
+<div class="paragraph"><p>Par exemple, l'ajout d'une ligne à un fichier ne doit pas se faire via ce code:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>$ echo "some strings" &gt;&gt; /etc/fstab</code></pre>
 </div></div>
-<div class="paragraph"><p>Instead use the command <code>ainsl(1)</code> in a shell script or use cfengine’s
-function <em>AppendIfNoSuchLine</em>.</p></div>
-<div class="paragraph"><p>All commands in the customization script must be capable of modifying
-the target file system wether it’s available in <em>/target</em> during the
-initial installation or wether it’s the normal file system relative to
-<em>/</em> during softupdate.</p></div>
-<div class="paragraph"><p>Here are some variable that help writing these scripts:</p></div>
+<div class="paragraph"><p>Utilisez plutôt la commande <code>ainsl(1)</code> dans un script shell ou utilisez la fonction <em>AppendIfNoSuchLine</em> de cfengine.</p></div>
+<div class="paragraph"><p>Toutes les commandes du script de personnalisation doivent être capables de modifier le système de fichiers cible s'il est disponible dans <em>/target</em> lors de l'installation initiale ou si c'est le système de fichiers normal relatif à <em>/</em> pendant le softtupdate.</p></div>
+<div class="paragraph"><p>Voici quelques variables qui aident à écrire ces scripts:</p></div>
 <div class="dlist"><dl>
 <dt class="hdlist1">
 <code>$target</code>
 </dt>
 <dd>
-<p>
-Points to the root directory of the client, which
-is_/target_ during installation and <em>/</em> during a softupdate.
+<p>Pointe vers le répertoire racine du client, qui est <em>/target</em> pendant l'installation et <em>/</em> pendant un softupdate.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2731,8 +2662,7 @@ is_/target_ during installation and <em>/</em> during a softupdate.
 </dt>
 <dd>
 <p>
-It’s the same value as <code>$target</code>. For historic reasons
-we have both these variables in FAI.
+C'est la même valeur que  <code>$target</code>. Pour des raisons historiques, nous avons ces deux variables dans FAI.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2740,9 +2670,7 @@ we have both these variables in FAI.
 </dt>
 <dd>
 <p>
-In case of the installation this is an alias for <em>chroot $target</em> in case of
-softupdate it’s just empty. You can prepend this to commands if you need to run a
-command inside the clients target file system via chroot.
+Dans le cas de l'installation, il s'agit d'un alias pour <em>chroot $target</em> en cas de softupdate c'est juste vide. Vous pouvez ajouter ceci aux commandes si vous avez besoin d'exécuter une commande dans le système de fichiers cible des clients via chroot.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2750,16 +2678,13 @@ command inside the clients target file system via chroot.
 </dt>
 <dd>
 <p>
-If you need to call code depending on the FAI action performed, you
-can use this variable. It contains the currently executed action:
-<em>install</em>, <em>softupdate</em>, <em>dirinstall</em>, <em>sysinfo</em>, <em>inventory</em> or your
-own defined action.
+Si vous devez appeler le code en fonction de l'action FAI effectuée, vous pouvez utiliser cette variable. Il contient l'action actuellement exécutée: <em>install</em>, <em>softupdate</em>, <em>dirinstall</em>, <em>sysinfo</em>, <em>inventory</em> ou votre propre action définie.
 </p>
 </dd>
 </dl></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_archcross_a_how_to_install_32bit_os_from_a_64bit_os"><a id="archcross"></a>How to install 32bit OS from a 64bit OS</h3>
+<h3 id="_a_id_archcross_a_how_to_install_32bit_os_from_a_64bit_os"><a id="archcross"></a>Comment installer un système d'exploitation 32 bits à partir d'un système d'exploitation 64 bits</h3>
 <div class="paragraph"><p>To install a computer with a 32bit OS, you need an i386 nfsroot.
 Creating this 32bit nfsroot on an install server running amd64 is
 quite simple. Install and set up the FAI packages. Then copy your FAI
