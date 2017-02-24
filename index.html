@@ -2912,26 +2912,17 @@ Attendez que les travaux en arrière-plan se terminent (par exemple, emacs compi
 </div>
 <div class="sect2">
 <h3 id="_a_id_autodiscover_a_autodiscover"><a id="autodiscover"></a> Découvrir automatiquement</h3>
-<div class="paragraph"><p>In FAI 5.0 we released a feature that allows clients to search for the
-faiserver in their respective subnetwork. This lifts the necessity of
-having to collect every client’s MAC address and configuring the DHCP
-daemon.</p></div>
-<div class="paragraph"><p>This is done by booting from a small FAI autodiscover bootmedium (CD,
-USB, etc.), which can be created via the command:</p></div>
+<div class="paragraph"><p>Dans FAI 5.0, nous avons publié une fonctionnalité qui permet aux clients de rechercher le faiserver dans leur sous-réseau respectif. Cela soulève la nécessité de récupérer l'adresse MAC de chaque client et de configurer le démon DHCP.</p></div>
+<div class="paragraph"><p>Cela se fait en démarrant à partir d'une petite autodiscover FAI bootmedium (CD, USB, etc.), qui peut être créée via la commande:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>faiserver# fai-cd -A autodiscover.iso</code></pre>
 </div></div>
-<div class="paragraph"><p>The image is roughly 25MB in size and scans the  subnet  for
-a  FAI server. By  default it shows a menu with all profiles available
-in the configuration space in the same manner as the <em>menu</em> flag
-does. From this menu, you can select the installation type you wish to
-perform.</p></div>
-<div class="paragraph"><p>For the clients to find the faiserver, the faiserver must run
-fai-monitor.</p></div>
+<div class="paragraph"><p>L'image a une taille d'environ 25 Mo et analyse le sous-réseau d'un serveur FAI. Par défaut, il affiche un menu avec tous les profils disponibles dans l'espace de configuration de la même manière que le drapeau de <em>menu</em>. Dans ce menu, vous pouvez sélectionner le type d'installation que vous souhaitez effectuer.</p></div>
+<div class="paragraph"><p>Pour que les clients puissent trouver le faiserver, le faiserver doit exécuter fai-monitor.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_changeboot_a_changing_the_boot_device"><a id="changeboot"></a>Changing the boot device</h3>
+<h3 id="_a_id_changeboot_a_changing_the_boot_device"><a id="changeboot"></a>Modification du périphérique d'amorçage</h3>
 <div class="paragraph"><p>Changing the boot sequence is normally done in the BIOS setup. But you
 can’t change the BIOS from a running Linux system.</p></div>
 <div class="paragraph"><p>So, the boot sequence of the BIOS will remain unchanged and
