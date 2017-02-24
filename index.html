@@ -2714,41 +2714,26 @@ FAI_DEBOOTSTRAP_OPTS="--arch i386 --exclude=info --include=aptitude""</code></pr
 <h2 id="_a_id_hints_a_various_hints_and_details"><a id="hints"></a>Divers conseils et détails</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_a_id_tasks_a_the_list_of_tasks"><a id="tasks"></a>The list of tasks</h3>
-<div class="paragraph"><p>Most tasks of the installation are defined as subroutines which are
-defined in <em>/usr/lib/fai/subroutines</em> (e.g. <code>task_instsoft</code>).
-Some are external shell scripts located in <em>/usr/lib/fai/</em>.
-They are called via a superior subroutine called <em>task</em>.
-This subroutine calls hooks if available and then calls the task (defined as
-<em>task_&lt;name&gt;</em>). A task and its hooks can be
-skipped on demand by using the command <em>skiptask()</em>.</p></div>
-<div class="paragraph"><p>Now follows the description of all tasks, listed in the order
-they are executed.</p></div>
+<h3 id="_a_id_tasks_a_the_list_of_tasks"><a id="tasks"></a>La liste des tâches</h3>
+<div class="paragraph"><p>La plupart des tâches de l'installation sont définies comme des sous-routines qui sont définies dans <em>/usr/lib/fai/subroutines</em> (par exemple <code>task_instsoft</code>). Certains sont des scripts shell externes situés dans <em>/usr/lib/fai/</em>. Ils sont appelés via un sous-programme supérieur appelé <em>task</em>. Ce sous-programme appelle les hooks si disponibles, puis appelle la tâche (définie comme <em>task_&lt;name&gt;</em>). Une tâche et ses hooks peuvent être ignorés à la demande en utilisant la commande <em>skiptask()</em>.</p></div>
+<div class="paragraph"><p>Suit maintenant la description de toutes les tâches, énumérées dans l'ordre dans lequel elles sont exécutées.</p></div>
 <div class="dlist"><dl>
 <dt class="hdlist1">
 confdir
 </dt>
 <dd>
 <p>
-The kernel appended parameters may define variables, the syslog daemon is
-started. The list of network devices is stored in
-<code>$netdevices</code>. Then additional parameters are fetched from a DHCP
-server. The DNS resolver configuration file is created.
+Les paramètres ajoutés au noyau peuvent définir des variables, le démon syslog est démarré. La liste des périphériques réseau est stockée dans <code>$netdevices</code>. Ensuite, des paramètres supplémentaires sont extraits d'un serveur DHCP. Le fichier de configuration du résolveur DNS est créé.
 </p>
-<div class="paragraph"><p>The location of the configuration space is defined by the variable
-<code>$FAI_CONFIG_SRC</code>.</p></div>
-<div class="paragraph"><p>After that, the file <em>$FAI/hooks/subroutines</em> is sourced if it
-exists. Using this file, you can define your own subroutines or
-override the definition of FAI’s subroutines.</p></div>
+<div class="paragraph"><p>L'emplacement de l'espace de configuration est défini par la variable <code>$FAI_CONFIG_SRC</code>.</p></div>
+<div class="paragraph"><p>Ensuite, le fichier <em>$FAI/hooks/subroutines</em> est sourcé s'il existe. En utilisant ce fichier, vous pouvez définir vos propres sous-programmes ou remplacer la définition des sous-programmes FAI.</p></div>
 </dd>
 <dt class="hdlist1">
 setup
 </dt>
 <dd>
 <p>
-This task sets the system time, all <code>$FAI_FLAGS</code> are defined and two
-additional virtual terminals are opened on demand. A secure shell
-daemon is started on demand for remote logins.
+Cette tâche définit l'heure du système, tous les <code>$FAI_FLAGS</code> sont définis et deux terminaux virtuels supplémentaires sont ouverts à la demande. Un démon de shell sécurisé est lancé à la demande pour les connexions à distance.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2756,10 +2741,7 @@ defclass
 </dt>
 <dd>
 <p>
-Calls <code>fai-class(1)</code> to define classes using scripts and files in
-<em>$FAI/class</em> and classes from <em>/tmp/fai/additional-classes</em> and the
-variable <code>$ADDCLASSES</code>. The list of all defined classes is stored in
-the variable <code>$classes</code> and saved to <em>/tmp/fai/FAI_CLASSES</em>.
+Appellez <code>fai-class(1)</code> pour définir des classes à l'aide de scripts et de fichiers dans <em>$FAI/class</em> et classes de <em>/tmp/fai/additional-classes</em> et la variable <code>$ADDCLASSES</code>. La liste de toutes les classes définies est stockée dans la variable <code>$classes</code> et enregistrée dans <em>/tmp/fai/FAI_CLASSES</em>.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2767,9 +2749,7 @@ defvar
 </dt>
 <dd>
 <p>
-Sources all files <em>$FAI/class/*.var</em> for every defined class. If a
-hook has written some variable definitions to the file
-<em>$LOGDIR/additional.var</em>, this file is also sourced.
+Sourcez tous les fichiers <em>$FAI/class/*.var</em> pour chaque classe définie. Si un hook a écrit quelques définitions de variables dans le fichier <em>$LOGDIR/additional.var</em>, ce fichier est également sourcé.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2777,12 +2757,7 @@ action
 </dt>
 <dd>
 <p>
-Depending on the value of <code>$FAI_ACTION</code> this subroutine decides which
-action FAI should perform. The default available actions are:
-<em>sysinfo</em>, <em>install</em>, <em>inventory</em>, <em>dirinstall</em> and <em>softupdate</em>.  If <code>$FAI_ACTION</code> has another
-value, a user defined action is called if a file
-<em>$FAI/hooks/$FAI_ACTION</em> exists. So you can easily define your own
-actions.
+En fonction de la valeur de <code>$FAI_ACTION</code>, ce sous-programme décide de l'action FAI à exécuter. Les actions disponibles par défaut sont: <em>sysinfo</em>, <em>install</em>, <em>inventory</em>, <em>dirinstall</em> et <em>softupdate</em>. Si  <code>$FAI_ACTION</code> a une autre valeur, une action définie par l'utilisateur est appelée si un fichier <em>$FAI/hooks/$FAI_ACTION</em> existe. Ainsi, vous pouvez facilement définir vos propres actions.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2790,11 +2765,7 @@ sysinfo
 </dt>
 <dd>
 <p>
-Called when no installation is performed but the action is
-<em>sysinfo</em>. It shows information about the detected hardware and mounts
-the local hard disks read only to <em>/target/<code>partitionname</code></em> or with
-regard to a <em>fstab</em> file found inside a partition. Log files are
-stored to the install server.
+Appelée lorsque aucune installation n'est effectuée mais que l'action est <em>sysinfo</em>. Il affiche des informations sur le matériel détecté et monte les disques durs locaux en lecture uniquement sur <em>/target/<code>partitionname</code></em> ou en regard d'un fichier <em>fstab</em> trouvé à l'intérieur d'une partition. Les fichiers journaux sont stockés sur le serveur d'installation.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2802,7 +2773,7 @@ inventory
 </dt>
 <dd>
 <p>
-A short list of system information is printed.
+Une courte liste des informations système est imprimée.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2810,12 +2781,7 @@ install
 </dt>
 <dd>
 <p>
-This task controls the installation sequence. You will hear three
-beeps before the installation starts. The major work is to call other
-tasks and to save the output to <em>/tmp/fai/fai.log</em>. If you have any
-problems during installation, look at all files in <em>/tmp/fai/</em>. You
-can find examples of the log files
-at <a href="http://fai-project.org/logs/">http://fai-project.org/logs/</a>.
+Cette tâche contrôle la séquence d'installation. Vous entendrez trois bips avant le début de l'installation. Le travail principal consiste à appeler d'autres tâches et à enregistrer la sortie dans <em>/tmp/fai/fai.log</em>. Si vous avez des problèmes pendant l'installation, regardez tous les fichiers dans <em>/tmp/fai/</em>. Vous trouverez des exemples de fichiers journaux à l'adresse <a href="http://fai-project.org/logs/">http://fai-project.org/logs/</a>.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2823,8 +2789,7 @@ dirinstall
 </dt>
 <dd>
 <p>
-Install into a directory, not onto a local disk. Use this for creating
-chroot environments.
+Installez dans un répertoire, et non pas sur un disque local. Utilisez-le pour créer des environnements chrootés.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2832,9 +2797,7 @@ softupdate
 </dt>
 <dd>
 <p>
-This task, executed inside a running system via the <code>fai(8)</code> command
-line interface, performs a softupdate.  See chapter <a href="#softupdate">[softupdate]</a> for
-details.
+Cette tâche, exécutée à l'intérieur d'un système en cours d'exécution via l'interface de ligne de commande <code>fai(8)</code>, effectue un softupdate. Voir le chapitre <a href="#softupdate">[softupdate]</a> pour plus de détails.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2842,11 +2805,7 @@ partition
 </dt>
 <dd>
 <p>
-Calls <code>setup-storage(8)</code> to partition the hard
-disks and to create file systems. The task writes variable definitions
-for the root and boot partition and device (<code>$ROOT_PARTITION,
-$BOOT_PARTITION, $BOOT_DEVICE</code>) to <em>/tmp/fai/disk_var.sh</em> and creates
-a <em>fstab</em> file for the new system.
+Appelle <code>setup-storage(8)</code> pour partitionner les disques durs et créer des systèmes de fichiers. La tâche écrit des définitions de variables pour la partition et le périphérique racine et de démarrage (<code>$ROOT_PARTITION, $BOOT_PARTITION, $BOOT_DEVICE</code>) dans <em>/tmp/fai/disk_var.sh</em> et crée un fichier <em>fstab</em> pour le nouveau système.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2854,8 +2813,7 @@ mountdisks
 </dt>
 <dd>
 <p>
-Mounts the created partitions according to the created
-<em>/tmp/fai/fstab</em> file relative to <code>$FAI_ROOT</code>.
+Montez les partitions créées en fonction du fichier <em>/tmp/fai/fstab</em> créé par rapport à <code>$FAI_ROOT</code>.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2863,15 +2821,7 @@ extrbase
 </dt>
 <dd>
 <p>
-Extracts a minimal system after that a chroot can be made into it. By
-default the base tar file <em>/var/tmp/base.tar.xz</em> will be
-extracted. Also files matching a class name in $FAI/basefiles /` are used for unpacking a
-different tar file depending on classes defined. This can be used for
-installing different Linux distributions than the one used for
-creating the nfsroot. The default file <em>base.tar.xz</em> is a snapshot of a
-basic Debian system created by <code>debootstrap(8)</code>
-This task uses the variable <code>FAI_BASEFILEURL</code> for fetching the base
-file via FTP or HTTP if it’s defined.
+Extrait un système minimal après lequel un chroot peut y être introduit. Par défaut, le fichier tar base <em>/var/tmp/base.tar.xz</em> sera extrait. Les fichiers correspondant à un nom de classe dans <em>$FAI/basefiles/</em> sont également utilisés pour décompresser un autre fichier tar selon les classes définies. Cela peut être utilisé pour installer des distributions Linux différentes de celles utilisées pour créer le nfsroot. Le fichier par défaut <em>base.tar.xz</em> est un instantané d'un système Debian de base créé par <code>debootstrap(8)</code> Cette tâche utilise la variable <code>FAI_BASEFILEURL</code> pour extraire le fichier de base via FTP ou HTTP si elle est définie.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2879,7 +2829,7 @@ debconf
 </dt>
 <dd>
 <p>
-Calls <code>fai-debconf(1)</code> to set the values for the debconf preseeding database.
+Appelle <code>fai-debconf(1)</code> pour définir les valeurs de la base de données de préconfiguration de debconf.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2887,10 +2837,7 @@ repository
 </dt>
 <dd>
 <p>
-Prepare access to the package repository by preparing the apt
-configuration. This can also add repository keys via
-<code>apt-key(8)</code> in a class based manner from files like <em>CLASSNAME.asc</em>
-in the directory <em>package_config</em>.
+Préparez l'accès au référentiel de paquets en préparant la configuration apt. Cela peut également ajouter des clés de référentiel via <code>apt-key(8)</code> en classe à partir de fichiers comme <em>CLASSNAME.asc</em> dans le répertoire <em>package_config</em>.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2898,10 +2845,7 @@ updatebase
 </dt>
 <dd>
 <p>
-Updates the base packages of the new system and updates the list of
-available packages. It also fakes some commands (called diversions)
-inside the new installed system using <code>dpkg-divert(8)</code>, so no daemons
-will be started during the installation.
+Met à jour les paquets de base du nouveau système et met à jour la liste des paquets disponibles. Il falsifie également certaines commandes (appelées diversions) à l'intérieur du nouveau système installé à l'aide de <code>dpkg-divert(8)</code>, de sorte qu'aucun démon ne sera démarré pendant l'installation.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2909,8 +2853,7 @@ instsoft
 </dt>
 <dd>
 <p>
-Installs the desired software packages using class files in
-<em>$FAI/package_config/</em>.
+Installe les progiciels souhaités en utilisant des fichiers de classe dans <em>$FAI/package_config/</em>.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2918,8 +2861,7 @@ configure
 </dt>
 <dd>
 <p>
-Calls scripts in <em>$FAI/scripts/</em> and its subdirectories for every
-defined class.
+Appelle les scripts dans <em>$FAI/scripts/</em> et ses sous-répertoires pour chaque classe définie.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2927,8 +2869,7 @@ tests
 </dt>
 <dd>
 <p>
-Calls test scripts in <em>$FAI/tests/</em> and its subdirectories for every
-defined class.
+Appelle les scripts de test dans <em>$FAI/tests/</em> et ses sous-répertoires pour chaque classe définie.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2936,8 +2877,7 @@ finish
 </dt>
 <dd>
 <p>
-Unmounts all file systems in the new installed system and removes
-diversions of files using the command <code>fai-divert</code>.
+Démonte tous les systèmes de fichiers dans le nouveau système installé et supprime les diversions de fichiers à l'aide de la commande <code>fai-divert</code>.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2945,10 +2885,7 @@ chboot
 </dt>
 <dd>
 <p>
-Changes the PXE configuration for a host on the install server which
-indicates which PXELINUX configuration to load on the next boot from network
-card via TFTP. Therefore the <code>fai-chboot(8)</code> command is executed
-remotely on the install server.
+Modifie la configuration PXE d'un hôte sur le serveur d'installation qui indique quelle configuration PXELINUX doit être chargée lors de la prochaine initialisation à partir de la carte réseau via TFTP. Par conséquent, la commande <code>fai-chboot(8)</code> est exécutée à distance sur le serveur d'installation.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2956,8 +2893,7 @@ savelog
 </dt>
 <dd>
 <p>
-Saves log files to local disk and to the account <code>$LOGUSER</code> on
-<code>$LOGSERVER</code> (defaults to the install server).
+Enregistre les fichiers journaux sur le disque local et sur le compte <code>$LOGUSER</code> sur <code>$LOGSERVER</code> (par défaut sur le serveur d'installation).
 </p>
 </dd>
 <dt class="hdlist1">
@@ -2965,26 +2901,17 @@ faiend
 </dt>
 <dd>
 <p>
-Wait for background jobs to finish (e.g. emacs compiling lisp files)
-and automatically reboots the install clients or waits for manual
-input before reboot.
+Attendez que les travaux en arrière-plan se terminent (par exemple, emacs compile des fichiers lisp) et redémarre automatiquement les clients d'installation ou attend la saisie manuelle avant le redémarrage.
 </p>
 </dd>
 </dl></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_itests_a_automated_tests"><a id="itests"></a>Automated tests</h3>
-<div class="paragraph"><p>After the customization scripts are executed, FAI will execute some
-tests if available. Using these test, you can check for errors of the
-installation. Test scripts are called via
-<code>fai-do-scripts(1)</code> and should append its messages to
-<em>$LOGDIR/test.log</em>. A Perl module including some useful subroutines
-can be found in <em>Faitest.pm</em>. A test can also define a new class for
-executing another tests during next boot via the variable
-<code>$ADDCLASSES</code>.</p></div>
+<h3 id="_a_id_itests_a_automated_tests"><a id="itests"></a>Tests automatisés</h3>
+<div class="paragraph"><p>Après l'exécution des scripts de personnalisation, FAI exécutera certains tests si disponibles. En utilisant ces tests, vous pouvez vérifier les erreurs de l'installation. Les scripts de test sont appelés via <code>fai-do-scripts(1)</code> et doivent ajouter leurs messages à <em>$LOGDIR/test.log</em>. Un module Perl comprenant des sous-routines utiles peut être trouvé dans <em>Faitest.pm</em>. Un test peut également définir une nouvelle classe pour exécuter d'autres tests lors du prochain démarrage via la variable <code>$ADDCLASSES</code>.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_autodiscover_a_autodiscover"><a id="autodiscover"></a> Autodiscover</h3>
+<h3 id="_a_id_autodiscover_a_autodiscover"><a id="autodiscover"></a> Découvrir automatiquement</h3>
 <div class="paragraph"><p>In FAI 5.0 we released a feature that allows clients to search for the
 faiserver in their respective subnetwork. This lifts the necessity of
 having to collect every client’s MAC address and configuring the DHCP
