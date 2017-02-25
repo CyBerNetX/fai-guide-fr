@@ -2923,57 +2923,31 @@ Attendez que les travaux en arrière-plan se terminent (par exemple, emacs compi
 </div>
 <div class="sect2">
 <h3 id="_a_id_changeboot_a_changing_the_boot_device"><a id="changeboot"></a>Modification du périphérique d'amorçage</h3>
-<div class="paragraph"><p>Changing the boot sequence is normally done in the BIOS setup. But you
-can’t change the BIOS from a running Linux system.</p></div>
-<div class="paragraph"><p>So, the boot sequence of the BIOS will remain unchanged and
-your computer should always boot first from its network card and the
-second boot device should be the local disk. Then you can
-change the boot device of the client by creating different PXELINUX
-configurations. This will define if an installation
-should be performed, or if the client should to boot from local
-disk. This is done using <code>fai-chboot(8)</code>.</p></div>
+<div class="paragraph"><p>La modification de la séquence d'amorçage s'effectue normalement dans la configuration du BIOS. Mais vous ne pouvez pas changer le BIOS d'un système Linux en cours d'exécution.</p></div>
+<div class="paragraph"><p>Ainsi, la séquence d'amorçage du BIOS restera inchangée et votre ordinateur devrait toujours démarrer en premier à partir de sa carte réseau et le deuxième périphérique d'amorçage devrait être le disque local. Ensuite, vous pouvez changer le périphérique d'amorçage du client en créant différentes configurations PXELINUX. Cela définira si une installation doit être effectuée, ou si le client doit démarrer à partir du disque local. Cela se fait à l'aide de <code>fai-chboot(8)</code>.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_debian_mirror_a_how_to_create_a_local_debian_mirror"><a id="debian-mirror"></a>How to create a local Debian mirror</h3>
-<div class="paragraph"><p>The script <code>mkdebmirror</code> <span class="footnote" data-note="You can find the script in
-&lt;em&gt;/usr/share/doc/fai-doc/examples/utils/&lt;/em&gt;">[<a id="_footnoteref_18" href="#_footnote_18" title="View footnote" class="footnote">18</a>]</span> can be used for creating
-your own local Debian mirror. This script uses the command
-<code>debmirror(1)</code>. A partial Debian mirror for i386 and amd64 architecture for
-Debian 8.0 (aka jessie) without the source packages needs about
-56GB of disk space. Accessing the mirror via HTTP will be the
-default way in most cases. To see more output from the script call
-<code>mkdebmirror -v</code>. A root account is not necessary to create and
-maintain the Debian mirror.</p></div>
-<div class="paragraph"><p>To use HTTP access to the local Debian mirror, install a web server
-and create a symlink to the local directory where your mirror is
-located:</p></div>
+<h3 id="_a_id_debian_mirror_a_how_to_create_a_local_debian_mirror"><a id="debian-mirror"></a>Comment créer un miroir Debian local</h3>
+<div class="paragraph"><p>Le script <code>mkdebmirror</code> <span class="footnote" data-note="You can find the script in &lt;em&gt;/usr/share/doc/fai-doc/examples/utils/&lt;/em&gt;">[<a id="_footnoteref_18" href="#_footnote_18" title="View footnote" class="footnote">18</a>]</span> peut être utilisé pour créer votre propre miroir Debian local. Ce script utilise la commande <code>debmirror(1)</code>. Un miroir Debian partiel pour l'architecture i386 et amd64 pour Debian 8.0 (aka jessie) sans les paquets source nécessite environ 56 Go d'espace disque. L'accès au miroir via HTTP sera la méthode par défaut dans la plupart des cas. Pour afficher plus de résultats à partir du script, appelez <code>mkdebmirror -v</code>. Un compte root n'est pas nécessaire pour créer et maintenir le miroir Debian.</p></div>
+<div class="paragraph"><p>Pour utiliser l'accès HTTP au miroir Debian local, installez un serveur Web et créez un lien symbolique vers le répertoire local où se trouve votre miroir:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>faiserver# apt-get install apache2
 faiserver# ln -s /files/scratch/debmirror /var/www/html/debmirror</code></pre>
 </div></div>
-<div class="paragraph"><p>Create a file <code>sources.list(5)</code> in <em>/etc/fai/apt</em> which gives access
-to your Debian mirror. Also add the IP-address of the
-HTTP server to the variable <code>$NFSROOT_ETC_HOSTS</code> in
-<em>nfsroot.conf</em> if the install clients have no DNS resolving.</p></div>
+<div class="paragraph"><p>Créez un fichier <code>sources.list(5)</code> dans <em>/etc/fai/apt</em> qui donne accès à votre miroir Debian. Ajoutez également l'adresse IP du serveur HTTP à la variable <code>$NFSROOT_ETC_HOSTS</code> dans <em>nfsroot.conf</em> si les clients d'installation n'ont pas de résolution DNS.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_small_hints">Small hints</h3>
+<h3 id="_small_hints">Petits conseils</h3>
 <div class="ulist"><ul>
 <li>
 <p>
-When using HTTP access to a Debian mirror, the local <em>/var</em> partition
-on all install clients must be big enough to keep the downloaded
-Debian packages. Do not try with less than 250 Mbytes unless you know
-why. You can limit the number of packages installed at a time with the
-variable <code>$MAXPACKAGES</code>.
+Lorsque vous utilisez l'accès HTTP à un miroir Debian, la partition locale <em>/var</em> sur tous les clients d'installation doit être suffisamment grande pour conserver les paquets Debian téléchargés. N'essayez pas avec moins de 250 Moctets à moins que vous sachiez pourquoi. Vous pouvez limiter le nombre de paquets installés à la fois avec la variable <code>$MAXPACKAGES</code>.
 </p>
 </li>
 <li>
 <p>
-You can remove the red logo on the install client by simply calling
-<code>reset</code> once. If will also not appear if you create a file using this
-command on the install server:
+Vous pouvez supprimer le logo rouge sur le client d'installation en appelant simplement une fois <code>reset</code>. Il ne s'affichera pas si vous créez un fichier à l'aide de cette commande sur le serveur d'installation:
 </p>
 </li>
 </ul></div>
@@ -2984,21 +2958,17 @@ command on the install server:
 <div class="ulist"><ul>
 <li>
 <p>
-A list of variables used by FAI can be found at
-<a href="http://wiki.fai-project.org/wiki/Variables">http://wiki.fai-project.org/wiki/Variables</a>.
+Une liste des variables utilisées par FAI peut être trouvée à <a href="http://wiki.fai-project.org/wiki/Variables">http://wiki.fai-project.org/wiki/Variables</a>.
 </p>
 </li>
 <li>
 <p>
-You can shorten some customization scripts by using one single fcopy
-command <em>fcopy -r /</em>.
+Vous pouvez raccourcir certains scripts de personnalisation en utilisant une seule commande fcopy <em>fcopy -r /</em>.
 </p>
 </li>
 <li>
 <p>
-If you rebuild the nfsroot, you will create a new ssh host key inside
-the nfsroot. Then logging in to an install client may fail, because
-the host key changes. You can use this:
+Si vous reconstruisez le nfsroot, vous allez créer une nouvelle clé hôte ssh dans le nfsroot. La connexion à un client d'installation peut échouer, car la clé hôte change. Vous pouvez utiliser ceci:
 </p>
 </li>
 </ul></div>
@@ -3009,62 +2979,40 @@ the host key changes. You can use this:
 <div class="ulist"><ul>
 <li>
 <p>
-You can also delete the host entry on your install client in your
-<em>~/.ssh/known_hosts</em> file by using the <em>ssh-keygen -R</em> command.
+Vous pouvez également supprimer l'entrée hôte de votre client d'installation dans votre fichier <em>~/.ssh/known_hosts</em> à l'aide de la commande <em>ssh-keygen -R</em>.
 </p>
 </li>
 <li>
 <p>
-In the tasks chboot and savelog, a connection using secure shell is
-opened to the FAI server (see <a href="#isavelog">[isavelog]</a>). To ensure that this works
-non-interactively, a proper entry in <em>NFSROOT/root/.ssh/known_hosts</em>
-must be created. When using fai-setup, this is done automatically, but
-it may require manual editing in case the name of your FAI server was
-not determined correctly.  If you stumble over ssh connections that
-require typing "yes" to accept the host key during installation,
-please check the contents of your <em>NFSROOT/root/.ssh/known_hosts file</em>
+Dans les tâches chboot et savelog, une connexion utilisant un shell sécurisé est ouverte au serveur FAI (voir <a href="#isavelog">[isavelog]</a>). Pour garantir que cela fonctionne de manière non interactive, une entrée appropriée dans <em>NFSROOT/root/.ssh/known_hosts</em> doit être créée. Lors de l'utilisation de fai-setup, cela se fait automatiquement, mais il peut s'avérer nécessaire de l'éditer manuellement si le nom de votre serveur FAI n'a pas été correctement déterminé. Si vous trébuchez sur des connexions ssh qui nécessitent de taper "yes" pour accepter la clé hôte pendant l'installation, vérifiez le contenu de votre fichier <em>NFSROOT/root/.ssh/known_hosts</em>
 </p>
 </li>
 <li>
 <p>
-A list of all local hard disks is
-stored in <code>$disklist</code>. It’s defined after <code>set_disk_info</code> is called.
+Une liste de tous les disques durs locaux est stockée dans <code>$disklist</code>. Il est défini après l'appel de <code>set_disk_info</code>.
 </p>
 </li>
 <li>
 <p>
-Use <code>fai-divert -a</code> if a postinst script calls a configuration
-program, e.g. the postinst script for package apache calls
-apacheconfig, which needs manual input. You can fake the configuration
-program so the installation can be fully automatic.
+Utilisez <code>fai-divert -a</code> si un script postinst appelle un programme de configuration, par exemple Le script postinst pour package apache appelle apacheconfig, qui nécessite une entrée manuelle. Vous pouvez fausser le programme de configuration pour que l'installation puisse être entièrement automatique.
 </p>
 </li>
 <li>
 <p>
-Sometimes the installation seems to stop, but often there’s only a
-postinstall script of a software package that requires manual input
-from the console. Change to another virtual terminal and look which
-process is running with tools like <code>top(1)</code> and <code>pstree(1)</code>. You can
-add <em>debug</em> to <em>FAI_FLAGS</em> to make the installation process show all
-output from the postinst scripts on the console and get its input also
-from the console.
+Parfois, l'installation semble s'arrêter, mais souvent il ya seulement un script postinstall d'un logiciel qui nécessite une entrée manuelle de la console. Passez à un autre terminal virtuel et regardez quel processus fonctionne avec des outils comme <code>top(1)</code> et <code>pstree(1)</code>. Vous pouvez ajouter  <em>debug</em> à <em>FAI_FLAGS</em> pour faire en sorte que le processus d'installation affiche toutes les sorties des scripts postinst sur la console et obtenir son entrée aussi à partir de la console.
 </p>
 </li>
 <li>
 <p>
-How can I define classes on the kernel command line?
+Comment puis-je définir des classes sur la ligne de commande du noyau?
 </p>
-<div class="paragraph"><p>Read the man page of <code>fai-class(8)</code>. If you like to define some
-additional classes (for e.g. A,B,C) on the kernel command line add this: <em>ADDCLASSES=A,B,C</em></p></div>
+<div class="paragraph"><p>Lisez la page de manuel de <code>fai-class(8)</code>. Si vous souhaitez définir des classes supplémentaires (par exemple A, B, C) sur la ligne de commande du noyau, ajoutez ceci: <em>ADDCLASSES=A,B,C</em></p></div>
 </li>
 <li>
 <p>
-How to use a custom kernel inside the nfsroot?
+Comment utiliser un noyau personnalisé dans le nfsroot?
 </p>
-<div class="paragraph"><p>Build your customized kernel by building a kernel package using
-<code>make-kpkg(8)</code> and use the option <code>--initrd</code>. Copy this Debian package
-to a local repository and add it to /etc/fai/sources.list. Add the
-name of your package to /etc/fai/NFSROOT. Then call</p></div>
+<div class="paragraph"><p>Construisez votre noyau personnalisé en construisant un paquet kernel à l'aide de <code>make-kpkg(8)</code> et utilisez l'option <code>--initrd</code>. Copiez ce paquet Debian dans un référentiel local et ajoutez-le à /etc/fai/sources.list. Ajoutez le nom de votre package à /etc/fai/NFSROOT. Ensuite appeler</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code># fai-make-nfsroot -k</code></pre>
@@ -3072,27 +3020,21 @@ name of your package to /etc/fai/NFSROOT. Then call</p></div>
 </li>
 <li>
 <p>
-Can I use a 4.X kernel?
+Puis-je utiliser un noyau 4.X?
 </p>
-<div class="paragraph"><p>Yes. Using FAI 5.1 and dracut 044+150-1 overlayfs (instead of aufs) is
-supported, so is kernel 4.x. When using Debian jessie, you may use a
-kernel from backports or have a look at
-<a href="https://lists.uni-koeln.de/pipermail/linux-fai/2016-March/011283.html">https://lists.uni-koeln.de/pipermail/linux-fai/2016-March/011283.html</a></p></div>
+<div class="paragraph"><p>Oui. L'utilisation de FAI 5.1 et dracut 044+150-1 overlayfs (au lieu d'aufs) est prise en charge, de même que le noyau 4.x. Lorsque vous utilisez Debian jessie, vous pouvez utiliser un noyau de backports ou consulter <a href="https://lists.uni-koeln.de/pipermail/linux-fai/2016-March/011283.html">https://lists.uni-koeln.de/pipermail/linux-fai/2016-March/011283.html</a></p></div>
 </li>
 <li>
 <p>
-How to use the nfsroot as system for diskless clients?
+Comment utiliser le nfsroot comme système pour les clients sans disque?
 </p>
 <div class="paragraph"><p><a href="http://wiki.fai-project.org/wiki/Use_nfsroot_for_diskless_clients">http://wiki.fai-project.org/wiki/Use_nfsroot_for_diskless_clients</a></p></div>
 </li>
 <li>
 <p>
-How to server multiple nfsroot directories on one FAI server?
+Comment faire pour servir plusieurs arborescence nfsroot sur un serveur FAI?
 </p>
-<div class="paragraph"><p>If you want to serve multiple nfsroot directories,
-you need to create specific config directories in <em>/etc</em> for FAI, like
-<em>/etc/fai-jessie</em> and <em>/etc/fai-stretch</em>. Then you need to set the
-<code>$NFSROOT</code> variables to different directories and run</p></div>
+<div class="paragraph"><p>Si vous souhaitez diffuser plusieurs répertoires nfsroot, vous devez créer des répertoires de configuration spécifiques dans /etc pour FAI, comme <em>/etc/fai-jessie</em> et <em>/etc/fai-stretch</em>. Ensuite, vous devez définir les variables <code>$NFSROOT</code> dans différents répertoires et exécuter</p></div>
 </li>
 </ul></div>
 <div class="listingblock">
@@ -3102,36 +3044,24 @@ you need to create specific config directories in <em>/etc</em> for FAI, like
 </div>
 <div class="sect2">
 <h3 id="_flag_reboot_fai_flags">flag_reboot (FAI_FLAGS)</h3>
-<div class="paragraph"><p>If flag_reboot is set, by adding "reboot" to <code>$FAI_FLAGS</code>, your client
-machine will reboot after the task faiend has finished. This is true
-for network as well as bootmedium installations.</p></div>
+<div class="paragraph"><p>Si flag_reboot est défini, en ajoutant "reboot" à <code>$FAI_FLAGS</code>, votre ordinateur client redémarrera après la fin de la tâche. Ceci est vrai pour les installations de réseau ainsi que pour les installations de bootmedium.</p></div>
 </div>
 <div class="sect2">
 <h3 id="_centos_reboot">CentOS reboot</h3>
-<div class="paragraph"><p>After the installation CentOS usually requires one additional reboot,
-because of the SELinux security fixes that are applied post-installation.</p></div>
+<div class="paragraph"><p>Après l'installation, CentOS nécessite habituellement un redémarrage supplémentaire, en raison des correctifs de sécurité SELinux qui sont appliqués après l'installation.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_a_id_logfiles_a_log_files"><a id="logfiles"></a>Log files</h3>
-<div class="paragraph"><p>FAI is creating several log files. During installation they are stored
-in <em>/tmp/fai</em> on the install client itself. At the end of the
-installation they will be copied to the install server (see
-<a href="#isavelog">[isavelog]</a>). After the install client rebooted into his newly
-installed system, you can find the FAI logs in <em>/var/log/fai</em>.
-Log files are also created when doing the softupdate or dirinstall
-action.</p></div>
-<div class="paragraph"><p>On the faiserver, you can find the (remote) log files under the ~fai
-directory.</p></div>
-<div class="paragraph"><p>Sample log files from successfully installed computers are
-available on <a href="http://fai-project.org/logs">http://fai-project.org/logs</a>.
-These a some log files which are created by FAI.</p></div>
+<h3 id="_a_id_logfiles_a_log_files"><a id="logfiles"></a>Fichiers journaux</h3>
+<div class="paragraph"><p>FAI crée plusieurs fichiers journaux. Pendant l'installation, ils sont stockés dans <em>/tmp/fai</em> sur le client d'installation lui-même. A la fin de l'installation, ils seront copiés sur le serveur d'installation (voir <a href="#isavelog">[isavelog]</a>). Une fois le client d'installation redémarré dans son système nouvellement installé, vous pouvez trouver les journaux FAI dans <em>/var/log/fai</em>. Les fichiers journaux sont également créés lors de l'action softupdate ou dirinstall.</p></div>
+<div class="paragraph"><p>Sur le faiserver, vous pouvez trouver les fichiers journaux (distants) sous le répertoire ~fai.</p></div>
+<div class="paragraph"><p>Les exemples de fichiers journaux des ordinateurs installés avec succès sont disponibles sur <a href="http://fai-project.org/logs">http://fai-project.org/logs</a>. Ce sont quelques fichiers journaux qui sont créés par FAI.</p></div>
 <div class="dlist"><dl>
 <dt class="hdlist1">
 FAI_CLASSES
 </dt>
 <dd>
 <p>
-Contains a list of all classes defined.
+Contient une liste de toutes les classes définies.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -3139,8 +3069,7 @@ dmesg.log
 </dt>
 <dd>
 <p>
-Output of the <code>dmesg</code> command. Contains useful messages of the kernel
-ring buffer.
+lA sortie de la commande <code>dmesg</code>. Contient des messages utiles de la mémoire tampon du noyau.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -3148,8 +3077,7 @@ fai.log
 </dt>
 <dd>
 <p>
-The main log file. Contains all important information. You should
-<strong>always</strong> read this file.
+Le fichier journal principal. Contient toutes les informations importantes. Vous devez <strong>toujours</strong> lire ce fichier.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -3157,7 +3085,7 @@ boot.log
 </dt>
 <dd>
 <p>
-A list of variables of network parameters, mostly defined by the DHCP daemon.
+Une liste de variables de paramètres de réseau, principalement définis par le démon DHCP.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -3165,7 +3093,7 @@ format.log
 </dt>
 <dd>
 <p>
-Output of the partition tool <code>setup-storage(8)</code>.
+Sortie de l'outil de partition <code>setup-storage(8)</code>.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -3173,7 +3101,7 @@ shell.log
 </dt>
 <dd>
 <p>
-Output of all shell scripts, that are used for customization.
+La sortie de tous les scripts shell, utilisés pour la personnalisation.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -3181,8 +3109,7 @@ variables.log
 </dt>
 <dd>
 <p>
-A list of all shell variables which are available during an
-installation.
+Une liste de toutes les variables shell qui sont disponibles au cours d'une installation.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -3190,7 +3117,7 @@ error.log
 </dt>
 <dd>
 <p>
-A summary of possible errors in all log files.
+Résumé des erreurs possibles dans tous les fichiers journaux.
 </p>
 </dd>
 <dt class="hdlist1">
@@ -3198,33 +3125,25 @@ disk_var.sh
 </dt>
 <dd>
 <p>
-A list of variables that contain information about devices and
-partitions to boot from, the root partition and a list of swap
-devices. These information is used by some customization scripts
-(e.g. <em>GRUB_PC/10-setup</em>).
+Une liste des variables contenant des informations sur les périphériques et les partitions à partir desquelles la partition racine et une liste de périphériques de swap. Ces informations sont utilisées par certains scripts de personnalisation (par exemple <em>GRUB_PC/10-setup</em>).
 </p>
 </dd>
 </dl></div>
-<div class="paragraph"><p>If the installation process finishes, the hook <em>savelog.LAST.sh</em>
-searches all log files for common errors and writes them to the file
-<em>error.log</em>. So, you should first look into this file for errors. Also
-the file <em>status.log</em> give you the exit code of the last command
-executed in a script. To be sure, you should look for more details in
-all log files.</p></div>
+<div class="paragraph"><p>Si le processus d'installation se termine, le hook <em>savelog.LAST.sh</em> recherche tous les fichiers journaux pour les erreurs courantes et les écrit dans le fichier <em>error.log</em>. Donc, vous devriez d'abord regarder dans ce fichier pour les erreurs. Le fichier <em>status.log</em> vous donne également le code de sortie de la dernière commande exécutée dans un script. Pour être sûr, vous devriez rechercher plus de détails dans tous les fichiers journaux.</p></div>
 </div>
 <div class="sect2">
-<h3 id="_how_to_use_http_for_pxe_boot">How to use HTTP for PXE boot</h3>
+<h3 id="_how_to_use_http_for_pxe_boot">Comment utiliser HTTP pour le démarrage PXE</h3>
 <div class="listingblock">
 <div class="content">
 <pre><code>cp /usr/lib/PXELINUX/lpxelinux.0 /srv/tftp/fai/pxelinux.0</code></pre>
 </div></div>
-<div class="paragraph"><p>Enable HTTP access to the tftp directory:</p></div>
+<div class="paragraph"><p>Activer l'accès HTTP au répertoire tftp:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>cd /var/www/html
 ln -s /srv/tftp/fai</code></pre>
 </div></div>
-<div class="paragraph"><p>Add <em>-U URL</em> to the <em>fai-chboot</em> call. For example:</p></div>
+<div class="paragraph"><p>Ajoutez <em>-U URL</em> à l'appel <em>fai-chboot</em>. Par exemple:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>fai-chboot -U http://faiserver/fai -IFv .......</code></pre>
@@ -3233,13 +3152,11 @@ ln -s /srv/tftp/fai</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_a_id_troubleshoot_a_troubleshooting"><a id="troubleshoot"></a>Troubleshooting</h2>
+<h2 id="_a_id_troubleshoot_a_troubleshooting"><a id="troubleshoot"></a>Dépannage</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_a_id_booterror_a_boot_errors"><a id="booterror"></a>Boot errors</h3>
-<div class="paragraph"><p>The following error message indicates that your install client doesn’t
-get an answer from a DHCP server. Check your cables or start the
-<code>dhcpd(8)</code> daemon with the debug flag enabled.</p></div>
+<h3 id="_a_id_booterror_a_boot_errors"><a id="booterror"></a>Erreurs d'amorçage</h3>
+<div class="paragraph"><p>Le message d'erreur suivant indique que votre client d'installation n'obtient pas de réponse d'un serveur DHCP. Vérifiez vos câbles ou démarrez le démon <code>dhcpd(8)</code> avec le debug flag activé.</p></div>
 <div class="quoteblock">
 <div class="content">
 <div class="literalblock">
@@ -3250,24 +3167,15 @@ Network boot aborted</code></pre>
 </div>
 <div class="attribution">
 </div></div>
-<div class="paragraph"><p>If you do not see the following message, the install kernel could not
-detect your network card, for example because of a missing driver:</p></div>
+<div class="paragraph"><p>Si vous ne voyez pas le message suivant, le noyau d'installation n'a pas pu détecter votre carte réseau, par exemple en raison d'un pilote manquant:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>Starting dhcp for interface eth0
 dhcp: PREINIT eth0 up
 dhcp: BOND setting eth</code></pre>
 </div></div>
-<div class="paragraph"><p>Check the initrd in the nfsroot (<code>lsinird</code>) if the kernel driver of your network
-card is included there and check if you like to add the package
-<em>firmware-linux-nonfree</em> in <code>/etc/fai/NFSROOT</code> and rebuild the initrd
-by calling <code>fai-make-nfsroot -k</code>.
-You may also add a driver to <code>/srv/fai/nfsroot/etc/dracut.conf</code> in
-the line <code>add_drivers</code>+<code>=</code>.</p></div>
-<div class="paragraph"><p>This is the error message you will see, when your network card is
-working, but the install server does not export the nfsroot
-directory to the install clients, This is often caused by missing
-NFS permissions on the server side.</p></div>
+<div class="paragraph"><p>Vérifiez l'initrd dans le nfsroot (<code>lsinird</code>) si le pilote du noyau de votre carte réseau est inclus et vérifiez si vous souhaitez ajouter le paquet <em>firmware-linux-nonfree</em> dans <code>/etc/fai/NFSROOT</code> et reconstruisez l'initrd en appelant <code>fai-make-nfsroot -k</code>. Vous pouvez également ajouter un pilote à <code>/srv/fai/nfsroot/etc/dracut.conf</code> dans la ligne <code>add_drivers</code>+<code>=</code>.</p></div>
+<div class="paragraph"><p>C'est le message d'erreur que vous verrez, lorsque votre carte réseau fonctionne, mais le serveur d'installation n'exporte pas le répertoire nfsroot vers les clients d'installation. Cela est souvent dû aux permissions NFS manquantes du côté serveur.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>Starting dhcp for interface eth0
@@ -3281,12 +3189,8 @@ dracut Warning: Could not boot
 Dropping to debug shell
 dracut:/#</code></pre>
 </div></div>
-<div class="paragraph"><p>Now, you are inside the emergency shell of the initrd which was created
-by <em>dracut(8)</em>. You will get a shell prompt, and can look at the log files.
-For more information about debugging the early boot process using
-dracut see <code>dracut.cmdline(7)</code></p></div>
-<div class="paragraph"><p>Use the following command on the install server to see which directories are exported
-from the install server (named faiserver):</p></div>
+<div class="paragraph"><p>Maintenant, vous êtes à l'intérieur du shell d'urgence de l'initrd qui a été créé par <em>dracut(8)</em>. Vous obtiendrez une invite du shell et pourrez consulter les fichiers journaux. Pour plus d'informations sur le débogage du processus de démarrage précoce à l'aide de dracut, consultez <code>dracut.cmdline(7)</code></p></div>
+<div class="paragraph"><p>Utilisez la commande suivante sur le serveur d'installation pour voir quels répertoires sont exportés à partir du serveur d'installation (nommé faiserver):</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>$ showmount -e faiserver</code></pre>
