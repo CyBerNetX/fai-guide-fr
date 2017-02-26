@@ -2237,12 +2237,8 @@ Utilisé par <code>setup-storage(8)</code>. Les partitions marquées avec <code>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_the_early_part_of_an_installation">La première partie d'une installation</h3>
-<div class="paragraph"><p>Après le démarrage du noyau, il monte le système de fichiers racine via NFS à partir du serveur d'installation et démarre le script <em>/usr/sbin/fai</em><span class="footnote" data-note="Since the root file system on the clients is mounted via
-NFS, &lt;code&gt;fai&lt;/code&gt; is located in
-&lt;em&gt;/srv/fai/nfsroot/usr/sbin&lt;/em&gt; on the install
-server.">[<a id="_footnoteref_10" href="#_footnote_10" title="View footnote" class="footnote">10</a>]</span>. Ce script contrôle la séquence de l'installation. Aucun autre script dans <em>/etc/init.d/</em> n'est utilisé.</p></div>
-<div class="paragraph"><p>L'espace de configuration est rendu disponible via la méthode configurée (un montage NFS par défaut) du serveur d'installation au chemin défini dans <em>$FAI</em> <span class="footnote" data-note="&lt;em&gt;$FAI&lt;/em&gt; is an internal variable used by the FAI
-scripts. By default the path is &lt;em&gt;/var/lib/fai/config&lt;/em&gt;.">[<a id="_footnoteref_11" href="#_footnote_11" title="View footnote" class="footnote">11</a>]</span>.</p></div>
+<div class="paragraph"><p>Après le démarrage du noyau, il monte le système de fichiers racine via NFS à partir du serveur d'installation et démarre le script <em>/usr/sbin/fai</em><span class="footnote" data-note="Puisque le système de fichiers racine sur les clients est monté via NFS, &lt;code&gt;fai&lt;/code&gt; est localisé in &lt;em&gt;/srv/fai/nfsroot/usr/sbin&lt;/em&gt; sur le servuer d'installation.">[<a id="_footnoteref_10" href="#_footnote_10" title="View footnote" class="footnote">10</a>]</span>. Ce script contrôle la séquence de l'installation. Aucun autre script dans <em>/etc/init.d/</em> n'est utilisé.</p></div>
+<div class="paragraph"><p>L'espace de configuration est rendu disponible via la méthode configurée (un montage NFS par défaut) du serveur d'installation au chemin défini dans <em>$FAI</em> <span class="footnote" data-note="&lt;em&gt;$FAI&lt;/em&gt; est une variable interne utilisée par les scripts FAI. Par défaut, le chemin est &lt;em&gt;/var/lib/fai/config&lt;/em&gt;.">[<a id="_footnoteref_11" href="#_footnote_11" title="View footnote" class="footnote">11</a>]</span>.</p></div>
 </div>
 <div class="sect2">
 <h3 id="_a_id_bootmesg_a_boot_messages"><a id="bootmesg"></a>Messages de boot</h3>
@@ -2273,7 +2269,7 @@ Loading vmlinuz-3.16.0-4-amd64..................
 Loading initrd.img-3.16.0-4-amd64......................ready.</code></pre>
 </div></div>
 <div class="paragraph"><p>À ce stade, le client d'installation a réussi à recevoir le réseau
-Config via DHCP et le noyau et initrd via TFTP. Il démarre maintenant Le noyau Linux et l'initrd. Si tout allait bien, l'initrd Monte nfsroot<span class="footnote" data-note="&lt;em&gt;/srv/fai/nfsroot&lt;/em&gt; from the install server via NFS">[<a id="_footnoteref_12" href="#_footnote_12" title="View footnote" class="footnote">12</a>]</span> Et les scripts FAI sont lancés. La première chose que vous voyez est le message en rouge de copyright FAI.</p></div>
+Config via DHCP et le noyau et initrd via TFTP. Il démarre maintenant Le noyau Linux et l'initrd. Si tout allait bien, l'initrd Monte nfsroot<span class="footnote" data-note="&lt;em&gt;/srv/fai/nfsroot&lt;/em&gt; depuis le serveur d'installation via NFS">[<a id="_footnoteref_12" href="#_footnote_12" title="View footnote" class="footnote">12</a>]</span> Et les scripts FAI sont lancés. La première chose que vous voyez est le message en rouge de copyright FAI.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>             -------------------------------------------------
@@ -2332,7 +2328,7 @@ Le disque local!</p></div>
 </div>
 <div class="sect2">
 <h3 id="_a_id_isetup_a_starting_fai_task_confdir"><a id="isetup"></a>Démarrage de FAI (tâche confdir)</h3>
-<div class="paragraph"><p>Une fois le client d'installation démarré, seul le script <em>/usr/sbin/fai</em> est exécuté. Il effectuera une initialisation minimale. La variable <code>$FAI_CONFIG_SRC</code> <span class="footnote" data-note="It it defined on the kernel command line">[<a id="_footnoteref_13" href="#_footnote_13" title="View footnote" class="footnote">13</a>]</span> est utilisée pour accéder à l'espace de configuration FAI qui est alors disponible dans le répertoire <code>$FAI</code> <span class="footnote" data-note="/var/lib/fai/config">[<a id="_footnoteref_14" href="#_footnote_14" title="View footnote" class="footnote">14</a>]</span>. FAI ne se déroulera pas sans l'espace de configuration.</p></div>
+<div class="paragraph"><p>Une fois le client d'installation démarré, seul le script <em>/usr/sbin/fai</em> est exécuté. Il effectuera une initialisation minimale. La variable <code>$FAI_CONFIG_SRC</code> <span class="footnote" data-note="Il a été défini sur la ligne de commande du noyau">[<a id="_footnoteref_13" href="#_footnote_13" title="View footnote" class="footnote">13</a>]</span> est utilisée pour accéder à l'espace de configuration FAI qui est alors disponible dans le répertoire <code>$FAI</code> <span class="footnote" data-note="/var/lib/fai/config">[<a id="_footnoteref_14" href="#_footnote_14" title="View footnote" class="footnote">14</a>]</span>. FAI ne se déroulera pas sans l'espace de configuration.</p></div>
 </div>
 <div class="sect2">
 <h3 id="_a_id_iclass_a_defining_classes_and_variables_tasks_defclass_and_defvar"><a id="iclass"></a>Définition de classes et de variables (tâches defclass et defvar)</h3>
@@ -2363,7 +2359,7 @@ Le disque local!</p></div>
 </div>
 <div class="sect2">
 <h3 id="_a_id_isavelog_a_saving_log_files_task_savelog"><a id="isavelog"></a>Enregistrement des fichiers journaux (tâche savelog)</h3>
-<div class="paragraph"><p>Lorsque toutes les tâches sont terminées, les fichiers journaux sont écrits dans <em>/var/log/fai/$HOSTNAME/install/</em><span class="footnote" data-note="&lt;em&gt;/var/log/fai/localhost/install/&lt;/em&gt; is a link to this directory.">[<a id="_footnoteref_15" href="#_footnote_15" title="View footnote" class="footnote">15</a>]</span> sur le nouveau système et sur le compte sur le serveur d'installation si <code>$LOGUSER</code> est défini. Il est également possible de spécifier un autre hôte comme enregistrement en enregistrant la destination via la variable <code>$LOGSERVER</code>. Si <code>$LOGSERVER</code> n'est pas défini, FAI utilise la variable <code>$SERVER</code> qui n'est définie que lors d'une installation initiale (par get-boot-info). Assurez-vous de définir <code>$LOGSERVER</code> dans un script <em>class/*.var</em> si vous utilisez l'action <em>softupdate</em>.</p></div>
+<div class="paragraph"><p>Lorsque toutes les tâches sont terminées, les fichiers journaux sont écrits dans <em>/var/log/fai/$HOSTNAME/install/</em><span class="footnote" data-note="&lt;em&gt;/var/log/fai/localhost/install/&lt;/em&gt; est un lien vers ce répertoire.">[<a id="_footnoteref_15" href="#_footnote_15" title="View footnote" class="footnote">15</a>]</span> sur le nouveau système et sur le compte sur le serveur d'installation si <code>$LOGUSER</code> est défini. Il est également possible de spécifier un autre hôte comme enregistrement en enregistrant la destination via la variable <code>$LOGSERVER</code>. Si <code>$LOGSERVER</code> n'est pas défini, FAI utilise la variable <code>$SERVER</code> qui n'est définie que lors d'une installation initiale (par get-boot-info). Assurez-vous de définir <code>$LOGSERVER</code> dans un script <em>class/*.var</em> si vous utilisez l'action <em>softupdate</em>.</p></div>
 <div class="paragraph"><p>De plus, deux liens symboliques seront créés pour indiquer le dernier répertoire écrit. Le <em>last</em> lien symbolique pointe vers le répertoire journal de la dernière action FAI exécutée. Les liens symboliques <em>last-install</em> et <em>last-sysinfo</em> pointent vers le répertoire avec la dernière action correspondante. Par défaut, les fichiers journaux seront copiés sur le serveur de journal à l'aide de scp. Vous pouvez utiliser la variable <code>$FAI_LOGPROTO</code> dans le fichier <em>fai.conf(5)</em> pour choisir une autre méthode d'enregistrement des journaux sur le serveur distant. Voici un exemple de structure de lien symbolique:</p></div>
 <div class="listingblock">
 <div class="content">
@@ -2412,8 +2408,7 @@ drwxr-xr-x   2 fai fai 4096 Dec  4 13:22 install-20141204_131351</code></pre>
 <div class="content">
 <pre><code>faiserver$ perl -ane 'print "\U$F[0]\n"' /tmp/mac.list|sort|uniq</code></pre>
 </div></div>
-<div class="paragraph"><p>Après cela, vous n'avez qu'à assigner ces adresses MAC aux noms d'hôte et aux adresses IP (<em>/etc/ethers</em> et <em>/etc/hosts</em> ou aux cartes NIS correspondantes). Avec ces informations, vous pouvez configurer votre démon DHCP (voir la section <a href="#bootdhcp">[bootdhcp]</a>). <span class="footnote" data-note="I recommend to write the MAC addresses (last three bytes will suffice if you have network cards
-from the same vendor) and the host name in the front of each chassis.">[<a id="_footnoteref_16" href="#_footnote_16" title="View footnote" class="footnote">16</a>]</span></p></div>
+<div class="paragraph"><p>Après cela, vous n'avez qu'à assigner ces adresses MAC aux noms d'hôte et aux adresses IP (<em>/etc/ethers</em> et <em>/etc/hosts</em> ou aux cartes NIS correspondantes). Avec ces informations, vous pouvez configurer votre démon DHCP (voir la section <a href="#bootdhcp">[bootdhcp]</a>). <span class="footnote" data-note="Je recommande d'écrire les adresses MAC (les trois derniers octets suffiront si vous avez des cartes réseau du même fournisseur) et le nom d'hôte à l'avant de chaque châssis.">[<a id="_footnoteref_16" href="#_footnote_16" title="View footnote" class="footnote">16</a>]</span></p></div>
 <div class="sect3">
 <h4 id="_debugging_the_network_traffic">Débogage du trafic réseau</h4>
 <div class="paragraph"><p>Si le client ne peut démarrer correctement à partir de la carte réseau, utilisez <code>tcpdump(8)</code> pour rechercher des paquets Ethernet entre le serveur d'installation et le client. Recherchez également les entrées de plusieurs fichiers journaux effectués par <code>tftpd(8)</code> et <code>dhcpd(8)</code> :</p></div>
@@ -2519,9 +2514,7 @@ Cette variable n'est nécessaire que si les clients n'ont pas accès à un serve
 </dd>
 </dl></div>
 <div class="paragraph"><p>Le contenu de <em>/etc/fai/apt/sources.list</em> est utilisé par le serveur d'installation et par les clients. Si votre serveur d'installation a plusieurs cartes réseau et différents noms d'hôte pour chaque carte (comme pour un serveur Beowulf), utilisez le nom du serveur d'installation qui est connu des clients d'installation.</p></div>
-<div class="paragraph"><p>Si vous avez des problèmes lors de l'exécution de <code>fai-setup</code>, ils proviennent habituellement de <code>fai-make-nfsroot(8)</code> qui est appelé par la commande précédente. L'ajout de <em>-v</em> vous donne une sortie plus détaillée qui vous aide à repérer l'erreur. La sortie est écrite dans <em>/var/log/fai/fai-make-nfsroot.log</em>. <span class="footnote" data-note="For debugging purpose
-it may help to enter the chroot environment manually using this
-command.  &lt;em&gt;faiserver# chroot /srv/fai/nfsroot bash&lt;/em&gt;">[<a id="_footnoteref_17" href="#_footnote_17" title="View footnote" class="footnote">17</a>]</span></p></div>
+<div class="paragraph"><p>Si vous avez des problèmes lors de l'exécution de <code>fai-setup</code>, ils proviennent habituellement de <code>fai-make-nfsroot(8)</code> qui est appelé par la commande précédente. L'ajout de <em>-v</em> vous donne une sortie plus détaillée qui vous aide à repérer l'erreur. La sortie est écrite dans <em>/var/log/fai/fai-make-nfsroot.log</em>. <span class="footnote" data-note="Pour le débogage, il peut être utile d'entrer l'environnement chroot manuellement à l'aide de cette commande. &lt;em&gt;faiserver# chroot /srv/fai/nfsroot bash&lt;/em&gt;">[<a id="_footnoteref_17" href="#_footnote_17" title="View footnote" class="footnote">17</a>]</span></p></div>
 <div class="paragraph"><p>L'installation crée également le compte <em>fai</em> (défini par <code>$LOGUSER</code>) s'il n'est pas déjà disponible. Vous pouvez donc ajouter un utilisateur avant d'appeler <code>fai-setup(8)</code> à l'aide de la commande <code>adduser(8)</code> et utiliser ce compte local pour enregistrer des fichiers journaux. Les fichiers journaux de tous les clients d'installation sont enregistrés dans le répertoire de base de ce compte. Vous devriez changer le groupe principal de ce compte, donc ce compte a des droits d'écriture sur <em>/srv/tftp/fai</em> pour appeler fai-chboot pour créer la configuration PXE pour les hôtes.</p></div>
 <div class="paragraph"><p>Lorsque vous apportez des modifications à <em>fai.conf</em>, <em>nfsroot.conf</em>, le nfsroot doit être reconstruit en appelant <code>fai-make-nfsroot(8)</code>. Si vous souhaitez uniquement installer un nouveau paquet kernel sur nfsroot, ajoutez les flags <em>-k</em> ou <em>-K</em> à <code>fai-make-nfsroot</code>. Cela ne recréera pas votre nfsroot, mais ne mettra à jour que vos noyaux et les modules du noyau dans le nfsroot ou ajoutera des paquets supplémentaires dans le nfsroot.</p></div>
 </div>
@@ -2928,7 +2921,7 @@ Attendez que les travaux en arrière-plan se terminent (par exemple, emacs compi
 </div>
 <div class="sect2">
 <h3 id="_a_id_debian_mirror_a_how_to_create_a_local_debian_mirror"><a id="debian-mirror"></a>Comment créer un miroir Debian local</h3>
-<div class="paragraph"><p>Le script <code>mkdebmirror</code> <span class="footnote" data-note="You can find the script in &lt;em&gt;/usr/share/doc/fai-doc/examples/utils/&lt;/em&gt;">[<a id="_footnoteref_18" href="#_footnote_18" title="View footnote" class="footnote">18</a>]</span> peut être utilisé pour créer votre propre miroir Debian local. Ce script utilise la commande <code>debmirror(1)</code>. Un miroir Debian partiel pour l'architecture i386 et amd64 pour Debian 8.0 (aka jessie) sans les paquets source nécessite environ 56 Go d'espace disque. L'accès au miroir via HTTP sera la méthode par défaut dans la plupart des cas. Pour afficher plus de résultats à partir du script, appelez <code>mkdebmirror -v</code>. Un compte root n'est pas nécessaire pour créer et maintenir le miroir Debian.</p></div>
+<div class="paragraph"><p>Le script <code>mkdebmirror</code> <span class="footnote" data-note="Vous pouvez trouver le script dans &lt;em&gt;/usr/share/doc/fai-doc/examples/utils/&lt;/em&gt;">[<a id="_footnoteref_18" href="#_footnote_18" title="View footnote" class="footnote">18</a>]</span> peut être utilisé pour créer votre propre miroir Debian local. Ce script utilise la commande <code>debmirror(1)</code>. Un miroir Debian partiel pour l'architecture i386 et amd64 pour Debian 8.0 (aka jessie) sans les paquets source nécessite environ 56 Go d'espace disque. L'accès au miroir via HTTP sera la méthode par défaut dans la plupart des cas. Pour afficher plus de résultats à partir du script, appelez <code>mkdebmirror -v</code>. Un compte root n'est pas nécessaire pour créer et maintenir le miroir Debian.</p></div>
 <div class="paragraph"><p>Pour utiliser l'accès HTTP au miroir Debian local, installez un serveur Web et créez un lien symbolique vers le répertoire local où se trouve votre miroir:</p></div>
 <div class="listingblock">
 <div class="content">
@@ -3199,25 +3192,9 @@ dracut:/#</code></pre>
 </div>
 </div>
 </div>
-<div id="footnotes"><hr><div class="footnote" id="_footnote_1"><a href="#_footnoteref_1" title="Return to text">1</a>. Solaris 8 Advanced Installation Guide at
-<a href="https://docs.oracle.com/cd/E19455-01/806-0957/806-0957.pdf">https://docs.oracle.com/cd/E19455-01/806-0957/806-0957.pdf</a>
-</div><div class="footnote" id="_footnote_2"><a href="#_footnoteref_2" title="Return to text">2</a>. <a href="http://www.science.uva.nl/pub/solaris/auto-install">http://www.science.uva.nl/pub/solaris/auto-install</a></div><div class="footnote" id="_footnote_3"><a href="#_footnoteref_3" title="Return to text">3</a>. fai-kvm needs a lot of ram
-for the vm, because of caching of /var, 2GB are OK</div><div class="footnote" id="_footnote_4"><a href="#_footnoteref_4" title="Return to text">4</a>. This installation will consume about 2GB of space in
-<code>/tmp</code>.</div><div class="footnote" id="_footnote_5"><a href="#_footnoteref_5" title="Return to text">5</a>. It’s also possible to use only the configuration
-file with the highest priority since the order of classes define a
-priority from low to high within the list of classes.  </div><div class="footnote" id="_footnote_6"><a href="#_footnoteref_6" title="Return to text">6</a>. If you want to use a faster mirror, adjust the URL
-  in <em>/etc/fai/apt/sources.list</em> and <code>FAI_DEBOOTSTRAP</code> in <em>/etc/fai/nfsroot.conf</em> before calling fai-setup.</div><div class="footnote" id="_footnote_7"><a href="#_footnoteref_7" title="Return to text">7</a>. This will call <code>fai-make-nfsroot(8)</code> internally.</div><div class="footnote" id="_footnote_8"><a href="#_footnoteref_8" title="Return to text">8</a>. These files need not belong to the root account.</div><div class="footnote" id="_footnote_9"><a href="#_footnoteref_9" title="Return to text">9</a>. You may also add this into your Domain Name System (DNS)</div><div class="footnote" id="_footnote_10"><a href="#_footnoteref_10" title="Return to text">10</a>. Since the root file system on the clients is mounted via
-NFS, <code>fai</code> is located in
-<em>/srv/fai/nfsroot/usr/sbin</em> on the install
-server.</div><div class="footnote" id="_footnote_11"><a href="#_footnoteref_11" title="Return to text">11</a>. <em>$FAI</em> is an internal variable used by the FAI
-scripts. By default the path is <em>/var/lib/fai/config</em>.</div><div class="footnote" id="_footnote_12"><a href="#_footnoteref_12" title="Return to text">12</a>. <em>/srv/fai/nfsroot</em> from the install
-server via NFS</div><div class="footnote" id="_footnote_13"><a href="#_footnoteref_13" title="Return to text">13</a>. It it defined on the kernel command line</div><div class="footnote" id="_footnote_14"><a href="#_footnoteref_14" title="Return to text">14</a>. /var/lib/fai/config</div><div class="footnote" id="_footnote_15"><a href="#_footnoteref_15" title="Return to text">15</a>. <em>/var/log/fai/localhost/install/</em> is a link to this
-directory.</div><div class="footnote" id="_footnote_16"><a href="#_footnoteref_16" title="Return to text">16</a>. I recommend to write the MAC
-addresses (last three bytes will suffice if you have network cards
-from the same vendor) and the host name in the front of each chassis.</div><div class="footnote" id="_footnote_17"><a href="#_footnoteref_17" title="Return to text">17</a>. For debugging purpose
-it may help to enter the chroot environment manually using this
-command.  <em>faiserver# chroot /srv/fai/nfsroot bash</em></div><div class="footnote" id="_footnote_18"><a href="#_footnoteref_18" title="Return to text">18</a>. You can find the script in
-<em>/usr/share/doc/fai-doc/examples/utils/</em></div></div>
+<div id="footnotes"><hr>
+
+</div>
 <div id="footer">
 <div id="footer-text">
 Version 5.3<br>
