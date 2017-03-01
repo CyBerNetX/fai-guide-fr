@@ -437,7 +437,7 @@ Si vous disposez de plusieurs interfaces réseau, vous pouvez définir l'interfa
 
 ==== Ajout d'une entrée d'hôte au DHCP
 
-L'adresse MAC est donnée par le matériel de la carte réseau. Pour chaque client d'installation, vous collectez son adresse MAC et la mappez à une adresse IP et à un nom d'hôte. Tout d'abord, nous ajoutons l'adresse IP et le nom d'hôte à _/etc/hosts_ footnote:[9].
+L'adresse MAC est donnée par le matériel de la carte réseau. Pour chaque client d'installation, vous collectez son adresse MAC et la mappez à une adresse IP et à un nom d'hôte. Tout d'abord, nous ajoutons l'adresse IP et le nom d'hôte à _/etc/hosts_ footnote:[Vous pouvez également ajouter ceci dans votre système de noms de domaine (DNS)].
 ----
 192.168.33.100    demohost
 ----
@@ -545,19 +545,17 @@ _hooks/_::
 === [[defining classes]]Définition des classes
 
 Il existe différentes possibilités pour définir des classes:
-
-    Certaines classes par défaut sont définies pour chaque hôte: DEFAULT, LAST et son nom d'hôte.
-
-    Les classes peuvent être répertoriées dans un fichier.
-
-    Les classes peuvent être dynamiquement définies par des scripts.
+. Certaines classes par défaut sont définies pour chaque hôte: DEFAULT, LAST et son nom d'hôte.
+. Les classes peuvent être répertoriées dans un fichier.
+. Les classes peuvent être dynamiquement définies par des scripts.
 
 La dernière option est une fonctionnalité très intéressante, puisque ces scripts définiront des classes est un moyen très flexible. Par exemple, plusieurs classes peuvent être définies uniquement si certains matériels sont identifiés ou si une classe est définie en fonction des informations de sous-réseau du réseau.
 
 Tous les noms de classes, sauf le nom d'hôte, sont écrits en majuscules.ILs ne doivent pas contenir un trait d'union, un dièse, un Point-Virgule OÜ un point, mais PEUVENT contenir des characters de soulignement et des Chiffres.
 
-La Tache defclass Appelle la commande fai-class(1) pour definir les classes. Tous les scripts correspondant ^[0-9][0-9]* (qui Commencent Avec Deux Chiffres) Dans le sous-repertoire $FAI/class sont exécutées afin de definir les classes. Tout ce qui is affiché sur STDOUT est automatiquement definie Comme une classe. pour Plus d'informations sur Les définisions de Classe , lire les pages de manuel versent fai-class(1). Le script 50-host-classes (voir ci - dessous la version allégée) est utilisé pour les définir des classes en fonction du nom d'hôte.
+La Tache _defclass_ Appelle la commande `fai-class(1)` pour definir les classes. Tous les scripts correspondant _^[0-9][0-9]*_ (qui Commencent Avec Deux Chiffres) Dans le sous-repertoire _$FAI/class_ sont exécutées afin de definir les classes. Tout ce qui is affiché sur STDOUT est automatiquement definie Comme une classe. pour Plus d'informations sur Les définisions de Classe , lire les pages de manuel versent `fai-class(1)`. Le script _50-host-classes_ (voir ci - dessous la version allégée) est utilisé pour les définir des classes en fonction du nom d'hôte.
 
+----
 # use a list of classes for our demo machines
 case $HOSTNAME in
     demohost)
@@ -569,60 +567,69 @@ case $HOSTNAME in
     *)
         echo "FAIBASE GRUB DHCPC" ;;
 esac
+----
 
 Les noms d'hôtes doivent Rarement Être utilisé Pour Les Fichiers de configuration dans l'Espace de configuration.à la place une classe Doit Être definie et ensuite ajouté Pour un hôte Donné. En effet, la Plupart du Temps les Données de configuration ne sont pas Spécifiques au d'nom hôte, mais peut etre partager entre differants hôtes./p>
 
 L'ordre des classes est important car Elle Définit la priorité des classes de Faible à Élevé.
-Définition des Variables
 
-La Tache defvar definit les variables pour l'installation du client. Les variables sont définies par les scripts Dans la class/*.var. Toutes les variables Globales PEUVENT Être définies Dans DEFAULT.var. Pour certains groupes d'hôtes utiliser un Fichier de classe ou Pour un seul hôte utiliser le Fichier $HOSTNAME .var . Ici aussi, il est utile d'étudier Tous les exemples.
+=== [[classvariables]]Définition des Variables
+
+La Tache _defvar_ definit les variables pour l'installation du client. Les variables sont définies par les scripts Dans la _class/*.var_. Toutes les variables Globales PEUVENT Être définies Dans 'DEFAULT.var'. Pour certains groupes d'hôtes utiliser un Fichier de classe ou Pour un seul hôte utiliser le Fichier +$HOSTNAME+ _.var_ . Ici aussi, il est utile d'étudier Tous les exemples.
 
 Les variables suivantes sont utilisées dans les exemples et peuvent etre aussi utiles pour votre installation:
 
-FAI_ACTION
+FAI_ACTION::
+Réglez les actions que doit éffectuer FAI. Normalement, ceci se fait par `fai-chboot(8)`. Si vous ne pouvez pas utiliser cette commande, définir la variable dans le script 'LAST.var'.
 
-    Réglez les actions que doit éffectuer FAI. Normalement, ceci se fait par fai-chboot(8). Si vous ne pouvez pas utiliser cette commande, définir la variable dans le script LAST.var.
-FAI_ALLOW_UNSIGNED
+FAI_ALLOW_UNSIGNED::
+Si défini à 1, FAI Permet l'installation de de paquets à partir de référentiels non Signés.
 
-    Si défini à 1, FAI Permet l'installation de de paquets à partir de référentiels non Signés.
-CONSOLEFONT
+CONSOLEFONT::
+La police de qui est chargée lors de l'installation par `setfont(8)`.
 
-    La police de qui est chargée lors de l'installation par setfont(8).
-KEYMAP
+KEYMAP::
+Définit les Fichiers de mappage du clavier Dans '/usr/share/keymaps' et '$FAI/files'. Vous ne Devez pas spécifier le chemin complet, puisque ce fichier sera localisé automatiquement.
 
-    Définit les Fichiers de mappage du clavier Dans /usr/share/keymaps et $FAI/files. Vous ne Devez pas spécifier le chemin complet, puisque ce fichier sera localisé automatiquement.
-rootpw
-
-    Le mot de passe root chiffré pour le nouveau système. Vous pouvez utiliser crypt(3), md5 et d' Autres types de hachage pour le mot de passe. Utilisez mkpasswd(1) pour créer le hachage d'un certain mot de passe. Par exemple, pour Générer le hachage MD5 pour l'utilisation du mot de passe.
-
+ROOTPW::
+Le mot de passe root chiffré pour le nouveau système. Vous pouvez utiliser `crypt(3)`, md5 et d' Autres types de hachage pour le mot de passe. Utilisez `mkpasswd(1)` pour créer le hachage d'un certain mot de passe. Par exemple, pour Générer le hachage MD5 pour l'utilisation du mot de passe.
+----
 $ echo "yoursecrectpassword" | mkpasswd -Hmd5 -s
+----
 
-UTC
+UTC::
+Réglez l'horloge du matériel à UTC si _UTC=yes_. Sinon, régler l'horloge à l'heure locale. Voir `clock(8)` pour en plus d'informations.
 
-    Réglez l'horloge du matériel à UTC si UTC=yes. Sinon, régler l'horloge à l'heure locale. Voir clock(8)pour en plus d'informations.
-TIMEZONE
+TIMEZONE::
+Est-ce que le fichier d'initialisation par rapport à '/usr/share/zoneinfo/'' indique votre fuseau horaire. Par exemple: _TIMEZONE=Europe/Berlin_.
 
-    Est-ce que le fichier d'initialisation par rapport à /usr/share/zoneinfo/ indique votre fuseau horaire. Par exemple: TIMEZONE=Europe/Berlin.
-MODULESLIST
+MODULESLIST::
+Une liste des modules du Noyau qui sont chargés pendent Le démarrage du nouveau systême (Écrit dans /etc/modules).
 
-    Une liste des modules du Noyau qui sont chargés pendent Le démarrage du nouveau systême (Écrit dans /etc/modules).
 
-Configuration du disque dur
+=== [[diskconfig]]Configuration du disque dur
 
-L'outil setup-storage(8) lit le fichier dans $FAI/disk_config pour la configuration du disque. Ce fichier décrit comment tous les disques Locaux devrons etre partitionné, Quels types de Systèmes de Fichiers doivent etre écris (Comme ext3/4, xfs, btrfs), et où ils seront Montés. Vous pouvez aussi créer des configurations RAID logiciel et LVM en Utilisant le Fichier de configuration. Il Est aussi possible de la mise en Conservation de le partitionnage du disque ou de conserver Les Donnees - sur CERTAINES partitions.
+L'outil `setup-storage(8)` lit le fichier dans '$FAI/disk_config' pour la configuration du disque. Ce fichier décrit comment tous les disques Locaux devrons etre partitionné, Quels types de Systèmes de Fichiers doivent etre écris (Comme ext3/4, xfs, btrfs), et où ils seront Montés. Vous pouvez aussi créer des configurations RAID logiciel et LVM en Utilisant le Fichier de configuration. Il Est aussi possible de la mise en Conservation de le partitionnage du disque ou de conserver Les Donnees sur CERTAINES partitions.
 
-Pendant le Processus d'installation de tous les Systèmes de Fichiers Locaux Sont Montés par rapport à /target. Par exemple, si vous Specifiez le Point de montage /home Dans un Fichier de configuration de disque, ce sera le répertoire /target/home pendant le Processus d'installation et deviendra /home pour le nouveau systéme Installé.
-Extraction du fichier de base
-Debconf préconfiguration
-L'Accès au dépôt de paquetages
-configuration du progiciel
+Pendant le Processus d'installation de tous les Systèmes de Fichiers Locaux Sont Montés par rapport à '/target'. Par exemple, si vous Specifiez le Point de montage '/home' Dans un Fichier de configuration de disque, ce sera le répertoire '/target/home' pendant le Processus d'installation et deviendra '/home' pour le nouveau systéme Installé.
 
-Avant l'installation de de paquets, FAI va ajouter le contenu de Tous les Fichiers nommés package_config/class.asc à la liste des clés apt. Si votre depo locale est signé par votre keyid AB12CD34 vous pouvez Facilement ajouter cette clé, aussi FAI l'utilisera pendant l'installation. Utilisez cette commande pour Créer le fichier CLASS.asc:
+=== [[extrbase]]Extraction du fichier de base
 
+=== [[debconf]]Debconf préconfiguration
+
+=== [[repository]]L'Accès au dépôt de paquetages
+
+=== [[packageconfig]]configuration du progiciel
+
+Avant l'installation de de paquets, FAI va ajouter le contenu de Tous les Fichiers nommés _package_config/class.asc_ à la liste des clés apt. Si votre depo locale est signé par votre keyid AB12CD34 vous pouvez Facilement ajouter cette clé, aussi FAI l'utilisera pendant l'installation. Utilisez cette commande pour Créer le fichier 'CLASS.asc':
+
+----
 faiserver$ gpg -a --export AB12CD34 > /srv/fai/config/package_config/MYCLASS.asc
+----
 
-Le script install_packages(8) installe les Logiciels Sélectionnés. Il lira tous les fichiers de configuration Dans $FAI/package_config Dont le nom correspond aux classes definie. La syntaxe est tres simple.
+Le script `install_packages(8)` installe les Logiciels Sélectionnés. Il lira tous les fichiers de configuration Dans '$FAI/package_config' Dont le nom correspond aux classes definie. La syntaxe est tres simple.
 
+----
 # an example package class
 
 PACKAGES taskinst
@@ -637,79 +644,86 @@ gpm xdm
 
 PACKAGES aptitude GRUB
 lilo- grub
+----
 
-Commentaires Commencent par un Dièse et se terminent à la fin de la ligne. Chaqué commande de paquetage commence par Le mot PACKAGES Suivi par un nom de commande, Ce qui correspond à l'outil de package Comme apt-get, aptitude ou yum par exemple. la commande qui définit la commandent qui sera utilisé pour installer les paquets nommés après cette commande. La liste de toutes les commandes disponibles peuvent Être listé en utilisant install_packages -H. Les paquets d'outils pris en charges sont: aptitude, apt-get, smart, yast, yum, rpm, zypper
+Commentaires Commencent par un Dièse et se terminent à la fin de la ligne. Chaqué commande de paquetage commence par Le mot _PACKAGES_ Suivi par un nom de commande, Ce qui correspond à l'outil de package Comme apt-get, aptitude ou yum par exemple. la commande qui définit la commandent qui sera utilisé pour installer les paquets nommés après cette commande. La liste de toutes les commandes disponibles peuvent Être listé en utilisant _install_packages -H_. Les paquets d'outils pris en charges son _aptitude, apt-get, smart, yast, yum, rpm, zypper_
 
-hold
+hold::
+Mettez un paquet en attente. Ce Paquet ne sera pas pris en charges par dpkg, pas exemple non mis à niveau.
 
-    Mettez un paquet en attente. Ce Paquet ne sera pas pris en charges par dpkg, pas exemple non mis à niveau.
-install
+install::
+Installez Tous les paquets (en utilisant `apt-get`) Qui sont précise dans les lignes Suivantes. Si un tiret est ajouté au nom du paquet (sans espace intermédiaire), le paquet sera supprimé, pas installé. Tous les noms de paquets sont vérifiées pour les fautes d'orthographe. Tout paquet qui n'existe pas, seront retiré de la liste des paquets à l'installation. Soyer donc prudentes de ne pas mal orthographier les noms de paquets.
 
-    Installez Tous les paquets (en utilisant apt-get) Qui sont précise dans les lignes Suivantes. Si un tiret est ajouté au nom du paquet (sans espace intermédiaire), le paquet sera supprimé, pas installé. Tous les noms de paquets sont vérifiées pour les fautes d'orthographe. Tout paquet qui n'existe pas, seront retiré de la liste des paquets à l'installation. Soyer donc prudentes de ne pas mal orthographier les noms de paquets.
-install-norec
+install-norec::
+Comme install,mais sans installer les paquets recommandés.
 
-    Comme install,mais sans installer les paquets recommandés.
-remove
+remove::
+Supprimer tous les paquets qui sont péciser dans les lignes suivantes. Annexer un + au nom du paquet si le paquet doit Être installé.
 
-    Supprimer tous les paquets qui sont péciser dans les lignes suivantes. Annexer un + au nom du paquet si le paquet doit Être installé.
-taskinst
+taskinst::
+Installez tous les paquets appartenant aux tâches qui sont spécifiées dans les lignes suivantes à l'aide de `tasksel(1)`. Vous pouvez aussi utiliser _aptitude_ pour installer les tâches.
 
-    Installez tous les paquets appartenant aux tâches qui sont spécifiées dans les lignes suivantes à l'aide de tasksel(1). Vous pouvez aussi utiliser aptitude pour installer les tâches.
-aptitude
+aptitude::
+Installez Ttus les paquets avec la commande `aptitude`. Ce sera la Valeur par défaut à l'avenir et pourra remplacer apt-get et taskinst. Aptitudes peut aussi installer les paquets
 
-    Installez Ttus les paquets avec la commande aptitude. Ce sera la Valeur par défaut à l'avenir et pourra remplacer apt-get et taskinst. Aptitudes peut aussi installer les paquets
-aptitude-r
+aptitude-r::
+Idem aptitude avec l'option _--with-recommends_.
 
-    Idem aptitude avec l'option --with-recommends.
-unpack
+unpack::
+Télécharge les paquets et décompresse seulement. Ne configure pas le paquet.
 
-    Télécharge les paquets et décompresse seulement. Ne configure pas le paquet.
-dselect-upgrade
+dselect-upgrade::
+Defini la sélections des paquets en Utilisant les lignes suivantes et installe ou supprime les paquets précisés. Ces lignes sont le résultat de la commande _dpkg --get-selections_. Il est recommandé de ne pas utiliser ce format, puisque vous devez aussi specifiez tous les paquets qui ne sont pas installés en raison d'une dépendance ou recommandation. Il vaut mieux juste spécifier le paquet que vous voulez avoir, et de laisser FAI (et apt-get) résoudre les dépendances.
 
-    Defini la sélections des paquets en Utilisant les lignes suivantes et installe ou supprime les paquets précisés. Ces lignes sont le résultat de la commande dpkg --get-selections. Il est recommandé de ne pas utiliser ce format, puisque vous devez aussi specifiez tous les paquets qui ne sont pas installés en raison d'une dépendance ou recommandation. Il vaut mieux juste spécifier le paquet que vous voulez avoir, et de laisser FAI (et apt-get) résoudre les dépendances.
+Plusieurs lignes avec des listes de noms de paquets séparés par des espaces suivent les directive PACKAGES. Toutes les dépendances sont résolues. Les paquetages avec suffixe _-_ (par exemple, _lilo-_) seront supprimés au lieu d'être installés. L'ordre des paquet n'a pas d'importance. Si vous souhaitez installer des paquets d'une autre version que la valeur par défaut, vous pouvez ajouter le nom de la version au nom du paquet comme dans _openoffice.org/etch-backports_. Vous pouvez également spécifier une certaine version comme _apt=0.3.1_. Plus d'informations sur ces fonctionnalités sont décrites dans `aptitude(8)`.
 
-Plusieurs lignes avec des listes de noms de paquets séparés par des espaces suivent les directive PACKAGES. Toutes les dépendances sont résolues. Les paquetages avec suffixe - (par exemple, lilo-) seront supprimés au lieu d'être installés. L'ordre des paquet n'a pas d'importance. Si vous souhaitez installer des paquets d'une autre version que la valeur par défaut, vous pouvez ajouter le nom de la version au nom du paquet comme dans openoffice.org/etch-backports. Vous pouvez également spécifier une certaine version comme apt=0.3.1. Plus d'informations sur ces fonctionnalités sont décrites dans aptitude(8).
+Une ligne qui contient la commande _PRELOADRM_, télécharge un fichier à l'aide de `wget(1)` dans un répertoire avant d'installer les packages. À l'aide du _file:_ URL, ce fichier est copié de +$FAI_ROOT+ vers le répertoire de téléchargement. Par exemple, le package `realplayer` a besoin d'une archive pour installer le logiciel, donc cette archive est téléchargée dans le répertoire '/root'. Après l'installation des paquets, ce fichier sera supprimé. Si le fichier ne doit pas être supprimé, utilisez plutôt la commande _PRELOAD_.
 
-Une ligne qui contient la commande PRELOADRM, télécharge un fichier à l'aide de wget(1) dans un répertoire avant d'installer les packages. À l'aide du file: URL, ce fichier est copié de $FAI_ROOT vers le répertoire de téléchargement. Par exemple, le package realplayer a besoin d'une archive pour installer le logiciel, donc cette archive est téléchargée dans le répertoire /root. Après l'installation des paquets, ce fichier sera supprimé. Si le fichier ne doit pas être supprimé, utilisez plutôt la commande PRELOAD.
-
-Il est possible d'ajouter une liste de noms de classes après la commande pour apt-get. Ainsi, cette commande PACKAGE ne sera exécutée que si la classe correspondante est définie. Ainsi, vous pouvez combiner de nombreux petits fichiers dans le fichier DEFAULT. ATTENTION! Utilisez cette fonctionnalité uniquement dans le fichier DEFAULT pour garder tout simple. Voir ce fichier pour quelques exemples.
+Il est possible d'ajouter une liste de noms de classes après la commande pour apt-get. Ainsi, cette commande _PACKAGE_ ne sera exécutée que si la classe correspondante est définie. Ainsi, vous pouvez combiner de nombreux petits fichiers dans le fichier DEFAULT. ATTENTION! Utilisez cette fonctionnalité uniquement dans le fichier DEFAULT pour garder tout simple. Voir ce fichier pour quelques exemples.
 
 Si vous souhaitez supprimer un nom de paquet d'une certaine classe faisait partie avant de cette classe , vous ne devez pas supprimer le nom du paquet classe, mais plutôt de lui ajouter un tiret (-). Cela garantira que le paquet est enlevé pendant une mise a jour sur des hôtes qui étaient Installé en utilisant l'ancienne définition de classe qui comprenait ce nom de paquet.
 
-Si vous spécifiez un paquet qui n'existe pas, ce paquet sera supprimé automatiquement de la liste d'installation uniquement si la commande install est utilisée.
-Scripts de personnalisation
+Si vous spécifiez un paquet qui n'existe pas, ce paquet sera supprimé automatiquement de la liste d'installation uniquement si la commande _install_ est utilisée.
 
-La commande fai-do-scripts(1) est appelée pour exécuter tous les scripts dans ce répertoire. Si un répertoire avec un nom de classe existe, tous les scripts correspondant à ^[0-9][0-9]* sont exécutés par ordre alphabétique. Il est donc possible d'utiliser des scripts de différentes langues (shell, cfengine, Perl, Python, Ruby, expect,..) pour une classe.
+=== [[cscripts]] Scripts de personnalisation
 
-Ces scripts écrivent leur sortie dans différents fichiers journaux, selon le type de script. Par exemple, Tous les scripts shell écrivent leur journal dans shell.log.
-Scripts shell
+La commande `fai-do-scripts(1)` est appelée pour exécuter tous les scripts dans ce répertoire. Si un répertoire avec un nom de classe existe, tous les scripts correspondant à '^[0-9][0-9]*' sont exécutés par ordre alphabétique. Il est donc possible d'utiliser des scripts de différentes langues (shell, cfengine, Perl, Python, Ruby, expect,..) pour une classe.
 
-La plupart des scripts sont des scripts Bourne shell. Les scripts shell sont utiles si la tâche de configuration ne doit seulement appeler certaines commandes shell ou créer un fichier à partir de zéro. Afin de ne pas écrire beaucoup de scripts courts, il est possible d'utiliser la commande ifclass pour tester si certaines classes sont définies.
+Ces scripts écrivent leur sortie dans différents fichiers journaux, selon le type de script. Par exemple, Tous les scripts shell écrivent leur journal dans 'shell.log'.
 
+==== [[shell]]Scripts shell
+
+La plupart des scripts sont des scripts Bourne shell. Les scripts shell sont utiles si la tâche de configuration ne doit seulement appeler certaines commandes shell ou créer un fichier à partir de zéro. Afin de ne pas écrire beaucoup de scripts courts, il est possible d'utiliser la commande `ifclass` pour tester si certaines classes sont définies.
+
+----
 ifclass -o A B C
+----
 
 Vérifie si l'une des classes A, B ou C est définie. L'utilisation de -a (AND logique) vérifie si toutes les classes d'une liste sont définies. La commande ifclass C vérifie si seule la classe C est définie.
 
-Pour copier des fichiers avec des classes, utilisez la commande fcopy(8). Si vous voulez extraire une archive à l'aide de classes, utilisez ftar(8). Pour ajouter des lignes à un fichier de configuration, utilisez ainsl(1) au lieu de simplement echo string >> filename..
+Pour copier des fichiers avec des classes, utilisez la commande `fcopy(8)`. Si vous voulez extraire une archive à l'aide de classes, utilisez `ftar(8)`. Pour ajouter des lignes à un fichier de configuration, utilisez `ainsl(1)` au lieu de simplement +echo string >> filename+.
 
-FAI prend également en charge les scripts zsh(1) pendant la tâche de personnalisation. Dans les scripts, la variable $classes contient une liste séparée par des espaces avec les noms de toutes les classes définies.
+FAI prend également en charge les scripts 'zsh(1)' pendant la tâche de personnalisation. Dans les scripts, la variable +$classes+ contient une liste séparée par des espaces avec les noms de toutes les classes définies.
+
 Scripts cfengine
 
-CFEngine dispose d'un riche ensemble de fonctions pour modifier les fichiers de configuration existants, par exemple LocateLineMatching, ReplaceAll, InsertLine, AppendIfNoSuchLine, HashCommentLinesContaining. Mais il ne peut pas traiter les variables qui sont indéfinies. Si une variable n'est pas définie, l'ensemble du script cfengine s'arrêtera.
+CFEngine dispose d'un riche ensemble de fonctions pour modifier les fichiers de configuration existants, par exemple _LocateLineMatching, ReplaceAll, InsertLine, AppendIfNoSuchLine, HashCommentLinesContaining_. Mais il ne peut pas traiter les variables qui sont indéfinies. Si une variable n'est pas définie, l'ensemble du script cfengine s'arrêtera.
 
-Plus d'informations peuvent être trouvées dans la page de manuel cfengine(8) ou sur la page d'accueil cfengine http://www.cfengine.org.
-Hooks
+Plus d'informations peuvent être trouvées dans la page de manuel `cfengine(8)` ou sur la page d'accueil cfengine http://www.cfengine.org.
 
-Les Hooks vous permettent de spécifier des fonctions ou des programmes qui sont exécutés à certaines étapes du processus d'installation. Avant qu'une tâche soit appelée, FAI recherche les hooks existants pour cette tâche et les exécute. Comme on peut s'y attendre, les classes sont également utilisées lors de l'appel de hooks. Les hooks sont exécutés pour chaque classe définie. Vous n'avez qu'à créer le hook avec le nom de la classe désirée et il sera utilisé. Si plusieurs hooks pour une tâche existent, ils sont appelés dans l'ordre défini par les classes. Si debug est inclus dans $FAI_FLAG l'option -d est passée à tous les hooks, donc vous pouvez déboguer vos propres hooks. Si certaines tâches par défaut doivent être ignorées, utilisez la sous-routine skiptask et une liste de tâches par défaut comme paramètres. Dans les exemples fournis, les hooks de la classe CENTOS ignorent certaines tâches spécifiques de Debian.
+=== [[hooks]]Hooks
 
-Le répertoire $FAI/hooks/ contient tous les hooks. Un hook est un fichier exécutable qui suit le nom de tâche taskname.CLASSNAME[.sh] (par exemple, repository.CENTOS ou savelog.LAST.sh), un nom de tâche et un nom de classe séparés par un point, éventuellement suivi de '.sh. Le nom de la tâche spécifie la tâche devant précéder l'exécution de ce hook, si la classe spécifiée est définie pour le client d'installation. Voir la section [tasks] pour une liste complète des tâches par défaut pouvant être utilisées.
+Les Hooks vous permettent de spécifier des fonctions ou des programmes qui sont exécutés à certaines étapes du processus d'installation. Avant qu'une tâche soit appelée, FAI recherche les hooks existants pour cette tâche et les exécute. Comme on peut s'y attendre, les classes sont également utilisées lors de l'appel de hooks. Les hooks sont exécutés pour chaque classe définie. Vous n'avez qu'à créer le hook avec le nom de la classe désirée et il sera utilisé. Si plusieurs hooks pour une tâche existent, ils sont appelés dans l'ordre défini par les classes. Si _debug_ est inclus dans +$FAI_FLAG+ l'option _-d_ est passée à tous les hooks, donc vous pouvez déboguer vos propres hooks. Si certaines tâches par défaut doivent être ignorées, utilisez la sous-routine _skiptask_ et une liste de tâches par défaut comme paramètres. Dans les exemples fournis, les hooks de la classe CENTOS ignorent certaines tâches spécifiques de Debian.
 
-Un hook du formulaire hookprefix.classname ne peut pas définir de variables pour le script d'installation, car il s'agit d'un sous-processus. Mais vous pouvez utiliser n'importe quel exécutable binaire ou n'importe quel script que vous avez écrit. Les hooks qui ont le suffixe .sh (par exemple, 'partition.DEFAULT.sh) doivent être des scripts Bourne shell et sont sourcé. Il est donc possible de redéfinir des variables pour les scripts d'installation.
+Le répertoire '$FAI/hooks/'' contient tous les hooks. Un hook est un fichier exécutable qui suit le nom de tâche 'taskname.CLASSNAME[.sh]'' (par exemple, 'repository.CENTOS' ou 'savelog.LAST.sh'), un nom de tâche et un nom de classe séparés par un point, éventuellement suivi de '.sh. Le nom de la tâche spécifie la tâche devant précéder l'exécution de ce hook, si la classe spécifiée est définie pour le client d'installation. Voir la section <<tasks>> pour une liste complète des tâches par défaut pouvant être utilisées.
 
-Dans la première partie de FAI, tous les hooks avec le préfixe confdir sont appelés. Ces hooks ne peuvent pas être localisés dans l'espace de configuration, car il n'est pas encore disponible. Par conséquent, ces hooks sont les seuls hooks situés dans $nfsroot/$FAI/hooks sur le serveur d'installation. Tous les autres hooks se trouvent dans $FAI_CONFIGDIR/hooks sur le serveur d'installation.
+Un hook du formulaire _hookprefix.classname_ ne peut pas définir de variables pour le script d'installation, car il s'agit d'un sous-processus. Mais vous pouvez utiliser n'importe quel exécutable binaire ou n'importe quel script que vous avez écrit. Les hooks qui ont le suffixe _.sh_ (par exemple, 'partition.DEFAULT.sh) doivent être des scripts Bourne shell et sont sourcé. Il est donc possible de redéfinir des variables pour les scripts d'installation.
 
-Tous les hooks appelés avant la définition des classes ne peuvent utiliser que les classes suivantes: DEFAULT $HOSTNAME LAST. Si un hook pour la classe DEFAULT doit être appelé uniquement si aucun hook pour la classe $HOSTNAME n'est disponible, insérez ces lignes sur le hook par défaut:
+Dans la première partie de FAI, tous les hooks avec le préfixe _confdir_ sont appelés. Ces hooks ne peuvent pas être localisés dans l'espace de configuration, car il n'est pas encore disponible. Par conséquent, ces hooks sont les seuls hooks situés dans +$nfsroot+'/$FAI/hooks' sur le serveur d'installation. Tous les autres hooks se trouvent dans '$FAI_CONFIGDIR/hooks' sur le serveur d'installation.
 
+Tous les hooks appelés avant la définition des classes ne peuvent utiliser que les classes suivantes: _DEFAULT $HOSTNAME LAST_. Si un hook pour la classe _DEFAULT_ doit être appelé uniquement si aucun hook pour la classe +$HOSTNAME+ n'est disponible, insérez ces lignes sur le hook par défaut:
+
+----
 hookexample.DEFAULT:
 
 #! /bin/sh
@@ -720,121 +734,72 @@ scriptname=$(basename $0 .DEFAULT)
 # here follows the actions for class DEFAULT
 .
 .
+----
 
 Quelques exemples de ce que les hooks pourraient être utilisés:
 
-    Charger les modules du noyau avant que les classes soient définies dans $FAI/class.
+- Charger les modules du noyau avant que les classes soient définies dans $FAI/class.
 
-    Envoyez un courriel à l'administrateur si l'installation est terminée.
+- Envoyez un courriel à l'administrateur si l'installation est terminée.
 
-    Installez un client sans disque et sautez le partitionnement de disque local.
+- Installez un client sans disque et sautez le partitionnement de disque local.
 
-    Jetez un oeil à hooks/debconf.IMAGE pour savoir comment cloner une machine en utilisant une image de système de fichiers.
+- Jetez un oeil à hooks/debconf.IMAGE pour savoir comment cloner une machine en utilisant une image de système de fichiers.
 
-FAI flags
+=== [[faiflags]]FAI flags
 
-La variable $FAI_FLAGS contient une liste de flags séparés par des espaces. Les flags suivants sont connus:
+La variable +$FAI_FLAGS+ contient une liste de flags séparés par des espaces. Les flags suivants sont connus:
 
-verbose
+verbose::
+Créez une sortie verbeuse pendant l'installation. Cela doit toujours être le premier flag, de sorte que les définitions consécutives des flags seront affichées verbeusement.
 
-    Créez une sortie verbeuse pendant l'installation. Cela doit toujours être le premier flag, de sorte que les définitions consécutives des flags seront affichées verbeusement.
-debug
+debug::
+Créer une sortie de débogage. Aucune installation sans assistance n'est effectuée. Pendant l'installation du paquet, vous devez répondre à toutes les questions des scripts postinstall sur la console du client. Beaucoup d'informations de débogage seront imprimées. Ce flag n'est utile que pour les développeurs FAI.
 
-    Créer une sortie de débogage. Aucune installation sans assistance n'est effectuée. Pendant l'installation du paquet, vous devez répondre à toutes les questions des scripts postinstall sur la console du client. Beaucoup d'informations de débogage seront imprimées. Ce flag n'est utile que pour les développeurs FAI.
-sshd
+sshd::
+Démarrez le démon ssh pour activer les connexions à distance. Vous pouvez ensuite vous connecter en tant que root à tous les clients d'installation pendant l'installation. Le mot de passe par défaut est fai et peut être modifié en définissant FAI_ROOTPW dans nfsroot.conf(5). Pour vous connecter à partir de votre serveur vers le client d'installation (nommé demohost dans cet exemple), utilisez:
 
-    Démarrez le démon ssh pour activer les connexions à distance. Vous pouvez ensuite vous connecter en tant que root à tous les clients d'installation pendant l'installation. Le mot de passe par défaut est fai et peut être modifié en définissant FAI_ROOTPW dans nfsroot.conf(5). Pour vous connecter à partir de votre serveur vers le client d'installation (nommé demohost dans cet exemple), utilisez:
-
+----
 $ ssh root@demohost
 Warning: Permanently added 'demohost,192.168.33.100' to the list of known hosts.
 root@demohost's password:
+----
 
-Ce n'est que le mot de passe root pendant le processus d'installation, pas pour le nouveau système installé. Vous pouvez également vous connecter sans mot de passe lorsque vous utilisez $SSH_IDENTITY.
+Ce n'est que le mot de passe root pendant le processus d'installation, pas pour le nouveau système installé. Vous pouvez également vous connecter sans mot de passe lorsque vous utilisez +$SSH_IDENTITY+.
 
-createvt
+createvt::
+Créez deux terminaux virtuels et exécutez un bash si _ctrl-c_ est tapé dans le terminal de console. Vous pouvez accéder aux terminaux supplémentaires en tapant _Alt-F2_ ou _Alt-F3_. Sinon, aucun terminal n'est disponible et la saisie _ctrl-c_ va redémarrer le client d'installation. La définition de ce flag est utile pour le débogage. Si vous voulez une installation qui ne devrait pas être interruptible, ne définissez pas ce flag.
 
-    Créez deux terminaux virtuels et exécutez un bash si ctrl-c est tapé dans le terminal de console. Vous pouvez accéder aux terminaux supplémentaires en tapant Alt-F2 ou Alt-F3. Sinon, aucun terminal n'est disponible et la saisie ctrl-c va redémarrer le client d'installation. La définition de ce flag est utile pour le débogage. Si vous voulez une installation qui ne devrait pas être interruptible, ne définissez pas ce flag.
-menu
+menu::
+Cela permet à un menu utilisateur de sélectionner un profil. Tous les fichiers +class/*.profile+ sont lus et un menu basé sur des curses sera créé.
 
-    Cela permet à un menu utilisateur de sélectionner un profil. Tous les fichiers class/*.profile sont lus et un menu basé sur des curses sera créé.
-reboot
+reboot::
+Redémarrez le client d'installation une fois l'installation terminée sans taper RETURN sur la console. Si ce drapeau n'est pas défini, et que error.log contient quelque chose, le client d'installation s'arrêtera et attendra que vous appuyez sur RETURN. Si aucune erreur ne s'est produite, le client redémarre automatiquement automatiquement.
 
-    Redémarrez le client d'installation une fois l'installation terminée sans taper RETURN sur la console. Si ce drapeau n'est pas défini, et que error.log contient quelque chose, le client d'installation s'arrêtera et attendra que vous appuyez sur RETURN. Si aucune erreur ne s'est produite, le client redémarre automatiquement automatiquement.
-halt
+halt::
+Arrêtez le client d'installation à la fin de l'installation, au lieu de redémarrer dans le nouveau système.
 
-    Arrêtez le client d'installation à la fin de l'installation, au lieu de redémarrer dans le nouveau système.
-initial
+initial::
+Utilisé par `setup-storage(8)`. Les partitions marquées avec +preserve_reinstall+ sont préservées à moins que ce flag ne soit défini. Souvent, ce drapeau est placé dans un 'fichierclass/*.var' en utilisant le paramètre 'flag_initial=1'.
 
-    Utilisé par setup-storage(8). Les partitions marquées avec preserve_reinstall sont préservées à moins que ce flag ne soit défini. Souvent, ce drapeau est placé dans un fichierclass/*.var en utilisant le paramètre flag_initial=1.
+== [[install]] FAI installe votre planification
 
-FAI installe votre planification
-La première partie d'une installation
+=== La première partie d'une installation
 
-Après le démarrage du noyau, il monte le système de fichiers racine via NFS à partir du serveur d'installation et démarre le script /usr/sbin/fai[10]. Ce script contrôle la séquence de l'installation. Aucun autre script dans /etc/init.d/ n'est utilisé.
+Après le démarrage du noyau, il monte le système de fichiers racine via NFS à partir du serveur d'installation et démarre le script '/usr/sbin/fai' footnote:[Puisque le système de fichiers racine sur les clients est monté via NFS, `fai` est localisé in '/srv/fai/nfsroot/usr/sbin' sur le servuer d'installation.]. Ce script contrôle la séquence de l'installation. Aucun autre script dans '/etc/init.d/' n'est utilisé.
 
-L'espace de configuration est rendu disponible via la méthode configurée (un montage NFS par défaut) du serveur d'installation au chemin défini dans $FAI [11].
-Messages de boot
+L'espace de configuration est rendu disponible via la méthode configurée (un montage NFS par défaut) du serveur d'installation au chemin défini dans $FAI footnote:[ '$FAI' est une variable interne utilisée par les scripts FAI. Par défaut, le chemin est _/var/lib/fai/config_.].
+
+=== [[bootmesg]]Messages de boot
 
 Lorsque vous démarrez le client d'installation à partir de la carte réseau avec PXE, vous obtiendrez des messages comme ceci:
 
-Managed PC Boot Agent (MBA) v4.00
-Pre-boot eXecution Environment (PXE) v2.00
-DHCP MAC ADDR: 00 A2 A3 04 05 06
-DHCP.../
+include::includes/bootexample.txt[]
 
-CLIENT MAC ADDR: 00 A2 A3 04 05 06  GUID: 3D6C4552
-CLIENT IP: 192.168.33.100 MASK: 255.255.255.0  DHCP IP: 192.168.33.250
-GATEWAY IP: 192.168.33.1
+À ce stade, le client d'installation a réussi à recevoir le réseau Config via DHCP et le noyau et initrd via TFTP. Il démarre maintenant Le noyau Linux et l'initrd. Si tout allait bien, l'initrd Monte nfsroot footnote:[ '/srv/fai/nfsroot' depuis le serveur d'installation via NFS] Et les scripts FAI sont lancés. La première chose que vous voyez est le message en rouge de copyright FAI.
 
-!PXE entry point found (we hope) at 9854:0106 via plan A
-UNDI code segment at: 9854 len 5260
-UNDI data segment at: 921D len 63A2
-Getting cached packet  01 02 03
-My Ip address seems to be C0A82164 192.168.33.100
-ip=192.168.33.100:192.168.33.250:192.168.33.1:255.255.255.0
-BOOTIF=01-00-A2-A3-04-05-06
-SYSUUID=
-TFTP prefix: fai/
-Trying to load pxelinux.cfg/C0A82164
+include::includes/fai-1st-part.txt[]
 
-Loading vmlinuz-3.16.0-4-amd64..................
-Loading initrd.img-3.16.0-4-amd64......................ready.
-
-À ce stade, le client d'installation a réussi à recevoir le réseau Config via DHCP et le noyau et initrd via TFTP. Il démarre maintenant Le noyau Linux et l'initrd. Si tout allait bien, l'initrd Monte nfsroot[12] Et les scripts FAI sont lancés. La première chose que vous voyez est le message en rouge de copyright FAI.
-
-             -------------------------------------------------
-                   Fully Automatic Installation  -  FAI
-
-                   5.3.3~bpo8+2  (c) 1999-2017
-               Thomas Lange  <lange@informatik.uni-koeln.de>
-             -------------------------------------------------
-
-Calling task_confdir
-Kernel currently running: Linux 3.16.0-4-amd64 x86_64 GNU/Linux
-Kernel parameters: BOOT_IMAGE=vmlinuz-3.16.0-4-amd64 initrd=initrd.img-3.16.0-4-amd64 \
- rw aufs ip=dhcp root=192.168.33.250:/srv/fai/nfsroot FAI_FLAGS=verbose,sshd,createvt\
- FAI_CONFIG_SRC=nfs://faiserver/srv/fai/cskoeln FAI_ACTION=install quiet\
- BOOTIF=01-00-a2-a3-04-05-06
-Reading /tmp/fai/boot.log
-FAI_FLAGS: verbose sshd createvt
-Setting SERVER=faiserver. Value extracted from FAI_CONFIG_SRC.
-FAI_CONFIG_SRC is set to nfs://faiserver/srv/fai/config
-Configuration space faiserver:/srv/fai/config mounted to /var/lib/fai/config
-Calling task_setup
-FAI_FLAGS: verbose sshd createvt
-15 Jan 13:22:37 ntpdate[1533]: step time server 192.168.33.250 offset -0.342793 sec
-Press ctrl-c to interrupt FAI and to get a shell
-Starting FAI execution - 20170115_132237
-Calling task_defclass
-fai-class: Defining classes.
-Executing /var/lib/fai/config/class/10-base-classes.
-10-base-classes      OK.
-Executing /var/lib/fai/config/class/20-hwdetect.source.
-Loading kernel module md-mod
-20-hwdetect.source   OK.
-Executing /var/lib/fai/config/class/50-host-classes.
-50-host-classes      OK.
-List of all classes: DEFAULT LINUX AMD64 FAIBASE DHCPC DEMO GRUB client01 LAST
 
 Vous pouvez également voir la liste des classes FAI, qui sont définies pour ce hôte. Cette liste est très importante pour le reste de l'installation.
 
