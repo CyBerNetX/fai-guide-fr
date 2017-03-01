@@ -85,7 +85,7 @@ https://github.com/faiproject/fai
 
 Les pages man incluent toujours des informations à jour et beaucoup de détails sur toutes les commandes FAI. Alors, n'oubliez pas de les lire attentivement. Lisez maintenant ce manuel, puis profitez de l'installation entièrement automatique et de votre temps économisé.
 
-===[[Motivation]]Motivation
+=== [[Motivation]]Motivation
 
 Avez-vous déjà effectué des installations identiques d'un système d'exploitation à plusieurs reprises? Souhaitez-vous être en mesure d'installer un cluster Linux avec des dizaines de nœuds à lui seul?
 
@@ -192,7 +192,7 @@ fai-kvm -Vn -u 3 pxe
 
 Vous pouvez démarrer autant de machines dans le réseau que les périphériques de prise sont disponibles. Toutes ces machines peuvent se connecter à l'Internet extérieur, mais sont seulement accessibles à partir de votre machine hôte.
 
-== [[overview]Vue d'ensemble et concepts
+== [[overview]]Vue d'ensemble et concepts
 
 FAI est un système non interactif permettant d'installer, de personnaliser et de gérer les configurations de systèmes et de logiciels Linux sur les ordinateurs ainsi que sur les machines virtuelles et les environnements chroot, des petits réseaux aux grandes infrastructures et clusters. Vous pouvez prendre un ou plusieurs PC vierges, mettre sous tension et après quelques minutes, Linux est installé, configuré et exécuté sur l'ensemble du cluster, sans aucune interaction nécessaire. Ainsi, il s'agit d'une méthode évolutive pour installer et mettre à jour un cluster sans surveillance avec peu d'efforts impliqués. FAI utilise le système d'exploitation Linux et une collection de scripts shell et Perl pour le processus d'installation. Les modifications apportées aux fichiers de configuration du système d'exploitation peuvent être effectuées par CFEngine, shell (bash et zsh), Perl, Python, Ruby et attendent des scripts.
 
@@ -460,7 +460,7 @@ Normalement, vous n'avez pas besoin d'apporter de modifications à la configurat
 
 La commande `fai-setup` a déjà configuré le démon NFS et ajouté quelques lignes au fichier de configuration _/etc/exports_. Il exporte les répertoires en utilisant NFS v3.
 
-==== Création de la configuration PXELINUX
+=== Création de la configuration PXELINUX
 
 La dernière étape avant de démarrer votre client pour la première fois est de spécifier quelle configuration le client doit démarrer lors de l'amorçage PXE. Nous fai-chboot(8) la commande `fai-chboot(8)` pour créer une configuration pxelinux pour chaque client d'installation. Cela comprend des informations sur le noyau, l'initrd, l'espace de configuration et certains paramètres d'amorçage. Vous devriez lire la page de manuel, qui vous donne quelques bons exemples. Voici la commande pour démarrer l'installation de l'hôte demohost.
 
@@ -705,7 +705,8 @@ Pour copier des fichiers avec des classes, utilisez la commande `fcopy(8)`. Si v
 
 FAI prend également en charge les scripts 'zsh(1)' pendant la tâche de personnalisation. Dans les scripts, la variable +$classes+ contient une liste séparée par des espaces avec les noms de toutes les classes définies.
 
-Scripts cfengine
+
+==== [[cfengine]]Scripts cfengine
 
 CFEngine dispose d'un riche ensemble de fonctions pour modifier les fichiers de configuration existants, par exemple _LocateLineMatching, ReplaceAll, InsertLine, AppendIfNoSuchLine, HashCommentLinesContaining_. Mais il ne peut pas traiter les variables qui sont indéfinies. Si une variable n'est pas définie, l'ensemble du script cfengine s'arrêtera.
 
