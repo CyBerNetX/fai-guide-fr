@@ -1175,7 +1175,7 @@ C'est tout!
 == [[hints]]Divers conseils et détails
 
 
-=== [[tasks]]TLa liste des tâches
+=== [[tasks]]La liste des tâches
 
 La plupart des tâches de l'installation sont définies comme des sous-routines qui sont définies dans '/usr/lib/fai/subroutines' (par exemple +task_instsoft+). Certains sont des scripts shell externes situés dans '/usr/lib/fai/'. Ils sont appelés via un sous-programme supérieur appelé _task_. Ce sous-programme appelle les hooks si disponibles, puis appelle la tâche (définie comme _task_<name>_). Une tâche et ses hooks peuvent être ignorés à la demande en utilisant la commande _skiptask()_.
 
