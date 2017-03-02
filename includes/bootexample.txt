@@ -1,0 +1,24 @@
+----
+Managed PC Boot Agent (MBA) v4.00
+Pre-boot eXecution Environment (PXE) v2.00
+DHCP MAC ADDR: 00 A2 A3 04 05 06
+DHCP.../
+
+CLIENT MAC ADDR: 00 A2 A3 04 05 06  GUID: 3D6C4552
+CLIENT IP: 192.168.33.100 MASK: 255.255.255.0  DHCP IP: 192.168.33.250
+GATEWAY IP: 192.168.33.1
+
+!PXE entry point found (we hope) at 9854:0106 via plan A
+UNDI code segment at: 9854 len 5260
+UNDI data segment at: 921D len 63A2
+Getting cached packet  01 02 03
+My Ip address seems to be C0A82164 192.168.33.100
+ip=192.168.33.100:192.168.33.250:192.168.33.1:255.255.255.0
+BOOTIF=01-00-A2-A3-04-05-06
+SYSUUID=
+TFTP prefix: fai/
+Trying to load pxelinux.cfg/C0A82164
+
+Loading vmlinuz-3.16.0-4-amd64..................
+Loading initrd.img-3.16.0-4-amd64......................ready.
+----
