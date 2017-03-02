@@ -980,45 +980,56 @@ Lorsque vous apportez des modifications à 'fai.conf', 'nfsroot.conf', le nfsroo
 
 === [[cdboot]]Création d'un CD FAI ou d'une clé USB
 
-Vous pouvez facilement créer un CD d'installation (ou clé USB) pour votre installation réseau. Cela permettra d'effectuer la même installation et la même configuration à partir du CD sans avoir besoin du serveur d'installation. Par conséquent, vous devez créer un miroir partiel de tous les paquets Debian nécessaires à vos classes FAI (à l'aide de fai-mirror(1)). Ensuite, la commande fai-cd(8) mettra ce miroir, le nfsroot et l'espace de configuration sur un CD amorçable. C'est tout!
+Vous pouvez facilement créer un CD d'installation (ou clé USB) pour votre installation réseau. Cela permettra d'effectuer la même installation et la même configuration à partir du CD sans avoir besoin du serveur d'installation. Par conséquent, vous devez créer un miroir partiel de tous les paquets Debian nécessaires à vos classes FAI (à l'aide de `fai-mirror(1)`). Ensuite, la commande `fai-cd(8)` mettra ce miroir, le nfsroot et l'espace de configuration sur un CD amorçable. C'est tout!
 
-Ce CD d'installation contient toutes les données nécessaires à l'installation. La commande fai-cd(8) place le nfsroot, l'espace de configuration et un sous-ensemble du miroir Debian sur un CD-ROM. Un miroir de paquets partiel est créé à l'aide de la commande fai-mirror(1) qui contient tous les paquetages utilisés par les classes utilisées dans votre espace de configuration. Un échantillon d'image ISO est disponible à l'adresse http://fai-project.org/fai-cd.
+Ce CD d'installation contient toutes les données nécessaires à l'installation. La commande `fai-cd(8)` place le nfsroot, l'espace de configuration et un sous-ensemble du miroir Debian sur un CD-ROM. Un miroir de paquets partiel est créé à l'aide de la commande `fai-mirror(1)` qui contient tous les paquetages utilisés par les classes utilisées dans votre espace de configuration. Un échantillon d'image ISO est disponible à l'adresse http://fai-project.org/fai-cd.
 
-Avec la commande dd(1), vous pouvez également créer une clé USB bootable en écrivant simplement le contenu du fichier ISO sur votre clé USB (ici le stick est /dev/sdf).
+Avec la commande `dd(1)`, vous pouvez également créer une clé USB bootable en écrivant simplement le contenu du fichier ISO sur votre clé USB (ici le stick est _/dev/sdf_).
 
+----
  faiserver# dd if=fai-cd.iso of=/dev/sdf bs=1M
+----
 
 Il ne s'agit pas d'un live CD du serveur d'installation.
-Création d'images de disque VM à l'aide de FAI
 
-En utilisant la commande fai-diskimage(8), vous pouvez créer des images de disques de machines Linux qui peuvent être utilisées avec une machine virtuelle comme KVM, VMware, VirtualBox ou un service cloud comme OpenStack, GCE, EC2 et autres. Le processus d'installation exécute les tâches FAI normales sur une image de disque brut. Après l'installation, vous pouvez démarrer l'image disque et avoir un système en cours d'exécution. L'image disque peut également être convertie au format qcow2.
 
+=== [[diskimage]]Création d'images de disque VM à l'aide de FAI
+
+En utilisant la commande `fai-diskimage(8)`, vous pouvez créer des images de disques de machines Linux qui peuvent être utilisées avec une machine virtuelle comme KVM, VMware, VirtualBox ou un service cloud comme OpenStack, GCE, EC2 et autres. Le processus d'installation exécute les tâches FAI normales sur une image de disque brut. Après l'installation, vous pouvez démarrer l'image disque et avoir un système en cours d'exécution. L'image disque peut également être convertie au format qcow2.
+
+----
  faiserver# export FAI_BASEFILEURL=http://fai-project.org/download/basefiles/
  faiserver# fai-diskimage -u cloud3 -S 2G -cDEBIAN,JESSIE64,AMD64,FAIBASE,GRUB_PC,CLOUD,GCE disk.raw
+----
 
 Crée le fichier disk.raw pour un hôte appelé cloud3, avec un petit ensemble de progiciels.
 
+----
  # export FAI_BASEFILEURL=http://fai-project.org/download/basefiles/
  # cl=DEFAULT,DHCPC,DEBIAN,AMD64,FAIBASE,GRUB_PC,UBUNTU,XENIAL,XENIAL64,XORG
  # fai-diskimage -v -u foobar -S5G -c$cl ubuntu.qcow2
+----
 
 Crée une image de disque appelée ubuntu.qcow2 pour un bureau Ubuntu 16.04 avec un nom d'hôte défini sur foobar.
 
 Vous ne devez pas configurer le nfsroot lorsque vous utilisez uniquement fai-diskimage. Mais vous avez besoin d'un fichier de base dans votre espace de configuration. Vous pouvez télécharger une image de base Debian à partir de http://fai-project.org/download/basefile et copier ceci dans votre espace de configuration. Si vous avez déjà configuré le nfsroot, vous pouvez copier le fichier de base Debian depuis le nfsroot dans votre espace de configuration à l'aide de cette commande:
 
+----
  $ cp /srv/fai/nfsroot/var/tmp/base.tar.xz
  $ /srv/fai/config/basefiles/JESSIE64.tar.xz
+----
 
-Système de sauvetage FAI
+=== [[sysinfo]]Système de sauvetage FAI
 
-Si vous définissez la variable $FAI_ACTION sur sysinfo (par exemple en utilisant fai-chboot -S), le client n'installera pas de nouveau système, mais collectera beaucoup d'informations système. Si vous définissez $FAI_ACTION sur inventory, vous ne recevrez que quelques informations sur le matériel. Les deux actions peuvent être utilisées pour FAI comme un système de sauvetage.
+Si vous définissez la variable +$FAI_ACTION+ sur sysinfo (par exemple en utilisant +fai-chboot -S+), le client n'installera pas de nouveau système, mais collectera beaucoup d'informations système. Si vous définissez +$FAI_ACTION+ sur _inventory_, vous ne recevrez que quelques informations sur le matériel. Les deux actions peuvent être utilisées pour FAI comme un système de sauvetage.
 
-Tapez ctrl-c pour obtenir un shell ou utilisez Alt-F2 ou Alt-F3 et vous obtiendrez un autre terminal de console, si vous avez ajouté createvt à $FAI_FLAGS.
+Tapez _ctrl-c_ pour obtenir un shell ou utilisez _Alt-F2_ ou _Alt-F3_ et vous obtiendrez un autre terminal de console, si vous avez ajouté _createvt_ à +$FAI_FLAGS+.
 
-Vous avez maintenant un système Linux en cours d'exécution sur le client d'installation sans utiliser le disque dur local. Utilisez-le comme système de secours si votre disque local est endommagé ou si l'ordinateur ne peut pas démarrer correctement à partir du disque dur. Vous obtiendrez un shell et vous pouvez exécuter diverses commandes (dmesg, lsmod, df, lspci, ...). Regardez le fichier journal dans /tmp/fai. Vous y trouverez de nombreuses informations sur le processus d'amorçage.
+Vous avez maintenant un système Linux en cours d'exécution sur le client d'installation sans utiliser le disque dur local. Utilisez-le comme système de secours si votre disque local est endommagé ou si l'ordinateur ne peut pas démarrer correctement à partir du disque dur. Vous obtiendrez un shell et vous pouvez exécuter diverses commandes (`dmesg`, `lsmod`, `df`, `lspci`, ...). Regardez le fichier journal dans `/tmp/fai`. Vous y trouverez de nombreuses informations sur le processus d'amorçage.
 
-FAI monte tous les systèmes de fichiers qu'il trouve sur les disques locaux en lecture seule. Il vous indique également sur quelle partition un fichier /etc/fstab existe. Lorsqu'une seule table de système de fichiers est trouvée, les partitions sont montées selon ces informations. Voici un exemple:
+FAI monte tous les systèmes de fichiers qu'il trouve sur les disques locaux en lecture seule. Il vous indique également sur quelle partition un fichier '/etc/fstab' existe. Lorsqu'une seule table de système de fichiers est trouvée, les partitions sont montées selon ces informations. Voici un exemple:
 
+----
 demohost:~# df
 Filesystem      1K-blocks      Used Available Use% Mounted on
 rootfs            4099064    414088   3645296  11% /
@@ -1034,88 +1045,104 @@ aufs              4099064    414088   3645296  11% /
 /dev/sda7          553376     16840    536536   4% /target/tmp
 /dev/sda8         2221628    275936   1832840  14% /target/usr
 /dev/sda6          577096    172924    374856  32% /target/var
+----
 
-Cette méthode peut être utilisée comme un environnement de secours! Si vous avez besoin d'un système de fichiers avec accès en lecture/écriture, utilisez la commande rwmount:
+*Cette méthode peut être utilisée comme un environnement de secours!* Si vous avez besoin d'un système de fichiers avec accès en lecture/écriture, utilisez la commande `rwmount`:
 
+----
 demohost# rwmount /target/home
+----
 
-FAI sans NFS
+=== [[nonfs]]FAI sans NFS
 
 Pour démarrer dans FAI et commencer la séquence d'installation sans utiliser le protocole NFS. Vous démarrez la machine cliente en utilisant PXE comme d'habitude, puis récupérez une image contenant le nfsroot via http.
 
 Pour créer une image, utilisez l'argument -S de fai-cd
 
+----
 faiserver# fai-cd -S squash.img
+----
 
 Déplacez cette image vers un répertoire à partir duquel elle peut être demandée via http (généralement un répertoire desservi par le serveur web)
 
 Pour demander maintenant l'image squashfs, ajoutez ce qui suit à votre ligne de commande du noyau, p. Dans votre fichier de configuration pxelinux pour le client.
 
+----
 root=live:http://faiserver/cskoeln/squash.img
+----
 
 Remplacez faiserver par le nom de domaine ou IP de la machine à laquelle votre image de squash est servie.
-Installation d'autres distributions à l'aide d'un nfsroot Debian
 
-Vous pouvez installer toutes sortes de distributions Linux à partir d'un seul nfsroot Debian. Par conséquent, vous devez créer un fichier base.tar.xz de la distribution que vous souhaitez installer et le placer dans le répertoire basefiles. Puis nommez-le UBUNTU1404.tar.xz par exemple. Un client d'installation appartenant à la classe UBUNTU1404 extrait ensuite ce fichier de base dans son système de fichiers vide. De plus, vous devez ajuster les sources.list ou les fichiers de configuration similaires nécessaires pour spécifier l'emplacement du référentiel de paquets.
 
-L'outils rinse(8) est utilisé pour créer des fichiers de base pour la distribution comme CentOS, openSUSE, Scientific Linux Cern ou Fedora. Certains fichiers de base peuvent être téléchargés à partir de http://fai-project.org/download/basefiles/.
+=== [[otherdists]]Installation d'autres distributions à l'aide d'un nfsroot Debian
 
-Le script mk-basefile dans /usr/share/doc/fai-doc/examples/simple/basefiles/ aide à créer ces fichiers de base.
-Création d'environnements chrooter et virtualiser
+Vous pouvez installer toutes sortes de distributions Linux à partir d'un seul nfsroot Debian. Par conséquent, vous devez créer un fichier base.tar.xz de la distribution que vous souhaitez installer et le placer dans le répertoire `basefiles`. Puis nommez-le UBUNTU1404.tar.xz par exemple. Un client d'installation appartenant à la classe UBUNTU1404 extrait ensuite ce fichier de base dans son système de fichiers vide. De plus, vous devez ajuster les sources.list ou les fichiers de configuration similaires nécessaires pour spécifier l'emplacement du référentiel de paquets.
 
-Si vous devez créer certains environnements chroot, ou un environnement de virtualisation où vous ne pouvez ni ne voulez exécuter un programme d'installation Debian normal pour accéder à un système opérationnel (par exemple, les domaines hôtes Xen), il ya l'action FAI dirinstall. En appelant
+L'outils `rinse(8)` est utilisé pour créer des fichiers de base pour la distribution comme CentOS, openSUSE, Scientific Linux Cern ou Fedora. Certains fichiers de base peuvent être téléchargés à partir de http://fai-project.org/download/basefiles/.
 
+Le script +mk-basefile+ dans '/usr/share/doc/fai-doc/examples/simple/basefiles/'' aide à créer ces fichiers de base.
+
+=== [[dirinstall]]Création d'environnements chrooter et virtualiser
+
+Si vous devez créer certains environnements chroot, ou un environnement de virtualisation où vous ne pouvez ni ne voulez exécuter un programme d'installation Debian normal pour accéder à un système opérationnel (par exemple, les domaines hôtes Xen), il ya l'action FAI _dirinstall_. 
+En appelant
+
+----
 faiserver# fai <options> dirinstall <target-directory>
+----
 
-Et en utilisant l'option -c <classes> ou -N vous obtenez une installation FAI, sans l'action de partitionnement, directement dans le répertoire cible. Le nom d'hôte de l'installation cible peut être spécifié à l'aide de -u <host-name>
+Et en utilisant l'option _-c <classes>_ ou _-N_ vous obtenez une installation FAI, sans l'action de partitionnement, directement dans le répertoire cible. Le nom d'hôte de l'installation cible peut être spécifié à l'aide de _-u <host-name>_
 
-Ceci, par exemple, peut être utilisé pour combiner FAI avec l'outil xen-tools, qui vous aide à construire des domaines invités Xen. xen-tools est très agréable pour générer des fichiers de configuration et bloquer des périphériques pour de nouveaux invités basés sur des commandes simples et/ou des fichiers de configuration, mais ils ne peuvent assigner qu'un seul rôle par installation pour la personnalisation. Les FAI-utilisateurs ont besoin et veulent plus, car ils sont utilisés pour avoir le système de classe. Ils les obtiennent même dans les installations xen-tools, en utilisant le code suivant en tant que rôle xen-tools script:
+Ceci, par exemple, peut être utilisé pour combiner FAI avec l'outil _xen-tools_, qui vous aide à construire des domaines invités Xen. _xen-tools_ est très agréable pour générer des fichiers de configuration et bloquer des périphériques pour de nouveaux invités basés sur des commandes simples et/ou des fichiers de configuration, mais ils ne peuvent assigner qu'un seul rôle par installation pour la personnalisation. Les FAI-utilisateurs ont besoin et veulent plus, car ils sont utilisés pour avoir le système de classe. Ils les obtiennent même dans les installations xen-tools, en utilisant le code suivant en tant que rôle xen-tools script:
 
+----
 #!/bin/sh
 TARGET=$1
 CMD="fai -N  -v -u ${hostname} dirinstall $TARGET"
 echo running $CMD
 $CMD
+----
 
-Ensuite, vous voulez définir la variable install=0 de la configuration xen-tools pour cet hôte.
-Utilisation de FAI pour les mises à jour
+Ensuite, vous voulez définir la variable _install=0_ de la configuration xen-tools pour cet hôte.
+
+=== [[softupdate]]Utilisation de FAI pour les mises à jour
 
 FAI peut également effectuer des mises à jour de systèmes déjà en cours d'exécution, sans réinstallation à partir de zéro. C'est ce qu'on appelle softupdate. Un FAI softupdate ignore les tâches qui ne sont pas adaptées à la mise à jour d'un système en cours d'exécution, comme le partitionnement des disques durs et la création de systèmes de fichiers. Au lieu de cela, il exécute uniquement les tâches de mise à jour et d'installation des progiciels et de l'appel des scripts de personnalisation.
 
 Pour exécuter un appel softupdate:
 
+----
 # fai -v -s nfs://faiserver/srv/fai/config softupdate
+----
 
-Par défaut, un softupdate utilise la liste des classes définies lors de l'installation initiale. Assurez-vous de définir la variable $LOGSERVER (effectuée dans un fichier class/*.var) si FAI doit enregistrer les fichiers journaux sur une machine distante.
+Par défaut, un softupdate utilise la liste des classes définies lors de l'installation initiale. Assurez-vous de définir la variable +$LOGSERVER+ (effectuée dans un fichier _class/*.var_) si FAI doit enregistrer les fichiers journaux sur une machine distante.
 
-C'est à vous, comment démarrer un softupdate sur un plus grand nombre d'hôtes. Vous pouvez faire le softupdate sur une base régulière via cron ou vous pouvez utiliser des outils comme clusterssh(1) pour démarrer un softupdate via un push sur une liste d'hôtes.
+C'est à vous, comment démarrer un softupdate sur un plus grand nombre d'hôtes. Vous pouvez faire le softupdate sur une base régulière via cron ou vous pouvez utiliser des outils comme `clusterssh(1)` pour démarrer un softupdate via un push sur une liste d'hôtes.
 
-Gardez à l'esprit que les scripts de personnalisation sont exécutés chaque fois que vous faites un softupdate. Cela signifie qu'ils doivent être idempotents, c'est-à-dire que le résultat de leur fonctionnement doit toujours produire le même résultat, même lorsqu'ils fonctionnent plus d'une fois.
+Gardez à l'esprit que les scripts de personnalisation sont exécutés chaque fois que vous faites un softupdate. Cela signifie qu'ils doivent être *idempotents*, c'est-à-dire que le résultat de leur fonctionnement doit toujours produire le même résultat, même lorsqu'ils fonctionnent plus d'une fois.
 
 Par exemple, l'ajout d'une ligne à un fichier ne doit pas se faire via ce code:
 
+----
 $ echo "some strings" >> /etc/fstab
+----
 
-Utilisez plutôt la commande ainsl(1) dans un script shell ou utilisez la fonction AppendIfNoSuchLine de cfengine.
+Utilisez plutôt la commande `ainsl(1)` dans un script shell ou utilisez la fonction _AppendIfNoSuchLine_ de cfengine.
 
-Toutes les commandes du script de personnalisation doivent être capables de modifier le système de fichiers cible s'il est disponible dans /target lors de l'installation initiale ou si c'est le système de fichiers normal relatif à / pendant le softtupdate.
+Toutes les commandes du script de personnalisation doivent être capables de modifier le système de fichiers cible s'il est disponible dans _/target_ lors de l'installation initiale ou si c'est le système de fichiers normal relatif à _/_ pendant le softtupdate.
 
 Voici quelques variables qui aident à écrire ces scripts:
 
-$target
++$target+:: Pointe vers le répertoire racine du client, qui est _/target_ pendant l'installation et _/_ pendant un softupdate.
 
-    Pointe vers le répertoire racine du client, qui est /target pendant l'installation et / pendant un softupdate.
-$FAI_ROOT
++$FAI_ROOT+:: C'est la même valeur que +$target+. Pour des raisons historiques, nous avons ces deux variables dans FAI.
 
-    C'est la même valeur que $target. Pour des raisons historiques, nous avons ces deux variables dans FAI.
-$ROOTCMD
++$ROOTCMD+:: Dans le cas de l'installation, il s'agit d'un alias pour 'chroot $target' en cas de softupdate c'est juste vide. Vous pouvez ajouter ceci aux commandes si vous avez besoin d'exécuter une commande dans le système de fichiers cible des clients via chroot.
 
-    Dans le cas de l'installation, il s'agit d'un alias pour chroot $target en cas de softupdate c'est juste vide. Vous pouvez ajouter ceci aux commandes si vous avez besoin d'exécuter une commande dans le système de fichiers cible des clients via chroot.
-$FAI_ACTION
++$FAI_ACTION+:: Si vous devez appeler le code en fonction de l'action FAI effectuée, vous pouvez utiliser cette variable. Il contient l'action actuellement exécutée: _install_, _softupdate_, _dirinstall_, _sysinfo_, _inventory_ ou votre propre action définie.
 
-    Si vous devez appeler le code en fonction de l'action FAI effectuée, vous pouvez utiliser cette variable. Il contient l'action actuellement exécutée: install, softupdate, dirinstall, sysinfo, inventory ou votre propre action définie.
 
-Comment installer un système d'exploitation 32 bits à partir d'un système d'exploitation 64 bits
+=== [[archcross]]Comment installer un système d'exploitation 32 bits à partir d'un système d'exploitation 64 bits
 
 Pour installer un ordinateur avec un système d'exploitation 32 bits, vous avez besoin d'un nfsroot i386. La création de cette nfsroot 32 bits sur un serveur d'installation exécutant amd64 est assez simple. Installez et configurez les paquets FAI. Copiez ensuite vos fichiers de configuration FAI dans un nouveau sous-répertoire.
 
