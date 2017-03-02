@@ -1146,43 +1146,55 @@ Voici quelques variables qui aident à écrire ces scripts:
 
 Pour installer un ordinateur avec un système d'exploitation 32 bits, vous avez besoin d'un nfsroot i386. La création de cette nfsroot 32 bits sur un serveur d'installation exécutant amd64 est assez simple. Installez et configurez les paquets FAI. Copiez ensuite vos fichiers de configuration FAI dans un nouveau sous-répertoire.
 
+----
 faiserver# cp -a /etc/fai /etc/fai-i386
+----
 
-Modifiez la variable $FAI_DEBOOTSTRAP_OPTS dans /etc/fai-i386/nfsroot.conf et ajoutez l'option --arch i386. Choisissez également un répertoire différent pour votre nouveau nfsroot. Voici les deux lignes après l'édition.
+Modifiez la variable +$FAI_DEBOOTSTRAP_OPTS+ dans '/etc/fai-i386/nfsroot.conf' et ajoutez l'option +--arch i386+. Choisissez également un répertoire différent pour votre nouveau nfsroot. Voici les deux lignes après l'édition.
 
+----
 NFSROOT=/srv/fai/nfsroot-i386
 FAI_DEBOOTSTRAP_OPTS="--arch i386 --exclude=info --include=aptitude""
+----
 
-Appelez maintenant fai-make-nfsroot qui crée le nfsroot 32 bits dans /srv/fai/nfsroot-i386
+Appelez maintenant fai-make-nfsroot qui crée le nfsroot 32 bits dans '/srv/fai/nfsroot-i386'
 
+----
 faiserver# fai-make-nfsroot -v -C/etc/fai-i386
+----
 
-La création d'un miroir partiel utilisant fai-mirror(1) nécessaire à un CD amorçable ou une clé USB est également possible sur une architecture différente. Vous devez spécifier l'architecture lors de l'appel de fai-mirror.
+La création d'un miroir partiel utilisant `fai-mirror(1)` nécessaire à un CD amorçable ou une clé USB est également possible sur une architecture différente. Vous devez spécifier l'architecture lors de l'appel de fai-mirror.
 
+----
 $ fai-mirror -m800 -B -a i386 -v -cDEFAULT,DEBIAN,FAIBASE,I386 /srv/mirror-i386
+----
 
 C'est tout!
-Divers conseils et détails
-La liste des tâches
 
-La plupart des tâches de l'installation sont définies comme des sous-routines qui sont définies dans /usr/lib/fai/subroutines (par exemple task_instsoft). Certains sont des scripts shell externes situés dans /usr/lib/fai/. Ils sont appelés via un sous-programme supérieur appelé task. Ce sous-programme appelle les hooks si disponibles, puis appelle la tâche (définie comme task_<name>). Une tâche et ses hooks peuvent être ignorés à la demande en utilisant la commande skiptask().
+
+== [[hints]]Divers conseils et détails
+
+
+=== [[tasks]]TLa liste des tâches
+
+La plupart des tâches de l'installation sont définies comme des sous-routines qui sont définies dans '/usr/lib/fai/subroutines' (par exemple +task_instsoft+). Certains sont des scripts shell externes situés dans '/usr/lib/fai/'. Ils sont appelés via un sous-programme supérieur appelé _task_. Ce sous-programme appelle les hooks si disponibles, puis appelle la tâche (définie comme _task_<name>_). Une tâche et ses hooks peuvent être ignorés à la demande en utilisant la commande _skiptask()_.
 
 Suit maintenant la description de toutes les tâches, énumérées dans l'ordre dans lequel elles sont exécutées.
 
-confdir
+confdir::
+Les paramètres ajoutés au noyau peuvent définir des variables, le démon syslog est démarré. La liste des périphériques réseau est stockée dans +$netdevices+. Ensuite, des paramètres supplémentaires sont extraits d'un serveur DHCP. Le fichier de configuration du résolveur DNS est créé.
++
+L'emplacement de l'espace de configuration est défini par la variable +$FAI_CONFIG_SRC+.
++
+Ensuite, le fichier '$FAI/hooks/subroutines' est sourcé s'il existe. En utilisant ce fichier, vous pouvez définir vos propres sous-programmes ou remplacer la définition des sous-programmes FAI.
 
-    Les paramètres ajoutés au noyau peuvent définir des variables, le démon syslog est démarré. La liste des périphériques réseau est stockée dans $netdevices. Ensuite, des paramètres supplémentaires sont extraits d'un serveur DHCP. Le fichier de configuration du résolveur DNS est créé.
+setup::
+Cette tâche définit l'heure du système, tous les +$FAI_FLAGS+ sont définis et deux terminaux virtuels supplémentaires sont ouverts à la demande. Un démon de shell sécurisé est lancé à la demande pour les connexions à distance.
 
-    L'emplacement de l'espace de configuration est défini par la variable $FAI_CONFIG_SRC.
+defclass::
+Appellez `fai-class(1)` pour définir des classes à l'aide de scripts et de fichiers dans '$FAI/class' et classes de '/tmp/fai/additional-classes' et la variable +$ADDCLASSES+. La liste de toutes les classes définies est stockée dans la variable +$classes+ et enregistrée dans '/tmp/fai/FAI_CLASSES'.
 
-    Ensuite, le fichier $FAI/hooks/subroutines est sourcé s'il existe. En utilisant ce fichier, vous pouvez définir vos propres sous-programmes ou remplacer la définition des sous-programmes FAI.
-setup
-
-    Cette tâche définit l'heure du système, tous les $FAI_FLAGS sont définis et deux terminaux virtuels supplémentaires sont ouverts à la demande. Un démon de shell sécurisé est lancé à la demande pour les connexions à distance.
-defclass
-
-    Appellez fai-class(1) pour définir des classes à l'aide de scripts et de fichiers dans $FAI/class et classes de /tmp/fai/additional-classes et la variable $ADDCLASSES. La liste de toutes les classes définies est stockée dans la variable $classes et enregistrée dans /tmp/fai/FAI_CLASSES.
-defvar
+defvar::
 
     Sourcez tous les fichiers $FAI/class/*.var pour chaque classe définie. Si un hook a écrit quelques définitions de variables dans le fichier $LOGDIR/additional.var, ce fichier est également sourcé.
 action
