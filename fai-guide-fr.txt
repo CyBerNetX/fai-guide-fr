@@ -804,55 +804,67 @@ include::includes/fai-1st-part.txt[]
 
 Vous pouvez également voir la liste des classes FAI, qui sont définies pour ce hôte. Cette liste est très importante pour le reste de l'installation.
 
-La première tâche est appelée confdir, qui est chargée de Accès à l'espace de configuration. Ici, nous utilisons un montage NFS à partir de l'installation Comme vous pouvez le voir sur la console (et plus tard dans les journaux).
+La première tâche est appelée _confdir_, qui est chargée de Accès à l'espace de configuration. Ici, nous utilisons un montage NFS à partir de l'installation Comme vous pouvez le voir sur la console (et plus tard dans les journaux).
 
+----
 FAI_CONFIG_SRC is set to nfs://faiserver/srv/fai/config
 Configuration space faiserver:/srv/fai/config mounted to /var/lib/fai/config
+----
 
-Avant de lancer l'installation ($FAI_ACTION=install), l'ordinateur Bip trois fois. Donc, faites attention quand vous entendez trois bips mais vous Ne voulez pas effectuer une installation et laisser FAI effacer toutes vos données sur Le disque local!
-Redémarrage de l'ordinateur dans le nouveau système
+Avant de lancer l'installation (+$FAI_ACTION=install+), l'ordinateur Bip trois fois. Donc, faites attention quand vous entendez trois bips mais vous Ne voulez pas effectuer une installation et laisser FAI effacer toutes vos données sur Le disque local!
 
-Pour redémarrer l'ordinateur pendant ou à la fin de l'installation, vous devez utiliser la commande faireboot en faveur de la commande de redémarrage normal. Utilisez aussi faireboot si vous êtes connecté depuis la télécommande. Si l'installation n'est pas terminée, utilisez faireboot -s, donc les fichiers journaux sont également copiés sur le serveur d'installation.
+=== [[reboot]]Redémarrage de l'ordinateur dans le nouveau système
 
-Si l'installation est terminée, l'ordinateur doit démarrer un petit système Debian. Vous pouvez vous connecter en tant que demo ou root avec le mot de passe fai.
-Démarrage de FAI (tâche confdir)
+Pour redémarrer l'ordinateur pendant ou à la fin de l'installation, vous devez utiliser la commande `faireboot` en faveur de la commande de redémarrage normal. Utilisez aussi `faireboot` si vous êtes connecté depuis la télécommande. Si l'installation n'est pas terminée, utilisez _faireboot -s_, donc les fichiers journaux sont également copiés sur le serveur d'installation.
 
-Une fois le client d'installation démarré, seul le script /usr/sbin/fai est exécuté. Il effectuera une initialisation minimale. La variable $FAI_CONFIG_SRC [13] est utilisée pour accéder à l'espace de configuration FAI qui est alors disponible dans le répertoire $FAI [14]. FAI ne se déroulera pas sans l'espace de configuration.
-Définition de classes et de variables (tâches defclass et defvar)
+Si l'installation est terminée, l'ordinateur doit démarrer un petit système Debian. Vous pouvez vous connecter en tant que _demo_ ou _root_ avec le mot de passe _fai_.
 
-La commande fai-class(1) exécute des scripts dans $FAI/class pour définir des classes. Si les scripts écrivent une chaîne sur stdout, cela sera défini comme une classe. Lisez tous les détails dans la page de manuel de fai-class(1).
+=== [[isetup]]Démarrage de FAI (tâche confdir)
 
-Après avoir défini les classes, chaque fichier correspondant à .var avec un préfixe qui correspond à une classe définie provient de variables définies. Il doit contenir le code shell vaild.
-Partitionnement de disques locaux, création de systèmes de fichiers (tâches de partitionnement)
+Une fois le client d'installation démarré, seul le script '/usr/sbin/fai' est exécuté. Il effectuera une initialisation minimale. La variable +$FAI_CONFIG_SRC+ footnote:[Il a été défini sur la ligne de commande du noyau] est utilisée pour accéder à l'espace de configuration FAI qui est alors disponible dans le répertoire +$FAI+ footnote:[/var/lib/fai/config]. FAI ne se déroulera pas sans l'espace de configuration.
 
-Pour le partitionnement du disque, un fichier de configuration de disque de $FAI/disk_config est sélectionné à l'aide de classes.
+=== [[iclass]]Définition de classes et de variables (tâches defclass et defvar)
+
+La commande `fai-class(1)` exécute des scripts dans '$FAI/class' pour définir des classes. Si les scripts écrivent une chaîne sur stdout, cela sera défini comme une classe. Lisez tous les détails dans la page de manuel de `fai-class(1)`.
+
+Après avoir défini les classes, chaque fichier correspondant à _.var_ avec un préfixe qui correspond à une classe définie provient de variables définies. Il doit contenir le code shell vaild.
+
+=== [[ipartition]]Partitionnement de disques locaux, création de systèmes de fichiers (tâches de partitionnement)
+
+Pour le partitionnement du disque, un fichier de configuration de disque de '$FAI/disk_config' est sélectionné à l'aide de classes.
 
 Le format de la configuration du disque est similaire à un fichier fstab.
 
-L'outil de partitionnement setup-storage(8) exécute toutes les commandes nécessaires à la création de la disposition de la partition du disque, du RAID logiciel, du LVM et de la création des systèmes de fichiers. Lisez la page de manuel de setup-storage(8) pour une description détaillée et quelques exemples du format.
-Préréglage Debconf (tâche debconf)
+L'outil de partitionnement `setup-storage(8)` exécute toutes les commandes nécessaires à la création de la disposition de la partition du disque, du RAID logiciel, du LVM et de la création des systèmes de fichiers. Lisez la page de manuel de `setup-storage(8)` pour une description détaillée et quelques exemples du format.
 
-Les fichiers dans $FAI/debconf sont utilisés par debconf(7) habituel en présselectionnant si les noms de fichier correspondent à un nom de classe.
-Installation de progiciels (tâche instsoft)
+=== [[ipreseed]]Préréglage Debconf (tâche debconf)
 
-La commande install_packages(8) lit les fichiers de configuration à partir de $FAI/package_config en classe et installe des progiciels sur le nouveau système de fichiers.
+Les fichiers dans '$FAI/debconf' sont utilisés par `debconf(7)` habituel en présselectionnant si les noms de fichier correspondent à un nom de classe.
 
-Il installe les paquets en utilisant apt-get(8), aptitude(1), yum ou d'autres outils de paquetage sans aucune interaction manuelle nécessaire. Les paquets sont également résolus par les outils de paquets.
+=== [[ipackages]]Installation de progiciels (tâche instsoft)
 
-Le format des fichiers de configuration est décrit dans [packageconfig].
-Personnalisation spécifique au site (task configure)
+La commande `install_packages(8)` lit les fichiers de configuration à partir de '$FAI/package_config' en classe et installe des progiciels sur le nouveau système de fichiers.
 
-Souvent, les configurations par défaut des progiciels ne répondent pas à vos besoins spécifiques au site. Vous pouvez appeler des scripts arbitraires qui ajustent la configuration du système. Par conséquent, la commande fai-do-scripts(1) exécute des scripts dans $FAI/scripts d'une manière basée sur la classe. Il est possible d'avoir plusieurs scripts de différents types (shell, cfengine, ...) à exécuter pour une classe.
+Il installe les paquets en utilisant `apt-get(8)`, `aptitude(1)`, `yum` ou d'autres outils de paquetage sans aucune interaction manuelle nécessaire. Les paquets sont également résolus par les outils de paquets.
 
-L'ensemble de scripts par défaut dans $FAI/scripts inclut des exemples d'installation de machines Debian et CentOS. Ils définissent le mot de passe root, ajoutent un compte utilisateur démo, paramétrent le fuseau horaire, configurent le réseau pour DHCP ou utilisent une adresse IP fixe,la configuration grub et plus encore. Ils devraient faire un travail raisonnable pour votre installation. Vous pouvez les modifier ou ajouter de nouveaux scripts pour répondre à vos besoins locaux.
+Le format des fichiers de configuration est décrit dans <<packageconfig>>.
 
-Plus d'informations sur ces scripts sont décrits dans [cscripts].
-Enregistrement des fichiers journaux (tâche savelog)
+=== [[icscripts]]Personnalisation spécifique au site (task configure)
 
-Lorsque toutes les tâches sont terminées, les fichiers journaux sont écrits dans /var/log/fai/$HOSTNAME/install/[15] sur le nouveau système et sur le compte sur le serveur d'installation si $LOGUSER est défini. Il est également possible de spécifier un autre hôte comme enregistrement en enregistrant la destination via la variable $LOGSERVER. Si $LOGSERVER n'est pas défini, FAI utilise la variable $SERVER qui n'est définie que lors d'une installation initiale (par get-boot-info). Assurez-vous de définir $LOGSERVER dans un script class/*.var si vous utilisez l'action softupdate.
+Souvent, les configurations par défaut des progiciels ne répondent pas à vos besoins spécifiques au site. Vous pouvez appeler des scripts arbitraires qui ajustent la configuration du système. Par conséquent, la commande `fai-do-scripts(1)` exécute des scripts dans '$FAI/scripts' d'une manière basée sur la classe. Il est possible d'avoir plusieurs scripts de différents types (shell, cfengine, ...) à exécuter pour une classe.
 
-De plus, deux liens symboliques seront créés pour indiquer le dernier répertoire écrit. Le last lien symbolique pointe vers le répertoire journal de la dernière action FAI exécutée. Les liens symboliques last-install et last-sysinfo pointent vers le répertoire avec la dernière action correspondante. Par défaut, les fichiers journaux seront copiés sur le serveur de journal à l'aide de scp. Vous pouvez utiliser la variable $FAI_LOGPROTO dans le fichier fai.conf(5) pour choisir une autre méthode d'enregistrement des journaux sur le serveur distant. Voici un exemple de structure de lien symbolique:
+L'ensemble de scripts par défaut dans '$FAI/scripts' inclut des exemples d'installation de machines Debian et CentOS. Ils définissent le mot de passe root, ajoutent un compte utilisateur démo, paramétrent le fuseau horaire, configurent le réseau pour DHCP ou utilisent une adresse IP fixe,la configuration grub et plus encore. Ils devraient faire un travail raisonnable pour votre installation. Vous pouvez les modifier ou ajouter de nouveaux scripts pour répondre à vos besoins locaux.
 
+Plus d'informations sur ces scripts sont décrits dans <<cscripts>>.
+
+
+=== [[isavelog]]Enregistrement des fichiers journaux (tâche savelog)
+
+Lorsque toutes les tâches sont terminées, les fichiers journaux sont écrits dans _/var/log/fai/$HOSTNAME/install/_footnote:['/var/log/fai/localhost/install/' est un lien vers ce répertoire.] sur le nouveau système et sur le compte sur le serveur d'installation si +$LOGUSER+ est défini. Il est également possible de spécifier un autre hôte comme enregistrement en enregistrant la destination via la variable +$LOGSERVER+. Si +$LOGSERVER+ n'est pas défini, FAI utilise la variable +$SERVER+ qui n'est définie que lors d'une installation initiale (par get-boot-info). Assurez-vous de définir +$LOGSERVER+ dans un script _class/*.var_ si vous utilisez l'action _softupdate_.
+
+De plus, deux liens symboliques seront créés pour indiquer le dernier répertoire écrit. Le lien symbolique 'last' pointe vers le répertoire journal de la dernière action FAI exécutée. Les liens symboliques 'last-install' et 'last-sysinfo' pointent vers le répertoire avec la dernière action correspondante. Par défaut, les fichiers journaux seront copiés sur le serveur de journal à l'aide de scp. Vous pouvez utiliser la variable +$FAI_LOGPROTO+ dans le fichier 'fai.conf(5)' pour choisir une autre méthode d'enregistrement des journaux sur le serveur distant. Voici un exemple de structure de lien symbolique:
+
+----
 lrwxrwxrwx   1 fai fai   23 Dec  2  2013 last-sysinfo -> sysinfo-20131202_161237
 drwxr-xr-x   2 fai fai 4096 Dec  2  2013 sysinfo-20131202_161237
 drwxr-xr-x   2 fai fai 4096 Feb 14  2014 install-20140214_142150
@@ -860,98 +872,113 @@ drwxr-xr-x   2 fai fai 4096 Dec  2 11:47 install-20141202_113918
 lrwxrwxrwx   1 fai fai   23 Dec  4 13:22 last-install -> install-20141204_131351
 lrwxrwxrwx   1 fai fai   23 Dec  4 13:22 last -> install-20141204_131351
 drwxr-xr-x   2 fai fai 4096 Dec  4 13:22 install-20141204_131351
+----
 
 Vous trouverez des exemples de fichiers journaux à l'adresse http://fai-project.org/logs.
-Redémarrez le nouveau système installé
 
-Avant de redémarrer, le client d'installation appelle fai-chboot -d <hostname> sur le serveur d'installation, pour désactiver sa propre configuration PXELINUX. Sinon, il redémarrera l'installation lors de la prochaine initialisation. Normalement, cela devrait démarrer le nouveau système installé à partir de son second périphérique d'amorçage, le disque dur local.
 
-À la fin, le système est automatiquement redémarré si "reboot" a été ajouté à $FAI_FLAGS.
-Chapitre avancés de FAI
-Vérification des paramètres reçus des serveurs DHCP
+=== [[ireboot]]Redémarrez le nouveau système installé
 
-Si le client d'installation démarre, vous pouvez vérifier si toutes les informations provenant du démon DHCP sont correctement reçues. Les informations reçues sont écrites dans /tmp/fai/boot.log. Un exemple de résultat d'une requête DHCP peut être trouvé dans les fichiers journaux d'exemple.
-Surveillance de plusieurs installations clientes
+Avant de redémarrer, le client d'installation appelle `fai-chboot -d <hostname>` sur le serveur d'installation, pour désactiver sa propre configuration PXELINUX. Sinon, il redémarrera l'installation lors de la prochaine initialisation. Normalement, cela devrait démarrer le nouveau système installé à partir de son second périphérique d'amorçage, le disque dur local.
 
-Vous pouvez surveiller l'installation de tous les clients d'installation avec la commande fai-monitor(8). Tous les clients vérifient si ce démon est en cours d'exécution sur le serveur d'installation (ou sur l'ordinateur défini par la variable $monserver). Chaque fois qu'une tâche démarre ou se termine, un message est envoyé. Le démon du moniteur FAI imprime ces messages à la sortie standard. Il ya aussi un frontend graphique disponible, appelé fai-monitor-gui(1).
+À la fin, le système est automatiquement redémarré si "reboot" a été ajouté à +$FAI_FLAGS+.
 
+
+== [[advanced]]Chapitre avancés de FAI
+
+
+=== [[checkbootp]]Vérification des paramètres reçus des serveurs DHCP
+
+Si le client d'installation démarre, vous pouvez vérifier si toutes les informations provenant du démon DHCP sont correctement reçues. Les informations reçues sont écrites dans '/tmp/fai/boot.log'. Un exemple de résultat d'une requête DHCP peut être trouvé dans les fichiers journaux d'exemple.
+
+
+
+=== [[fai-monitor]]Surveillance de plusieurs installations clientes
+
+Vous pouvez surveiller l'installation de tous les clients d'installation avec la commande `fai-monitor(8)`. Tous les clients vérifient si ce démon est en cours d'exécution sur le serveur d'installation (ou sur l'ordinateur défini par la variable $monserver). Chaque fois qu'une tâche démarre ou se termine, un message est envoyé. Le démon du moniteur FAI imprime ces messages à la sortie standard. Il ya aussi un frontend graphique disponible, appelé `fai-monitor-gui(1)`.
+
+----
 $  fai-monitor | fai-monitor-gui - &
+----
 
-Collecte d'adresses Ethernet pour plusieurs hôtes
+
+=== [[mac]]Collecte d'adresses Ethernet pour plusieurs hôtes
 
 Vous devez collecter toutes les adresses Ethernet (MAC) des clients à l'installation et affecter un nom d'hôte et une adresse IP à chaque client. Pour collecter les adresses MAC, démarrez vos clients pour l'installation. Vous pouvez déjà le faire avant que n'importe quel démon DHCP s'exécute dans votre sous-réseau. Ils échoueront à démarrer (en raison du manque de DHCP ou de TFTP manquant), mais vous pouvez toujours collecter les adresses MAC.
 
 Pendant que les clients d'installation démarrent, ils envoient des paquets de diffusion au LAN. Vous pouvez enregistrer les adresses MAC de ces hôtes en exécutant simultanément la commande suivante sur le serveur:
 
+----
 faiserver# tcpdump -qtel broadcast and port bootpc >/tmp/mac.list
+----
 
-Une fois que les hôtes ont été envoyés, certains paquets de diffusion annule tcpdump en tapant ctrl-c. Vous obtenez une liste de toutes les adresses MAC uniques avec ces commandes:
+Une fois que les hôtes ont été envoyés, certains paquets de diffusion annule `tcpdump` en tapant _ctrl-c_. Vous obtenez une liste de toutes les adresses MAC uniques avec ces commandes:
 
+----
 faiserver$ perl -ane 'print "\U$F[0]\n"' /tmp/mac.list|sort|uniq
+----
 
-Après cela, vous n'avez qu'à assigner ces adresses MAC aux noms d'hôte et aux adresses IP (/etc/ethers et /etc/hosts ou aux cartes NIS correspondantes). Avec ces informations, vous pouvez configurer votre démon DHCP (voir la section [bootdhcp]). [16]
-Débogage du trafic réseau
+Après cela, vous n'avez qu'à assigner ces adresses MAC aux noms d'hôte et aux adresses IP (/etc/ethers et /etc/hosts ou aux cartes NIS correspondantes). Avec ces informations, vous pouvez configurer votre démon DHCP (voir la section [bootdhcp]). footnote:[Je recommande d'écrire les adresses MAC (les trois derniers octets suffiront si vous avez des cartes réseau du même fournisseur) et le nom d'hôte à l'avant de chaque châssis.]
 
-Si le client ne peut démarrer correctement à partir de la carte réseau, utilisez tcpdump(8) pour rechercher des paquets Ethernet entre le serveur d'installation et le client. Recherchez également les entrées de plusieurs fichiers journaux effectués par tftpd(8) et dhcpd(8) :
+==== Débogage du trafic réseau
 
+Si le client ne peut démarrer correctement à partir de la carte réseau, utilisez `tcpdump(8)` pour rechercher des paquets Ethernet entre le serveur d'installation et le client. Recherchez également les entrées de plusieurs fichiers journaux effectués par `tftpd(8)` et `dhcpd(8)` :
+
+----
 faiserver$ egrep "tftpd|dhcpd" /var/log/*
+----
 
-Détails du démarrage PXE
+=== [[pxeboot]]Détails du démarrage PXE
 
 Ici, nous décrivons les détails du démarrage PXE, qui ne sont nécessaires que si vous avez des problèmes lors du démarrage de vos clients d'installation.
 
-Presque toutes les cartes réseau modernes prennent en charge l'environnement de démarrage PXE. PXE est l'environnement d'exécution de pré-lancement. Cela nécessite le chargeur de démarrage PXELINUX et une version spéciale du démonTFTP, disponible dans les paquets Debian pxelinux et tftpd-hpa. Le démarrage PXE nécessite également un serveur DHCP, afin que la carte réseau puisse configurer ses paramètres IP. Il s'agit de la séquence d'une amorce PXE:
+Presque toutes les cartes réseau modernes prennent en charge l'environnement de démarrage PXE. PXE est l'environnement d'exécution de pré-lancement. Cela nécessite le chargeur de démarrage PXELINUX et une version spéciale du démonTFTP, disponible dans les paquets Debian +pxelinux+ et +tftpd-hpa+. Le démarrage PXE nécessite également un serveur DHCP, afin que la carte réseau puisse configurer ses paramètres IP. Il s'agit de la séquence d'une amorce PXE:
 
-    La carte réseau du client envoie son adresse MAC
-
-    Le serveur DHCP répond à la configuration IP du client
-
-    La carte réseau configure son IP
-
-    Le client d'installation obtient le binaire pxelinux.0 via TFTP
-
-    Obtenez le fichier de configuration pxelinux.cfg/C0A8210C via TFTP
-
-    C0A8210C est l'adresse IP du client en hexadécimal
-
-    Cette configuration contient le noyau, initrd et les paramètres de ligne de commande supplémentaires du noyau, qui a été créé par fai-chboot.
-
-    Obtenez le noyau et initrd via TFTP.
+* La carte réseau du client envoie son adresse MAC
+* Le serveur DHCP répond à la configuration IP du client
+* La carte réseau configure son IP
+* Le client d'installation obtient le binaire pxelinux.0 via TFTP
+* Obtenez le fichier de configuration pxelinux.cfg/C0A8210C via TFTP
+* C0A8210C est l'adresse IP du client en hexadécimal
+* Cette configuration contient le noyau, initrd et les paramètres de ligne de commande supplémentaires du noyau, qui a été créé par fai-chboot.
+* Obtenez le noyau et initrd via TFTP.
 
 Exemple d'un fichier pxelinux.cfg:
-
+----
 default fai-generated
 
 label fai-generated
 kernel vmlinuz-3.16.0-4-amd64
 append initrd=initrd.img-3.16.0-4-amd64 ip=dhcp  root=/srv/fai/nfsroot aufs  FAI_FLAGS=verbose,sshd,createvt FAI_CONFIG_SRC=nfs://faiserver/srv/fai/config FAI_ACTION=install
+----
 
-Voir /usr/share/doc/syslinux/pxelinux.doc pour des informations plus détaillées sur PXELINUX. Il existe un nouveau binaire lpxelinux qui prend également en charge le chargement du noyau et de l'initrd via FTP ou HTTP. La commande fai-chboot(8) prend en charge cette option avec l'option -U.
-Personnalisation de la configuration de votre serveur d'installation
+Voir '/usr/share/doc/syslinux/pxelinux.doc' pour des informations plus détaillées sur PXELINUX. Il existe un nouveau binaire lpxelinux qui prend également en charge le chargement du noyau et de l'initrd via FTP ou HTTP. La commande 'fai-chboot(8)'' prend en charge cette option avec l'option '-U'.
 
-    Miroir de paquetage local/plus rapide
 
-    Loguser différent
 
-    Local root password dans nfsroot
+=== [[Customizing your install server setup]]Personnalisation de la configuration de votre serveur d'installation
 
-La configuration du paquet FAI (et non les données de configuration pour les clients d'installation) est définie dans fai.conf(5). Les définitions qui sont utilisées uniquement pour créer le nfsroot sont situées dans nfsroot.conf(5). Vérifiez ces variables importantes dans nfsroot.conf avant d'appeler fai-setup ou fai-make-nfsroot.
+- Miroir de paquetage local/plus rapide
+- Loguser différent
+- Local root password dans nfsroot
 
-FAI_DEBOOTSTRAP
+La configuration du paquet FAI (et non les données de configuration pour les clients d'installation) est définie dans 'fai.conf(5)'. Les définitions qui sont utilisées uniquement pour créer le nfsroot sont situées dans 'nfsroot.conf(5)'. Vérifiez ces variables importantes dans 'nfsroot.conf' avant d'appeler 'fai-setup' ou 'fai-make-nfsroot'.
 
-    La construction de nfsroot utilise la commande debootstrap(8). Il a besoin de l'emplacement d'un miroir Debian et du nom de la distribution (wheezy, jessie, stretch, sid) pour lequel le système Debian de base devrait être construit. N'utilisez pas de distributions différentes ici et dans /etc/fai/apt/sources.list. Cela créera un nfsroot brisé.
-NFSROOT_ETC_HOSTS
+FAI_DEBOOTSTRAP::
+La construction de nfsroot utilise la commande `debootstrap(8)`. Il a besoin de l'emplacement d'un miroir Debian et du nom de la distribution (wheezy, jessie, stretch, sid) pour lequel le système Debian de base devrait être construit. N'utilisez pas de distributions différentes ici et dans '/etc/fai/apt/sources.list'. Cela créera un nfsroot brisé.
 
-    Cette variable n'est nécessaire que si les clients n'ont pas accès à un serveur DNS. Cette variable multiligne est ajoutée à /etc/hosts dans le nfsroot. Ensuite, les clients d'installation peuvent accéder à ces hôtes par leur nom sans utiliser DNS.
+NFSROOT_ETC_HOSTS::
+Cette variable n'est nécessaire que si les clients n'ont pas accès à un serveur DNS. Cette variable multiligne est ajoutée à /etc/hosts dans le nfsroot. Ensuite, les clients d'installation peuvent accéder à ces hôtes par leur nom sans utiliser DNS.
 
-Le contenu de /etc/fai/apt/sources.list est utilisé par le serveur d'installation et par les clients. Si votre serveur d'installation a plusieurs cartes réseau et différents noms d'hôte pour chaque carte (comme pour un serveur Beowulf), utilisez le nom du serveur d'installation qui est connu des clients d'installation.
+Le contenu de '/etc/fai/apt/sources.list' est utilisé par le serveur d'installation et par les clients. Si votre serveur d'installation a plusieurs cartes réseau et différents noms d'hôte pour chaque carte (comme pour un serveur Beowulf), utilisez le nom du serveur d'installation qui est connu des clients d'installation.
 
-Si vous avez des problèmes lors de l'exécution de fai-setup, ils proviennent habituellement de fai-make-nfsroot(8) qui est appelé par la commande précédente. L'ajout de -v vous donne une sortie plus détaillée qui vous aide à repérer l'erreur. La sortie est écrite dans /var/log/fai/fai-make-nfsroot.log. [17]
+Si vous avez des problèmes lors de l'exécution de `fai-setup`, ils proviennent habituellement de `fai-make-nfsroot(8)` qui est appelé par la commande précédente. L'ajout de '-v' vous donne une sortie plus détaillée qui vous aide à repérer l'erreur. La sortie est écrite dans '/var/log/fai/fai-make-nfsroot.log'. footnote:[Pour le débogage, il peut être utile d'entrer l'environnement chroot manuellement à l'aide de cette commande. 'faiserver# chroot /srv/fai/nfsroot bash']
 
-L'installation crée également le compte fai (défini par $LOGUSER) s'il n'est pas déjà disponible. Vous pouvez donc ajouter un utilisateur avant d'appeler fai-setup(8) à l'aide de la commande adduser(8) et utiliser ce compte local pour enregistrer des fichiers journaux. Les fichiers journaux de tous les clients d'installation sont enregistrés dans le répertoire de base de ce compte. Vous devriez changer le groupe principal de ce compte, donc ce compte a des droits d'écriture sur /srv/tftp/fai pour appeler fai-chboot pour créer la configuration PXE pour les hôtes.
+L'installation crée également le compte fai (défini par +$LOGUSER+) s'il n'est pas déjà disponible. Vous pouvez donc ajouter un utilisateur avant d'appeler `fai-setup(8)` à l'aide de la commande `adduser(8)` et utiliser ce compte local pour enregistrer des fichiers journaux. Les fichiers journaux de tous les clients d'installation sont enregistrés dans le répertoire de base de ce compte. Vous devriez changer le groupe principal de ce compte, donc ce compte a des droits d'écriture sur '/srv/tftp/fai' pour appeler fai-chboot pour créer la configuration PXE pour les hôtes.
 
-Lorsque vous apportez des modifications à fai.conf, nfsroot.conf, le nfsroot doit être reconstruit en appelant fai-make-nfsroot(8). Si vous souhaitez uniquement installer un nouveau paquet kernel sur nfsroot, ajoutez les flags -k ou -K à fai-make-nfsroot. Cela ne recréera pas votre nfsroot, mais ne mettra à jour que vos noyaux et les modules du noyau dans le nfsroot ou ajoutera des paquets supplémentaires dans le nfsroot.
-Création d'un CD FAI ou d'une clé USB
+Lorsque vous apportez des modifications à 'fai.conf', 'nfsroot.conf', le nfsroot doit être reconstruit en appelant `fai-make-nfsroot(8)`. Si vous souhaitez uniquement installer un nouveau paquet kernel sur nfsroot, ajoutez les flags _-k_ ou _-K_ à +fai-make-nfsroot+. Cela ne recréera pas votre nfsroot, mais ne mettra à jour que vos noyaux et les modules du noyau dans le nfsroot ou ajoutera des paquets supplémentaires dans le nfsroot.
+
+=== [[cdboot]]Création d'un CD FAI ou d'une clé USB
 
 Vous pouvez facilement créer un CD d'installation (ou clé USB) pour votre installation réseau. Cela permettra d'effectuer la même installation et la même configuration à partir du CD sans avoir besoin du serveur d'installation. Par conséquent, vous devez créer un miroir partiel de tous les paquets Debian nécessaires à vos classes FAI (à l'aide de fai-mirror(1)). Ensuite, la commande fai-cd(8) mettra ce miroir, le nfsroot et l'espace de configuration sur un CD amorçable. C'est tout!
 
