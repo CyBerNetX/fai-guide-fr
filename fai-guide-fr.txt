@@ -1195,219 +1195,252 @@ defclass::
 Appellez `fai-class(1)` pour définir des classes à l'aide de scripts et de fichiers dans '$FAI/class' et classes de '/tmp/fai/additional-classes' et la variable +$ADDCLASSES+. La liste de toutes les classes définies est stockée dans la variable +$classes+ et enregistrée dans '/tmp/fai/FAI_CLASSES'.
 
 defvar::
+Sourcez tous les fichiers '$FAI/class/*.var' pour chaque classe définie. Si un hook a écrit quelques définitions de variables dans le fichier '$LOGDIR/additional.var', ce fichier est également sourcé.
 
-    Sourcez tous les fichiers $FAI/class/*.var pour chaque classe définie. Si un hook a écrit quelques définitions de variables dans le fichier $LOGDIR/additional.var, ce fichier est également sourcé.
-action
+action::
+En fonction de la valeur de +$FAI_ACTION+, ce sous-programme décide de l'action FAI à exécuter. Les actions disponibles par défaut sont: _sysinfo_, _install_, _inventory_, _dirinstall_ et _softupdate_. Si +$FAI_ACTION+ a une autre valeur, une action définie par l'utilisateur est appelée si un fichier '$FAI/hooks/$FAI_ACTION' existe. Ainsi, vous pouvez facilement définir vos propres actions.
 
-    En fonction de la valeur de $FAI_ACTION, ce sous-programme décide de l'action FAI à exécuter. Les actions disponibles par défaut sont: sysinfo, install, inventory, dirinstall et softupdate. Si $FAI_ACTION a une autre valeur, une action définie par l'utilisateur est appelée si un fichier $FAI/hooks/$FAI_ACTION existe. Ainsi, vous pouvez facilement définir vos propres actions.
-sysinfo
+sysinfo::
+Appelée lorsque aucune installation n'est effectuée mais que l'action est _sysinfo_. Il affiche des informations sur le matériel détecté et monte les disques durs locaux en lecture uniquement sur '/target/+partitionname+' ou en regard d'un fichier 'fstab' trouvé à l'intérieur d'une partition. Les fichiers journaux sont stockés sur le serveur d'installation.
 
-    Appelée lorsque aucune installation n'est effectuée mais que l'action est sysinfo. Il affiche des informations sur le matériel détecté et monte les disques durs locaux en lecture uniquement sur /target/partitionname ou en regard d'un fichier fstab trouvé à l'intérieur d'une partition. Les fichiers journaux sont stockés sur le serveur d'installation.
-inventory
+inventory::
+Une courte liste des informations système est imprimée.
 
-    Une courte liste des informations système est imprimée.
-install
+install::
+Cette tâche contrôle la séquence d'installation. Vous entendrez trois bips avant le début de l'installation. Le travail principal consiste à appeler d'autres tâches et à enregistrer la sortie dans '/tmp/fai/fai.log'. Si vous avez des problèmes pendant l'installation, regardez tous les fichiers dans '/tmp/fai/'. Vous trouverez des exemples de fichiers journaux à l'adresse http://fai-project.org/logs/.
 
-    Cette tâche contrôle la séquence d'installation. Vous entendrez trois bips avant le début de l'installation. Le travail principal consiste à appeler d'autres tâches et à enregistrer la sortie dans /tmp/fai/fai.log. Si vous avez des problèmes pendant l'installation, regardez tous les fichiers dans /tmp/fai/. Vous trouverez des exemples de fichiers journaux à l'adresse http://fai-project.org/logs/.
-dirinstall
+dirinstall::
+Installez dans un répertoire, et non pas sur un disque local. Utilisez-le pour créer des environnements chrootés.
 
-    Installez dans un répertoire, et non pas sur un disque local. Utilisez-le pour créer des environnements chrootés.
-softupdate
+softupdate::
+Cette tâche, exécutée à l'intérieur d'un système en cours d'exécution via l'interface de ligne de commande `fai(8)`, effectue un softupdate. Voir le chapitre <<softupdate>> pour plus de détails.
 
-    Cette tâche, exécutée à l'intérieur d'un système en cours d'exécution via l'interface de ligne de commande fai(8), effectue un softupdate. Voir le chapitre [softupdate] pour plus de détails.
-partition
+partition::
+Appelle `setup-storage(8)` pour partitionner les disques durs et créer des systèmes de fichiers. La tâche écrit des définitions de variables pour la partition et le périphérique racine et de démarrage (+$ROOT_PARTITION, $BOOT_PARTITION, $BOOT_DEVICE+) dans '/tmp/fai/disk_var.sh' et crée un fichier 'fstab' pour le nouveau système.
 
-    Appelle setup-storage(8) pour partitionner les disques durs et créer des systèmes de fichiers. La tâche écrit des définitions de variables pour la partition et le périphérique racine et de démarrage ($ROOT_PARTITION, $BOOT_PARTITION, $BOOT_DEVICE) dans /tmp/fai/disk_var.sh et crée un fichier fstab pour le nouveau système.
-mountdisks
+mountdisks::
+Montez les partitions créées en fonction du fichier '/tmp/fai/fstab' créé par rapport à +$FAI_ROOT+.
 
-    Montez les partitions créées en fonction du fichier /tmp/fai/fstab créé par rapport à $FAI_ROOT.
-extrbase
+extrbase::
+Extrait un système minimal après lequel un chroot peut y être introduit. Par défaut, le fichier tar base '/var/tmp/base.tar.xz' sera extrait. Les fichiers correspondant à un nom de classe dans '$FAI/basefiles/' sont également utilisés pour décompresser un autre fichier tar selon les classes définies. Cela peut être utilisé pour installer des distributions Linux différentes de celles utilisées pour créer le nfsroot. Le fichier par défaut 'base.tar.xz' est un instantané d'un système Debian de base créé par `debootstrap(8)` Cette tâche utilise la variable +FAI_BASEFILEURL+ pour extraire le fichier de base via FTP ou HTTP si elle est définie.
 
-    Extrait un système minimal après lequel un chroot peut y être introduit. Par défaut, le fichier tar base /var/tmp/base.tar.xz sera extrait. Les fichiers correspondant à un nom de classe dans $FAI/basefiles/ sont également utilisés pour décompresser un autre fichier tar selon les classes définies. Cela peut être utilisé pour installer des distributions Linux différentes de celles utilisées pour créer le nfsroot. Le fichier par défaut base.tar.xz est un instantané d'un système Debian de base créé par debootstrap(8) Cette tâche utilise la variable FAI_BASEFILEURL pour extraire le fichier de base via FTP ou HTTP si elle est définie.
-debconf
+debconf::
+Appelle `fai-debconf(1)` pour définir les valeurs de la base de données de préconfiguration de debconf.
 
-    Appelle fai-debconf(1) pour définir les valeurs de la base de données de préconfiguration de debconf.
-repository
+repository::
+Préparez l'accès au référentiel de paquets en préparant la configuration apt. Cela peut également ajouter des clés de référentiel via `apt-key(8)` en classe à partir de fichiers comme _CLASSNAME.asc_ dans le répertoire _package_config_.
 
-    Préparez l'accès au référentiel de paquets en préparant la configuration apt. Cela peut également ajouter des clés de référentiel via apt-key(8) en classe à partir de fichiers comme CLASSNAME.asc dans le répertoire package_config.
-updatebase
+updatebase::
+Met à jour les paquets de base du nouveau système et met à jour la liste des paquets disponibles. Il falsifie également certaines commandes (appelées diversions) à l'intérieur du nouveau système installé à l'aide de `dpkg-divert(8)`, de sorte qu'aucun démon ne sera démarré pendant l'installation.
 
-    Met à jour les paquets de base du nouveau système et met à jour la liste des paquets disponibles. Il falsifie également certaines commandes (appelées diversions) à l'intérieur du nouveau système installé à l'aide de dpkg-divert(8), de sorte qu'aucun démon ne sera démarré pendant l'installation.
-instsoft
+instsoft::
+Installe les progiciels souhaités en utilisant des fichiers de classe dans '$FAI/package_config/'.
 
-    Installe les progiciels souhaités en utilisant des fichiers de classe dans $FAI/package_config/.
-configure
+configure::
+Appelle les scripts dans '$FAI/scripts/' et ses sous-répertoires pour chaque classe définie.
 
-    Appelle les scripts dans $FAI/scripts/ et ses sous-répertoires pour chaque classe définie.
-tests
+tests::
+Appelle les scripts de test dans '$FAI/tests/' et ses sous-répertoires pour chaque classe définie.
 
-    Appelle les scripts de test dans $FAI/tests/ et ses sous-répertoires pour chaque classe définie.
-finish
+finish::
+Démonte tous les systèmes de fichiers dans le nouveau système installé et supprime les diversions de fichiers à l'aide de la commande `fai-divert`.
 
-    Démonte tous les systèmes de fichiers dans le nouveau système installé et supprime les diversions de fichiers à l'aide de la commande fai-divert.
-chboot
+chboot::
+Modifie la configuration PXE d'un hôte sur le serveur d'installation qui indique quelle configuration PXELINUX doit être chargée lors de la prochaine initialisation à partir de la carte réseau via TFTP. Par conséquent, la commande `fai-chboot(8)` est exécutée à distance sur le serveur d'installation.
 
-    Modifie la configuration PXE d'un hôte sur le serveur d'installation qui indique quelle configuration PXELINUX doit être chargée lors de la prochaine initialisation à partir de la carte réseau via TFTP. Par conséquent, la commande fai-chboot(8) est exécutée à distance sur le serveur d'installation.
-savelog
+savelog::
+Enregistre les fichiers journaux sur le disque local et sur le compte +$LOGUSER+ sur +$LOGSERVER+ (par défaut sur le serveur d'installation).
 
-    Enregistre les fichiers journaux sur le disque local et sur le compte $LOGUSER sur $LOGSERVER (par défaut sur le serveur d'installation).
-faiend
+faiend::
+Attendez que les travaux en arrière-plan se terminent (par exemple, emacs compile des fichiers lisp) et redémarre automatiquement les clients d'installation ou attend la saisie manuelle avant le redémarrage.
 
-    Attendez que les travaux en arrière-plan se terminent (par exemple, emacs compile des fichiers lisp) et redémarre automatiquement les clients d'installation ou attend la saisie manuelle avant le redémarrage.
 
-Tests automatisés
 
-Après l'exécution des scripts de personnalisation, FAI exécutera certains tests si disponibles. En utilisant ces tests, vous pouvez vérifier les erreurs de l'installation. Les scripts de test sont appelés via fai-do-scripts(1) et doivent ajouter leurs messages à $LOGDIR/test.log. Un module Perl comprenant des sous-routines utiles peut être trouvé dans Faitest.pm. Un test peut également définir une nouvelle classe pour exécuter d'autres tests lors du prochain démarrage via la variable $ADDCLASSES.
-Découvrir automatiquement
+=== [[itests]]Tests automatisés
+
+Après l'exécution des scripts de personnalisation, FAI exécutera certains tests si disponibles. En utilisant ces tests, vous pouvez vérifier les erreurs de l'installation. Les scripts de test sont appelés via `fai-do-scripts(1)` et doivent ajouter leurs messages à _$LOGDIR/test.log_. Un module Perl comprenant des sous-routines utiles peut être trouvé dans _Faitest.pm_. Un test peut également définir une nouvelle classe pour exécuter d'autres tests lors du prochain démarrage via la variable +$ADDCLASSES+.
+
+
+=== [[autodiscover]] Découvrir automatiquement
 
 Dans FAI 5.0, nous avons publié une fonctionnalité qui permet aux clients de rechercher le faiserver dans leur sous-réseau respectif. Cela soulève la nécessité de récupérer l'adresse MAC de chaque client et de configurer le démon DHCP.
 
 Cela se fait en démarrant à partir d'une petite autodiscover FAI bootmedium (CD, USB, etc.), qui peut être créée via la commande:
 
+----
 faiserver# fai-cd -A autodiscover.iso
+----
 
 L'image a une taille d'environ 25 Mo et analyse le sous-réseau d'un serveur FAI. Par défaut, il affiche un menu avec tous les profils disponibles dans l'espace de configuration de la même manière que le drapeau de menu. Dans ce menu, vous pouvez sélectionner le type d'installation que vous souhaitez effectuer.
 
 Pour que les clients puissent trouver le faiserver, le faiserver doit exécuter fai-monitor.
-Modification du périphérique d'amorçage
+
+=== [[changeboot]]Modification du périphérique d'amorçage
 
 La modification de la séquence d'amorçage s'effectue normalement dans la configuration du BIOS. Mais vous ne pouvez pas changer le BIOS d'un système Linux en cours d'exécution.
 
-Ainsi, la séquence d'amorçage du BIOS restera inchangée et votre ordinateur devrait toujours démarrer en premier à partir de sa carte réseau et le deuxième périphérique d'amorçage devrait être le disque local. Ensuite, vous pouvez changer le périphérique d'amorçage du client en créant différentes configurations PXELINUX. Cela définira si une installation doit être effectuée, ou si le client doit démarrer à partir du disque local. Cela se fait à l'aide de fai-chboot(8).
-Comment créer un miroir Debian local
+Ainsi, la séquence d'amorçage du BIOS restera inchangée et votre ordinateur devrait toujours démarrer en premier à partir de sa carte réseau et le deuxième périphérique d'amorçage devrait être le disque local. Ensuite, vous pouvez changer le périphérique d'amorçage du client en créant différentes configurations PXELINUX. Cela définira si une installation doit être effectuée, ou si le client doit démarrer à partir du disque local. Cela se fait à l'aide de `fai-chboot(8)`.
 
-Le script mkdebmirror [18] peut être utilisé pour créer votre propre miroir Debian local. Ce script utilise la commande debmirror(1). Un miroir Debian partiel pour l'architecture i386 et amd64 pour Debian 8.0 (aka jessie) sans les paquets source nécessite environ 56 Go d'espace disque. L'accès au miroir via HTTP sera la méthode par défaut dans la plupart des cas. Pour afficher plus de résultats à partir du script, appelez mkdebmirror -v. Un compte root n'est pas nécessaire pour créer et maintenir le miroir Debian.
+
+=== [[debian-mirror]]Comment créer un miroir Debian local
+
+Le script `mkdebmirror` footnote:[Vous pouvez trouver le script dans '/usr/share/doc/fai-doc/examples/utils/' Version 5.3] peut être utilisé pour créer votre propre miroir Debian local. Ce script utilise la commande `debmirror(1)`. Un miroir Debian partiel pour l'architecture i386 et amd64 pour Debian 8.0 (aka jessie) sans les paquets source nécessite environ {mirrorsize}Go d'espace disque. L'accès au miroir via HTTP sera la méthode par défaut dans la plupart des cas. Pour afficher plus de résultats à partir du script, appelez +mkdebmirror -v+. Un compte root n'est pas nécessaire pour créer et maintenir le miroir Debian.
 
 Pour utiliser l'accès HTTP au miroir Debian local, installez un serveur Web et créez un lien symbolique vers le répertoire local où se trouve votre miroir:
 
+----
 faiserver# apt-get install apache2
 faiserver# ln -s /files/scratch/debmirror /var/www/html/debmirror
+----
 
-Créez un fichier sources.list(5) dans /etc/fai/apt qui donne accès à votre miroir Debian. Ajoutez également l'adresse IP du serveur HTTP à la variable $NFSROOT_ETC_HOSTS dans nfsroot.conf si les clients d'installation n'ont pas de résolution DNS.
-Petits conseils
+Créez un fichier `sources.list(5)` dans '/etc/fai/apt' qui donne accès à votre miroir Debian. Ajoutez également l'adresse IP du serveur HTTP à la variable +$NFSROOT_ETC_HOSTS+ dans 'nfsroot.conf' si les clients d'installation n'ont pas de résolution DNS.
 
-    Lorsque vous utilisez l'accès HTTP à un miroir Debian, la partition locale /var sur tous les clients d'installation doit être suffisamment grande pour conserver les paquets Debian téléchargés. N'essayez pas avec moins de 250 Moctets à moins que vous sachiez pourquoi. Vous pouvez limiter le nombre de paquets installés à la fois avec la variable $MAXPACKAGES.
 
-    Vous pouvez supprimer le logo rouge sur le client d'installation en appelant simplement une fois reset. Il ne s'affichera pas si vous créez un fichier à l'aide de cette commande sur le serveur d'installation:
+=== Petits conseils
 
+- Lorsque vous utilisez l'accès HTTP à un miroir Debian, la partition locale _/var_ sur tous les clients d'installation doit être suffisamment grande pour conserver les paquets Debian téléchargés. N'essayez pas avec moins de 250 Moctets à moins que vous sachiez pourquoi. Vous pouvez limiter le nombre de paquets installés à la fois avec la variable +$MAXPACKAGES+.
+
+- Vous pouvez supprimer le logo rouge sur le client d'installation en appelant simplement une fois `reset`. Il ne s'affichera pas si vous créez un fichier à l'aide de cette commande sur le serveur d'installation:
+
+----
 touch /srv/fai/nfsroot/.nocolorlogo
+----
 
-    Une liste des variables utilisées par FAI peut être trouvée à http://wiki.fai-project.org/wiki/Variables.
+- Une liste des variables utilisées par FAI peut être trouvée à http://wiki.fai-project.org/wiki/Variables.
 
-    Vous pouvez raccourcir certains scripts de personnalisation en utilisant une seule commande fcopy fcopy -r /.
+- Vous pouvez raccourcir certains scripts de personnalisation en utilisant une seule commande fcopy _fcopy -r /_.
 
-    Si vous reconstruisez le nfsroot, vous allez créer une nouvelle clé hôte ssh dans le nfsroot. La connexion à un client d'installation peut échouer, car la clé hôte change. Vous pouvez utiliser ceci:
+- Si vous reconstruisez le nfsroot, vous allez créer une nouvelle clé hôte ssh dans le nfsroot. La connexion à un client d'installation peut échouer, car la clé hôte change. Vous pouvez utiliser ceci:
 
+----
 $ ssh -o StrictHostKeyChecking=no root@installclient
+----
 
-    Vous pouvez également supprimer l'entrée hôte de votre client d'installation dans votre fichier ~/.ssh/known_hosts à l'aide de la commande ssh-keygen -R.
+- Vous pouvez également supprimer l'entrée hôte de votre client d'installation dans votre fichier _~/.ssh/known_hosts_ à l'aide de la commande _ssh-keygen -R_.
 
-    Dans les tâches chboot et savelog, une connexion utilisant un shell sécurisé est ouverte au serveur FAI (voir [isavelog]). Pour garantir que cela fonctionne de manière non interactive, une entrée appropriée dans NFSROOT/root/.ssh/known_hosts doit être créée. Lors de l'utilisation de fai-setup, cela se fait automatiquement, mais il peut s'avérer nécessaire de l'éditer manuellement si le nom de votre serveur FAI n'a pas été correctement déterminé. Si vous trébuchez sur des connexions ssh qui nécessitent de taper "yes" pour accepter la clé hôte pendant l'installation, vérifiez le contenu de votre fichier NFSROOT/root/.ssh/known_hosts
+- Dans les tâches chboot et savelog, une connexion utilisant un shell sécurisé est ouverte au serveur FAI (voir <<isavelog>>). Pour garantir que cela fonctionne de manière non interactive, une entrée appropriée dans 'NFSROOT/root/.ssh/known_hosts' doit être créée. Lors de l'utilisation de fai-setup, cela se fait automatiquement, mais il peut s'avérer nécessaire de l'éditer manuellement si le nom de votre serveur FAI n'a pas été correctement déterminé. Si vous trébuchez sur des connexions ssh qui nécessitent de taper "yes" pour accepter la clé hôte pendant l'installation, vérifiez le contenu de votre fichier 'NFSROOT/root/.ssh/known_hosts'
 
-    Une liste de tous les disques durs locaux est stockée dans $disklist. Il est défini après l'appel de set_disk_info.
+- Une liste de tous les disques durs locaux est stockée dans +$disklist+. Il est défini après l'appel de `set_disk_info`.
 
-    Utilisez fai-divert -a si un script postinst appelle un programme de configuration, par exemple Le script postinst pour package apache appelle apacheconfig, qui nécessite une entrée manuelle. Vous pouvez fausser le programme de configuration pour que l'installation puisse être entièrement automatique.
+- Utilisez `fai-divert -a` si un script postinst appelle un programme de configuration, par exemple Le script postinst pour package apache appelle apacheconfig, qui nécessite une entrée manuelle. Vous pouvez fausser le programme de configuration pour que l'installation puisse être entièrement automatique.
 
-    Parfois, l'installation semble s'arrêter, mais souvent il ya seulement un script postinstall d'un logiciel qui nécessite une entrée manuelle de la console. Passez à un autre terminal virtuel et regardez quel processus fonctionne avec des outils comme top(1) et pstree(1). Vous pouvez ajouter debug à FAI_FLAGS pour faire en sorte que le processus d'installation affiche toutes les sorties des scripts postinst sur la console et obtenir son entrée aussi à partir de la console.
+- Parfois, l'installation semble s'arrêter, mais souvent il ya seulement un script postinstall d'un logiciel qui nécessite une entrée manuelle de la console. Passez à un autre terminal virtuel et regardez quel processus fonctionne avec des outils comme `top(1)` et `pstree(1)`. Vous pouvez ajouter _debug_ à _FAI_FLAGS_ pour faire en sorte que le processus d'installation affiche toutes les sorties des scripts postinst sur la console et obtenir son entrée aussi à partir de la console.
 
-    Comment puis-je définir des classes sur la ligne de commande du noyau?
+- Comment puis-je définir des classes sur la ligne de commande du noyau?
++
+Lisez la page de manuel de `fai-class(8)`. Si vous souhaitez définir des classes supplémentaires (par exemple A, B, C) sur la ligne de commande du noyau, ajoutez ceci: _ADDCLASSES=A,B,C_
 
-    Lisez la page de manuel de fai-class(8). Si vous souhaitez définir des classes supplémentaires (par exemple A, B, C) sur la ligne de commande du noyau, ajoutez ceci: ADDCLASSES=A,B,C
+- Comment utiliser un noyau personnalisé dans le nfsroot?
++
+Construisez votre noyau personnalisé en construisant un paquet kernel à l'aide de `make-kpkg(8)` et utilisez l'option `--initrd`. Copiez ce paquet Debian dans un référentiel local et ajoutez-le à /etc/fai/sources.list. Ajoutez le nom de votre package à /etc/fai/NFSROOT. Ensuite appeler
++
+----
+# fai-make-nfsroot -k
+----
 
-    Comment utiliser un noyau personnalisé dans le nfsroot?
+- Puis-je utiliser un noyau 4.X?
++
+Oui. L'utilisation de FAI 5.1 et dracut 044+150-1 overlayfs (au lieu d'aufs) est prise en charge, de même que le noyau 4.x. Lorsque vous utilisez Debian jessie, vous pouvez utiliser un noyau de backports ou consulter https://lists.uni-koeln.de/pipermail/linux-fai/2016-March/011283.html
 
-    Construisez votre noyau personnalisé en construisant un paquet kernel à l'aide de make-kpkg(8) et utilisez l'option --initrd. Copiez ce paquet Debian dans un référentiel local et ajoutez-le à /etc/fai/sources.list. Ajoutez le nom de votre package à /etc/fai/NFSROOT. Ensuite appeler
+- Comment utiliser le nfsroot comme système pour les clients sans disque?
++
+http://wiki.fai-project.org/wiki/Use_nfsroot_for_diskless_clients
 
-    # fai-make-nfsroot -k
+- Comment faire pour servir plusieurs arborescence nfsroot sur un serveur FAI?
++
+Si vous souhaitez diffuser plusieurs répertoires nfsroot, vous devez créer des répertoires de configuration spécifiques dans '/etc' pour FAI, comme '/etc/fai-jessie' et '/etc/fai-stretch'. Ensuite, vous devez définir les variables +$NFSROOT+ dans différents répertoires et exécuter
 
-    Puis-je utiliser un noyau 4.X?
-
-    Oui. L'utilisation de FAI 5.1 et dracut 044+150-1 overlayfs (au lieu d'aufs) est prise en charge, de même que le noyau 4.x. Lorsque vous utilisez Debian jessie, vous pouvez utiliser un noyau de backports ou consulter https://lists.uni-koeln.de/pipermail/linux-fai/2016-March/011283.html
-
-    Comment utiliser le nfsroot comme système pour les clients sans disque?
-
-    http://wiki.fai-project.org/wiki/Use_nfsroot_for_diskless_clients
-
-    Comment faire pour servir plusieurs arborescence nfsroot sur un serveur FAI?
-
-    Si vous souhaitez diffuser plusieurs répertoires nfsroot, vous devez créer des répertoires de configuration spécifiques dans /etc pour FAI, comme /etc/fai-jessie et /etc/fai-stretch. Ensuite, vous devez définir les variables $NFSROOT dans différents répertoires et exécuter
-
+----
 faiserver#fai-make-nfsroot -c /etc/fai-jessie
+----
 
-flag_reboot (FAI_FLAGS)
+=== flag_reboot (FAI_FLAGS)
 
-Si flag_reboot est défini, en ajoutant "reboot" à $FAI_FLAGS, votre ordinateur client redémarrera après la fin de la tâche. Ceci est vrai pour les installations de réseau ainsi que pour les installations de bootmedium.
-CentOS reboot
+Si flag_reboot est défini, en ajoutant "reboot" à +$FAI_FLAGS+, votre ordinateur client redémarrera après la fin de la tâche. Ceci est vrai pour les installations de réseau ainsi que pour les installations de bootmedium.
 
+=== CentOS reboot
 Après l'installation, CentOS nécessite habituellement un redémarrage supplémentaire, en raison des correctifs de sécurité SELinux qui sont appliqués après l'installation.
-Fichiers journaux
 
-FAI crée plusieurs fichiers journaux. Pendant l'installation, ils sont stockés dans /tmp/fai sur le client d'installation lui-même. A la fin de l'installation, ils seront copiés sur le serveur d'installation (voir [isavelog]). Une fois le client d'installation redémarré dans son système nouvellement installé, vous pouvez trouver les journaux FAI dans /var/log/fai. Les fichiers journaux sont également créés lors de l'action softupdate ou dirinstall.
+
+=== [[logfiles]]Fichiers journaux
+
+FAI crée plusieurs fichiers journaux. Pendant l'installation, ils sont stockés dans '/tmp/fai' sur le client d'installation lui-même. A la fin de l'installation, ils seront copiés sur le serveur d'installation (voir <<isavelog>>). Une fois le client d'installation redémarré dans son système nouvellement installé, vous pouvez trouver les journaux FAI dans '/var/log/fai'. Les fichiers journaux sont également créés lors de l'action softupdate ou dirinstall.
 
 Sur le faiserver, vous pouvez trouver les fichiers journaux (distants) sous le répertoire ~fai.
 
 Les exemples de fichiers journaux des ordinateurs installés avec succès sont disponibles sur http://fai-project.org/logs. Ce sont quelques fichiers journaux qui sont créés par FAI.
 
-FAI_CLASSES
+FAI_CLASSES::
+Contient une liste de toutes les classes définies.
 
-    Contient une liste de toutes les classes définies.
-dmesg.log
+dmesg.log::
+La sortie de la commande `dmesg`. Contient des messages utiles de la mémoire tampon du noyau.
 
-    lA sortie de la commande dmesg. Contient des messages utiles de la mémoire tampon du noyau.
-fai.log
+fai.log::
+Le fichier journal principal. Contient toutes les informations importantes. Vous devez *toujours* lire ce fichier.
 
-    Le fichier journal principal. Contient toutes les informations importantes. Vous devez toujours lire ce fichier.
-boot.log
+boot.log::
+Une liste de variables de paramètres de réseau, principalement définis par le démon DHCP.
 
-    Une liste de variables de paramètres de réseau, principalement définis par le démon DHCP.
-format.log
+format.log::
+Sortie de l'outil de partition `setup-storage(8)`.
 
-    Sortie de l'outil de partition setup-storage(8).
-shell.log
+shell.log::
+La sortie de tous les scripts shell, utilisés pour la personnalisation.
 
-    La sortie de tous les scripts shell, utilisés pour la personnalisation.
-variables.log
+variables.log::
+Une liste de toutes les variables shell qui sont disponibles au cours d'une installation.
 
-    Une liste de toutes les variables shell qui sont disponibles au cours d'une installation.
-error.log
+error.log::
+Résumé des erreurs possibles dans tous les fichiers journaux.
 
-    Résumé des erreurs possibles dans tous les fichiers journaux.
-disk_var.sh
+disk_var.sh::
+Une liste des variables contenant des informations sur les périphériques et les partitions à partir desquelles la partition racine et une liste de périphériques de swap. Ces informations sont utilisées par certains scripts de personnalisation (par exemple _GRUB_PC/10-setup_).
 
-    Une liste des variables contenant des informations sur les périphériques et les partitions à partir desquelles la partition racine et une liste de périphériques de swap. Ces informations sont utilisées par certains scripts de personnalisation (par exemple GRUB_PC/10-setup).
+Si le processus d'installation se termine, le hook 'savelog.LAST.sh' recherche tous les fichiers journaux pour les erreurs courantes et les écrit dans le fichier 'error.log'. Donc, vous devriez d'abord regarder dans ce fichier pour les erreurs. Le fichier 'status.log' vous donne également le code de sortie de la dernière commande exécutée dans un script. Pour être sûr, vous devriez rechercher plus de détails dans tous les fichiers journaux.
 
-Si le processus d'installation se termine, le hook savelog.LAST.sh recherche tous les fichiers journaux pour les erreurs courantes et les écrit dans le fichier error.log. Donc, vous devriez d'abord regarder dans ce fichier pour les erreurs. Le fichier status.log vous donne également le code de sortie de la dernière commande exécutée dans un script. Pour être sûr, vous devriez rechercher plus de détails dans tous les fichiers journaux.
-Comment utiliser HTTP pour le démarrage PXE
+=== Comment utiliser HTTP pour le démarrage PXE
 
+----
 cp /usr/lib/PXELINUX/lpxelinux.0 /srv/tftp/fai/pxelinux.0
+----
 
 Activer l'accès HTTP au répertoire tftp:
 
+----
 cd /var/www/html
 ln -s /srv/tftp/fai
+----
 
-Ajoutez -U URL à l'appel fai-chboot. Par exemple:
+Ajoutez '-U URL' à l'appel 'fai-chboot'. Par exemple:
 
+----
 fai-chboot -U http://faiserver/fai -IFv .......
+----
 
-Dépannage
-Erreurs d'amorçage
+== [[troubleshoot]]Dépannage
 
-Le message d'erreur suivant indique que votre client d'installation n'obtient pas de réponse d'un serveur DHCP. Vérifiez vos câbles ou démarrez le démon dhcpd(8) avec le debug flag activé.
+=== [[booterror]]Erreurs d'amorçage
 
+Le message d'erreur suivant indique que votre client d'installation n'obtient pas de réponse d'un serveur DHCP. Vérifiez vos câbles ou démarrez le démon `dhcpd(8)` avec le debug flag activé.
+____
 PXE-E51: No DHCP or BOOTP offers received
 Network boot aborted
+____
 
 Si vous ne voyez pas le message suivant, le noyau d'installation n'a pas pu détecter votre carte réseau, par exemple en raison d'un pilote manquant:
 
+----
 Starting dhcp for interface eth0
 dhcp: PREINIT eth0 up
 dhcp: BOND setting eth
+----
 
-Vérifiez l'initrd dans le nfsroot (lsinird) si le pilote du noyau de votre carte réseau est inclus et vérifiez si vous souhaitez ajouter le paquet firmware-linux-nonfree dans /etc/fai/NFSROOT et reconstruisez l'initrd en appelant fai-make-nfsroot -k. Vous pouvez également ajouter un pilote à /srv/fai/nfsroot/etc/dracut.conf dans la ligne add_drivers+=.
+Vérifiez l'initrd dans le nfsroot (`lsinird`) si le pilote du noyau de votre carte réseau est inclus et vérifiez si vous souhaitez ajouter le paquet 'firmware-linux-nonfree' dans +/etc/fai/NFSROOT+ et reconstruisez l'initrd en appelant `fai-make-nfsroot -k`. Vous pouvez également ajouter un pilote à +/srv/fai/nfsroot/etc/dracut.conf+ dans la ligne +add_drivers+++=+.
 
 C'est le message d'erreur que vous verrez, lorsque votre carte réseau fonctionne, mais le serveur d'installation n'exporte pas le répertoire nfsroot vers les clients d'installation. Cela est souvent dû aux permissions NFS manquantes du côté serveur.
 
+----
 Starting dhcp for interface eth0
 dhcp: PREINIT eth0 up
 dhcp: BOND setting eth
@@ -1418,30 +1451,12 @@ dracut Warning: Could not boot
 .
 Dropping to debug shell
 dracut:/#
+----
 
-Maintenant, vous êtes à l'intérieur du shell d'urgence de l'initrd qui a été créé par dracut(8). Vous obtiendrez une invite du shell et pourrez consulter les fichiers journaux. Pour plus d'informations sur le débogage du processus de démarrage précoce à l'aide de dracut, consultez dracut.cmdline(7)
+Maintenant, vous êtes à l'intérieur du shell d'urgence de l'initrd qui a été créé par 'dracut(8)'. Vous obtiendrez une invite du shell et pourrez consulter les fichiers journaux. Pour plus d'informations sur le débogage du processus de démarrage précoce à l'aide de dracut, consultez `dracut.cmdline(7)`
 
 Utilisez la commande suivante sur le serveur d'installation pour voir quels répertoires sont exportés à partir du serveur d'installation (nommé faiserver):
 
+----
 $ showmount -e faiserver
-
-1. Solaris 8 Advanced Installation Guide at https://docs.oracle.com/cd/E19455-01/806-0957/806-0957.pdf
-2. http://www.science.uva.nl/pub/solaris/auto-install
-3. fai-kvm a besoin de beaucoup de ram pour la vm, à cause de la mise en cache de /var, 2GB sont OK
-4. Cette installation consommera environ 2 Go d'espace dans /tmp.
-5. Il est également possible d'utiliser uniquement le fichier de configuration avec la plus haute priorité puisque l'ordre des classes définit une priorité de bas à haut dans la liste des classes.
-6. Si vous souhaitez utiliser un miroir plus rapide, ajustez l'URL dans /etc/fai/apt/sources.list et FAI_DEBOOTSTRAP in /etc/fai/nfsroot.conf avant d'appeler fai-setup.
-7. Ceci appellera fai-make-nfsroot(8) interne.
-8. Ces fichiers ne doivent pas appartenir au compte racine.
-9. Vous pouvez également ajouter ceci dans votre système de noms de domaine (DNS)
-10. Puisque le système de fichiers racine sur les clients est monté via NFS, fai est localisé in /srv/fai/nfsroot/usr/sbin sur le servuer d'installation.
-11. $FAI est une variable interne utilisée par les scripts FAI. Par défaut, le chemin est /var/lib/fai/config.
-12. /srv/fai/nfsroot depuis le serveur d'installation via NFS
-13. Il a été défini sur la ligne de commande du noyau
-14. /var/lib/fai/config
-15. /var/log/fai/localhost/install/ est un lien vers ce répertoire.
-16. Je recommande d'écrire les adresses MAC (les trois derniers octets suffiront si vous avez des cartes réseau du même fournisseur) et le nom d'hôte à l'avant de chaque châssis.
-17. Pour le débogage, il peut être utile d'entrer l'environnement chroot manuellement à l'aide de cette commande. faiserver# chroot /srv/fai/nfsroot bash
-18. Vous pouvez trouver le script dans /usr/share/doc/fai-doc/examples/utils/
-Version 5.3
-Last updated 2017-01-24 15:09:25 CET
+----
