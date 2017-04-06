@@ -3,3 +3,5 @@ image*
 *log
 fai-guide-fr.html
 fai-guide-fr.pdf
+fai-guide-fr.xml
+*.patch
