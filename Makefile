@@ -3,7 +3,7 @@
 DOC = fai-guide-fr
 MISC_DOC = classes_description.txt changelog.old
 DOC2DIR = $(shell pwd)/../debian/fai-setup-storage/usr/share/doc/fai-setup-storage
-OPT = --dblatex-opts "-P latex.output.revhistory=0 --param=latex.encoding=utf8"
+OPT = --dblatex-opts="-P latex.output.revhistory=0 --param=latex.encoding=utf8" --no-xmllint
 
 
 free:	text html ps pdf
