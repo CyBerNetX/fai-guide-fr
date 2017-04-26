@@ -265,7 +265,7 @@ sysinfo              # print detailed system information
 inventory            # print short hardware inventory list
 ____
 
-Pour une description plus détaillée des _tâches_ , voir <<tâches>>.
+Pour une description plus détaillée des _tâches_ , voir <<tasks>>.
 
 Notez que vous n'êtes pas limité aux tâches FAI. Vous pouvez également définir des programmes ou des scripts supplémentaires qui seront exécutés à certaines occasions. On les appelle des _hooks_.
 
@@ -298,7 +298,7 @@ Les classes déterminent comment l'installation est effectuée. Par exemple, un 
 
 Souvent, une configuration client est créée en modifiant ou en ajoutant uniquement les classes auxquelles ce client appartient, ce qui rend l'installation d'un nouveau client très facile. Ainsi, aucune information supplémentaire ne doit être ajoutée à l'espace de configuration si les classes existantes suffisent à vos besoins.
 
-Comme vous pouvez le voir, les classes sont un pilier central de la personnalisation de votre espace de configuration et de l'installation de votre client. Pour définir vos propres classes, reportez-vous à <<définition des classes>>.
+Comme vous pouvez le voir, les classes sont un pilier central de la personnalisation de votre espace de configuration et de l'installation de votre client. Pour définir vos propres classes, reportez-vous à <<defining classes>>.
 
 == [[setup]]Configurer votre faiserver
 
@@ -481,7 +481,7 @@ Dans la section suivante, vous pouvez lire la planification de votre installatio
 
 === [[custom server]]Serveur personnalisé
 
-Le faiseur et sa configuration n'est nullement statique. Il est possible de personnaliser et d'étendre votre serveur. Pour cela, reportez-vous à la section <<Personnalisation de votre installation du serveur d'installation>> dans <<avancé>>.
+Le faiseur et sa configuration n'est nullement statique. Il est possible de personnaliser et d'étendre votre serveur. Pour cela, reportez-vous à la section <<Customizing your install server setup>> dans <<advanced>>.
 
 == [[plan]]Planifiez votre installation
 
