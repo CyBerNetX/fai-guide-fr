@@ -24,6 +24,10 @@ ps: $(DOC).txt images
 	a2x $(OPT) -L --icons -a toc -a toclevels=3 -f ps $(DOC).txt
 	rm -f $(DOC).xml $(DOC).fo
 
+epub: $(DOC).txt images
+	a2x $(OPT) -L --icons -a toc -a toclevels=3 -f epub $(DOC).txt
+	rm -f $(DOC).xml $(DOC).fo
+	
 # a2x uses lynx, maybe use w3m instead
 # which texwidth for text output?
 # asciidoc --doctype=article  -a "toc" -a "toclevels=3" -f /etc/asciidoc/text.conf -b html4 -o - "f-guide.txt" | lynx -dump -stdin >"./f-guide.text"
