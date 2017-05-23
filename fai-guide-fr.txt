@@ -236,33 +236,33 @@ les tâches::
 L'installation d'un client se compose de plusieurs parties, appelées tâches. Les tâches sont des sous-programmes prédéfinis qui effectuent une certaine partie de la FAI. Les tâches FAI suivantes sont exécutées au cours d'une installation sur les clients d'installation.
 
 ____
-confdir               # get the config space
-setup                 # some initialization, start sshd on demand
-defclass              # define FAI classes
-defvar                # define variables
-action                # evaluate FAI_ACTION
-install               # Start the installation
-partition             # partition the harddisks, create file systems
-mountdisks            # mount the file systems
-extrbase              # extract the base.tar.xz
-debconf               # do the Debian debconf preseeding
-repository            # prepare access to the package repository
-updatebase            # Set up package tools and update packages
-instsoft              # install software packages
-configure             # call customization scripts
-finish                # do some cleanup, show installation statistics
-tests                 # call tests if defined
-chboot                # call fai-chboot on the install server
-savelog               # save log files to local and remote location
-faiend                # reboot host, eject CD if needed
+	confdir               # get the config space
+	setup                 # some initialization, start sshd on demand
+	defclass              # define FAI classes
+	defvar                # define variables
+	action                # evaluate FAI_ACTION
+	install               # Start the installation
+	partition             # partition the harddisks, create file systems
+	mountdisks            # mount the file systems
+	extrbase              # extract the base.tar.xz
+	debconf               # do the Debian debconf preseeding
+	repository            # prepare access to the package repository
+	updatebase            # Set up package tools and update packages
+	instsoft              # install software packages
+	configure             # call customization scripts
+	finish                # do some cleanup, show installation statistics
+	tests                 # call tests if defined
+	chboot                # call fai-chboot on the install server
+	savelog               # save log files to local and remote location
+	faiend                # reboot host, eject CD if needed
 ____
 ____
 Il s'agit de tâches qui ne sont exécutées que lorsqu'une action différente est exécutée
 
-dirinstall           # install a chroot environment
-softupdate           # only do the system configuration
-sysinfo              # print detailed system information
-inventory            # print short hardware inventory list
+	dirinstall           # install a chroot environment
+	softupdate           # only do the system configuration
+	sysinfo              # print detailed system information
+	inventory            # print short hardware inventory list
 ____
 
 Pour une description plus détaillée des _tâches_ , voir <<tasks>>.
