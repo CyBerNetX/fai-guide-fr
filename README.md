@@ -1,450 +1,558 @@
+////
+  -*- Doc -*-
+////
 
-Guide FAI (Installation entièrement automatique)
-Thomas Lange
-<lange@informatik.uni-koeln.de>
-version 5.3, 16 Jan 2017 Traduction française: Jean-Baptiste Masurel
-Table des matières
-Abstrait
-Introduction
-Disponibilité
-Motivation
-Comment fonctionne FAI
-Caractéristiques
-Le temps de l'installation
-Quickstart - Pour l'utilisateur impatient
-Ma première installation
-Mon premier serveur d'installation
-Vue d'ensemble et concepts
-Conditions Générales
-Le concept de classe
-Configurer votre faiserver
-Installer les paquetages FAI
-Créez le nfsroot
-Création de l'espace de configuration
-Configurer les démons réseau
-Configuration du démon DHCP
-Ajout d'une entrée d'hôte au DHCP
-TFTP
-NFS
-Création de la configuration PXELINUX
-Serveur personnalisé
-Planifiez votre installation
-L'espace de configuration et ses sous-répertoires
-Définition des classes
-Définition des Variables
-Configuration du disque dur
-Extraction du fichier de base
-Debconf préconfiguration
-L'Accès au dépôt de paquetages
-configuration du progiciel
-Scripts de personnalisation
-Scripts shell
-Scripts cfengine
-Hooks
-FAI flags
-FAI installe votre planification
-La première partie d'une installation
-Messages de boot
-Redémarrage de l'ordinateur dans le nouveau système
-Démarrage de FAI (tâche confdir)
-Définition de classes et de variables (tâches defclass et defvar)
-Partitionnement de disques locaux, création de systèmes de fichiers (tâches de partitionnement)
-Préréglage Debconf (tâche debconf)
-Installation de progiciels (tâche instsoft)
-Personnalisation spécifique au site (task configure)
-Enregistrement des fichiers journaux (tâche savelog)
-Redémarrez le nouveau système installé
-Chapitre avancés de FAI
-Vérification des paramètres reçus des serveurs DHCP
-Surveillance de plusieurs installations clientes
-Collecte d'adresses Ethernet pour plusieurs hôtes
-Débogage du trafic réseau
-Détails du démarrage PXE
-Personnalisation de la configuration de votre serveur d'installation
-Création d'un CD FAI ou d'une clé USB
-Création d'images de disque VM à l'aide de FAI
-Système de sauvetage FAI
-FAI sans NFS
-Installation d'autres distributions à l'aide d'un nfsroot Debian
-Création d'environnements chrooter et virtualiser
-Utilisation de FAI pour les mises à jour
-Comment installer un système d'exploitation 32 bits à partir d'un système d'exploitation 64 bits
-Divers conseils et détails
-La liste des tâches
-Tests automatisés
-Découvrir automatiquement
-Modification du périphérique d'amorçage
-Comment créer un miroir Debian local
-Petits conseils
-flag_reboot (FAI_FLAGS)
-CentOS reboot
-Fichiers journaux
-Comment utiliser HTTP pour le démarrage PXE
-Dépannage
-Erreurs d'amorçage
-Abstrait
+FAI Guide (Fully Automatic Installation)
+========================================
+Thomas Lange <lange@informatik.uni-koeln.de>
+Mon, 16 Jan 2017
+:Date: a date
+:Revision: 5.3
 
-FAI est un système non interactif permettant d'installer, de personnaliser et de gérer les configurations de systèmes et de logiciels Linux sur les ordinateurs ainsi que sur les machines virtuelles et les environnements chroot, des petits réseaux aux grandes infrastructures et clusters.
+:nfsrootsize: 690
+:mirrorsize: 56
 
-Ce manuel décrit le logiciel d'installation entièrement automatique. Cela inclut l'installation des paquets, la configuration du serveur, la création de la configuration et la gestion des erreurs.
+////
+<tt>  => _
+path <file => ''
+<var> => +
+<prgn> =>` ` (wie manref)
+<em>  => _
+////
 
+
+
+Abstract
+--------
+FAI is a non-interactive system to install, customize and manage Linux
+systems and software configurations on computers as well as virtual
+machines and chroot environments, from small networks to large
+infrastructures and clusters.
+
+This manual describes the Fully Automatic Installation software. This
+includes the installation of the packages, setting up the server, creating of the
+configuration and how to deal with errors.
+
+----
      +-----------------------------------------------------------------------+
      | This manual describes FAI 5.3 but most things are also valid for 4.x. |
      +-----------------------------------------------------------------------+
+----
 
 (c) 2000-2017 Thomas Lange
-droits d'auteur
 
-Ce manuel est un logiciel libre; Vous pouvez le redistribuer et / ou le modifier selon les termes de la Licence Publique Générale GNU publiée par la Free Software Foundation; Soit la version 2, soit (à votre choix) toute version ultérieure.
 
-Ceci est distribué dans l'espoir qu'il sera utile, mais sans aucune garantie ; Sans même la garantie implicite de qualité marchande ou d'adaptation à un usage particulier. Pour plus de détails, consultez la GNU General Public License.<
+.Copyright
+This manual is free software; you may redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 2, or (at your option) any
+later version.
 
-Une copie de la GNU General Public License est disponible sous la forme /usr/share/common-licenses/GPL dans la distribution Debian GNU/Linux ou sur le World Wide Web sur le site GNU Vous pouvez également l'obtenir en écrivant à la Free Software Foundation , Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, États-Unis.
-Introduction
-Disponibilité
+This is distributed in the hope that it will be useful, but *without
+any warranty*; without even the implied warranty of merchantability or
+fitness for a particular purpose. See the GNU General Public License
+for more details.
 
-Page d'accueil
+A copy of the GNU General Public License is available as
+'/usr/share/common-licenses/GPL' in the Debian GNU/Linux distribution
+or on the World Wide Web at http://www.gnu.org/copyleft/gpl.html[the
+GNU website] You can also obtain it by writing to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
+USA
 
-    http://fai-project.org
-FAI wiki
 
-    http://wiki.fai-project.org
-Téléchargement
 
-    http://fai-project.org/download
-Entrée pour sources.list
+<<<
 
-    deb http://fai-project.org/download jessie koeln
-Pages du manuel
 
-    http://fai-project.org/doc/man/
-Liste de diffusion
+== [[introduction]]Introduction
 
-    https://lists.uni-koeln.de/mailman/listinfo/linux-fai
-Retour d'information
+=== [[availability]]Availability
 
-    Envoyez vos commentaires et vos commentaires à fai@fai-project.orgou à la liste de diffusion .
-Bogues
 
-    Utiliser le système de suivi des bogues Debian (BTS) http://bugs.debian.org
-Changements visibles par l'utilisateur
+Homepage::
+http://fai-project.org
 
-    http://fai-project.org/NEWS
-Arbre source via git
+FAI wiki::
+http://wiki.fai-project.org
 
-    git clone git://github.com/faiproject/fai.git
-Voir l'arbre source avec http
+Download::
+http://fai-project.org/download
 
-    https://github.com/faiproject/fai
+Entry for 'sources.list'::
+`deb http://fai-project.org/download jessie koeln`
 
-Les pages man incluent toujours des informations à jour et beaucoup de détails sur toutes les commandes FAI. Alors, n'oubliez pas de les lire attentivement. Lisez maintenant ce manuel, puis profitez de l'installation entièrement automatique et de votre temps économisé.
-Motivation
+Manual pages::
+http://fai-project.org/doc/man/
 
-Avez-vous déjà effectué des installations identiques d'un système d'exploitation à plusieurs reprises? Souhaitez-vous être en mesure d'installer un cluster Linux avec des dizaines de nœuds à lui seul?
+Mailing list::
+https://lists.uni-koeln.de/mailman/listinfo/linux-fai
 
-Répéter la même tâche encore et encore est ennuyeux - et conduira certainement à des erreurs. Aussi beaucoup de temps pourrait être sauvé si les installations ont été faites automatiquement. Un processus d'installation avec interaction manuelle n'est pas à l'échelle. Mais les grappes ont l'habitude de croître au fil des ans. Pensez à long terme plutôt que de planifier quelques mois dans l'avenir.
+Feedback::
+Send feedback and comments to mailto:fai@fai-project.org[] or
+to the mailing list.
 
-En 1999, j'ai dû effectuer une installation d'un cluster Linux avec un serveur et 16 clients. Puisque j'ai eu beaucoup d'expérience en faisant des installations automatiques des systèmes d'exploitation de Solaris sur le matériel de SUN SPARC, l'idée de construire une installation automatique pour Debian est née. Solaris dispose d'une fonctionnalité d'installation automatique appelée JumpStart [1]. En conjonction avec les scripts d'auto-installation de Casper Dik [2], Je pourrais sauver beaucoup de temps non seulement pour chaque nouvel ordinateur de SUN, mais aussi pour la réinstallation des postes de travail existants. Par exemple, j'ai dû construire un LAN temporaire avec quatre stations de travail SUN pour une conférence, qui a duré seulement quelques jours. J'ai retiré ces postes de travail de notre réseau de recherche habituel et mis en place une nouvelle installation pour la conférence. Quand il était terminé, j'ai simplement intégré les postes de travail dans le réseau de recherche, redémarré une seule fois, et après une demi-heure, tout était opérationnel comme avant. La configuration de tous les postes de travail était exactement la même qu'avant la conférence, car tout était effectué par le même processus d'installation. J'ai également utilisé l'installation automatique pour réinstaller un poste de travail après un disque dur endommagé avait été remplacé. Il m'a fallu deux semaines pour recevoir le nouveau disque dur, mais seulement quelques minutes après l'installation du nouveau disque, le poste de travail fonctionnait comme avant. Et c'est pourquoi j'ai choisi d'adapter cette technique à un cluster de PC sous Linux.
-Comment fonctionne FAI
+Bugs::
+Use the Debian bug tracking system (BTS) http://bugs.debian.org
+
+User visible changes::
+http://fai-project.org/NEWS
+
+Source tree via git::
+git clone git://github.com/faiproject/fai.git
+
+View source tree via http::
+https://github.com/faiproject/fai
+
+
+The man pages always include up-to-date information and a lot of
+details of all FAI commands. So, don't forget to read them carefully.
+Now read this manual, then enjoy the fully automatic installation and
+your saved time.
+
+=== [[motivation]]Motivation
+
+Have you ever performed identical installations of an operating system
+several times? Would you like to be able to install a Linux cluster
+with dozens of nodes single handedly?
+
+Repeating the same task again and again is boring -- and will surely
+lead to errors. Also a whole lot of time could be saved if the
+installations were done automatically. An installation process with
+manual interaction does not scale. But clusters have the habit of
+growing over the years. Think long-term rather than planning just a
+few months into the future.
+
+In 1999, I had to perform an installation of a Linux cluster with one
+server and 16 clients. Since I had much experience doing automatic
+installations of Solaris operating systems on SUN SPARC hardware, the
+idea to build an automatic installation for Debian was born. Solaris
+has an automatic installation feature called JumpStart
+footnote:[Solaris 8 Advanced Installation Guide at
+https://docs.oracle.com/cd/E19455-01/806-0957/806-0957.pdf
+]. In conjunction with the auto-install scripts
+from Casper Dik
+footnote:[http://www.science.uva.nl/pub/solaris/auto-install], I could
+save a lot of time not only for every new SUN computer, but also for
+re-installation of existing workstations. For example, I had to build
+a temporary LAN with four SUN workstations for a conference, which
+lasted only a few days. I took these workstations out of our normal
+research network and set up a new installation for the conference.
+When it was over, I simply integrated the workstations back into the
+research network, rebooted just once, and after half an hour,
+everything was up and running as before. The configuration of all
+workstations was exactly the same as before the conference, because
+everything was performed by the same installation process. I also used
+the automatic installation for reinstalling a workstation after a
+damaged hard disk had been replaced. It took two weeks until I
+received the new hard disk but only a few minutes after the new disk
+was installed, the workstation was running as before. And this is why
+I chose to adapt this technique to a PC cluster running Linux.
 
-Le client d'installation qui sera installé à l'aide de FAI, est démarré via une carte réseau ou à partir d'un CD ou d'une clé USB. Il obtient une adresse IP et démarre un noyau Linux qui monte son système de fichiers racine via NFS (nfsroot) du serveur d'installation. Une fois le noyau démarré, le script de démarrage FAI exécute l'installation automatique qui n'a pas besoin d'interaction. Tout d'abord, les disques durs seront partitionnés, les systèmes de fichiers seront créés et des progiciels seront ensuite installés. Après cela, le nouveau système d'exploitation installé est configuré selon vos besoins locaux en utilisant quelques scripts. Enfin, le nouveau système d'exploitation sera démarré à partir du disque local.
 
-Les détails sur la façon d'installer l'ordinateur (la configuration) sont stockés dans l'espace de configuration du serveur d'installation. Les fichiers de configuration sont partagés entre des groupes d'ordinateurs s'ils sont similaires en utilisant le concept de classe. Vous n'avez donc pas besoin de créer une configuration pour chaque nouvel hôte. Par conséquent, FAI est une méthode évolutive pour installer un gros cluster avec un grand nombre de nœuds même si leur configuration n'est pas identique.
 
-FAI peut également être utilisé comme un système de sauvetage ou pour l'inventaire matériel. Vous pouvez démarrer votre ordinateur, mais il n'effectuera pas une installation. Au lieu de cela, il exécutera un Debian GNU / Linux entièrement fonctionnel sans utiliser les disques durs locaux. Ensuite, vous pouvez effectuer une connexion à distance et sauvegarder ou restaurer une partition de disque, vérifier un système de fichiers, inspecter le matériel ou effectuer toute autre tâche.
-Caractéristiques
 
-    Une installation entièrement automatisée peut être effectuée.
+=== [[work]]How does FAI work
 
-    Très rapide installation sans surveillance.
+The install client which will be installed using FAI, is booted via
+network card or from CD or USB stick. It gets an IP address and boots
+a Linux kernel which mounts its root file system via NFS (the nfsroot)
+from the
+install server. After the kernel is started, the FAI startup script
+performs the automatic installation which doesn't need any
+interaction. First, the hard disks will be partitioned, file systems
+are created and then software packages are installed. After that, the
+new installed operating system is configured to your local needs using
+some scripts. Finally, the new operating system will be booted from the
+local disk.
 
-    Système flexible grâce à un concept de classe simple.
+The details of how to install the computer (the configuration) are
+stored in the configuration space on the install server. Configuration
+files are shared among groups of computers if they are similar using
+the class concept. So you need not create a configuration for every
+new host. Hence, FAI is a scalable method to install a big cluster
+with a great number of nodes even if their configuration is not identical.
 
-    Mise à jour des systèmes en cours d'exécution sans réinstallation.
+FAI can also be used as a rescue system or for hardware inventory. You can boot your
+computer, but it will not perform an installation. Instead it will run
+a fully functional Debian GNU/Linux without using the local hard
+disks. Then you
+can do a remote login and backup or restore a disk partition, check a
+file system, inspect the hardware or do any other task.
 
-    Création facile d'un environnement de virtualisation ou d'un chroot
 
-    Les hôtes peuvent démarrer à partir d'une carte réseau, d'un CD, d'une clé USB.
+=== [[features]]Features
 
-    Création simple d'un CD d'installation ou d'une clé USB.
+* A fully automated installation can be performed.
+* Very quick unattended installation.
+* Flexible system through easy class concept.
+* Update of running systems without re-installation.
+* Easy creation of a virtualization environment or a chroot
+* Hosts can boot from network card, CD, USB stick.
+* Simple creation of an installation CD or USB stick.
+* PXE with DHCP boot method is supported.
+* ReiserFS, ext3/ext4, btrfs and XFS file system support.
+* Software RAID and LVM support.
+* Automatic hardware detection.
+* You can deploy Debian, Ubuntu, CentOS, SuSE, Scientific Linux
+* Remote login via ssh during installation process possible.
+* All similar configurations are shared among all install clients.
+* Log files for all installations are saved to the installation server.
+* Shell, Perl, Python, Ruby, expect and CFEngine scripts are supported during the customization step.
+* Support for many protocols like NFS, FTP, HTTP, git
+* Can be used as a rescue system and for hardware inventory.
+* Diskless client support.
+* Easily add your own functions via hooks or change the default behavior.
+* Cloning machines using disk images is supported
 
-    PXE avec la méthode de démarrage DHCP est pris en charge.
 
-    ReiserFS, ext3 / ext4, btrfs et support de système de fichiers XFS.
+=== Installation times
 
-    Support logiciel RAID et LVM.
+The installation time is determined by the amount of software and
+the speed of the hard disk. Here are some sample
+times. All install clients had a 1Gbit network card installed.
 
-    Détection automatique du matériel.
+[width="80%",cols="<4,^2,<3,>4,>2",options="header"]
+|=================================================================
+| CPU  |  RAM |   Disk    |   Software installed  | time
+| i7-3770T 2.50GHz  |    8GB|    SSD    |   6 GB software  | 8.5 min
+| Core-i7 3.2GHz    |     6GB| SATA disk|   4.3GB software |    7 min
+| Core-i7 3.2GHz    |     6GB| SATA disk|  471 MB software |    77sec
+| Intel Core2 Duo   |     2GB| SATA disk|    3 GB software |   14 min
+|=================================================================
 
-    Vous pouvez déployer Debian, Ubuntu, CentOS, SuSE, Scientific Linux
 
-    Connexion à distance via ssh lors du processus d'installation possible.
 
-    Toutes les configurations similaires sont partagées entre tous les clients d'installation.
 
-    Les fichiers journaux de toutes les installations sont enregistrés sur le serveur d'installation.
+== [[impatient]]Quickstart - For the impatient user
 
-    Les scripts Shell, Perl, Python, Ruby, expect et CFEngine sont pris en charge lors de l'étape de personnalisation.
+=== [[first]]My first installation
 
-    Prise en charge de nombreux protocoles comme NFS, FTP, HTTP, git
+Without further ado, this section will provide a quick and easy demonstration of a fully automatic installation using the FAI CD and a virtual machine.
 
-    Peut être utilisé comme un système de sauvetage et pour l'inventaire matériel.
+Just download the CD ISO image from http://fai-project.org/fai-cd and boot
+your VM using this CD. You will see a grub menu where you can select
+from different installation types.
 
-    Prise en charge du client sans disque.
+This installation will run without an install server. The CD
+installation is the same as when run in a network environment using
+the FAI install server.
 
-    Ajoutez facilement vos propres fonctions via des hooks ou modifiez le comportement par défaut.
+=== [[cdserver]]My first server installation
 
-    Clonage de machines utilisant des images de disque est pris en charge
 
-Le temps de l'installation
+Please note, if you intend to use QEMU/KVM then you need to have
+qemu-kvm qemu-utils bridge-utils installed on the machine to
+use fai-mk-network and fai-kvm footnote:[fai-kvm needs a lot of ram
+for the vm, because of caching of /var, 2GB are OK].
 
-Le temps d'installation est déterminé par la quantité de logiciel et la vitesse du disque dur. Voici quelques exemples de temps. Tous les clients d'installation avaient une carte réseau 1Gbit installée.
-CPU     RAM     Disque  Logiciel installé   temps
 
-i7-3770T 2.50GHz
-    
+You can do that via
 
-8GB
-    
-
-Disque SSD
-    
-
-6 GB de logiciel
-    
-
-8.5 min
-
-Core-i7 3.2GHz
-    
-
-6GB
-    
-
-Disque SATA
-    
-
-4.3GB de logiciel
-    
-
-7 min
-
-Core-i7 3.2GHz
-    
-
-6GB
-    
-
-Disque SATA
-    
-
-471 MB de logiciel
-    
-
-77sec
-
-Intel Core2 Duo
-    
-
-2GB
-    
-
-Disque SATA
-    
-
-3 GB de logiciel
-    
-
-14 min
-Quickstart - Pour l'utilisateur impatient
-Ma première installation
-
-Sans plus tarder, cette section fournira une démonstration rapide et facile d'une installation entièrement automatique à l'aide du CD FAI et d'une machine virtuelle.
-
-Il suffit de télécharger l' image ISO du CD à partir de http://fai-project.org/fai-cd et de démarrer votre VM à l'aide de ce CD. Vous verrez un menu grub où vous pouvez choisir parmi différents types d'installation.
-
-Cette installation s'exécutera sans serveur d'installation. L'installation du CD est identique à celle exécutée dans un environnement réseau à l'aide du serveur d'installation FAI.
-Mon premier serveur d'installation
-
-S'il vous plaît noter, si vous avez l'intention d'utiliser QEMU/KVM, vous devez avoir qemu-kvm qemu-utils bridge-utils installés sur la machine à utiliser fai-mk-network et fai-kvm[3].
-
-Vous pouvez le faire via
-
+----
 # apt-get install qemu-kvm qemu-utils bridge-utils
+----
 
-Si vous avez l'intention d'utiliser VMware ou VirtualBox, assurez-vous que votre client utilise une connexion réseau pontée. En outre, il n'est pas possible d'utiliser des interfaces réseau pontées via le réseau sans fil, car la plupart des cartes réseau WiFi ne prennent pas en charge cette fonctionnalité.
+If you intend to use VMware or VirtualBox, ensure that your client
+uses a bridged network connection. Also, It is not possible to use
+bridged network interfaces over wireless, as most WiFi network cards
+do not support this feature.
 
-our configurer votre propre serveur FAI, nous vous recommandons de créer un réseau de test sur votre ordinateur et d'utiliser KVM. Pour créer ce réseau privé, il ya le script fai-mk-network (dans le paquet fai-server). Il configure un pont logiciel avec plusieurs dispositifs de dérivation qui appartiennent à l'utilisateur<username>.
-
+For setting up your first own FAI server, we recommend creating a
+test network on your computer and to use KVM. For creating this
+private network there's the script `fai-mk-network` (in the package
+fai-server). It sets up a software bridge with several tap devices
+that belong to the user +<username>+.
+----
 fai-mk-network <username>
+----
 
-Après cela, vous pouvez utiliser fai-kvm (-h vous aidera) pour démarrer des machines virtuelles en utilisant KVM qui sont connectés à ce réseau privé. Fais attention. Par défaut, fai-kvm créera les images de disque pour les machines /tmp, qui est un disque RAM sur la plupart des systèmes. Il n'y a aucun problème à créer une image de disque vide de 20G dans /tmp (même si cette partition est de 4 Go de taille), mais alors que la VM écrit des données sur son disque, cela commencera à consommer de l'espace dans /tmp.
+After that, you can use fai-kvm (-h will give you some help) for
+starting virtual machines using KVM that are connected to this private
+network. Be carefull. By default, fai-kvm will create the disk images
+for the virtual machines in +/tmp+, which is a RAM disk on most
+systems. It's no problem to create an empty 20G disk image in /tmp
+(even if this partition is of 4GB size), but while the VM is writing
+data to its disk, this will start to consume space in +/tmp+.
 
-Démarrez le premier hôte virtuel, qui deviendra le serveur FAI [4]:
-
+Start the first virtual host, which will become the FAI server
+footnote:[This installation will consume about 2GB of space in
++/tmp+.]:
+----
 fai-kvm -Vn -s20 -u 1 cd fai-cd.iso
+----
 
-Dans le menu grub faiserver,faiserver, fixed IP. Cela va installer un hôte appelé faiserver avec IP 192.168.33.250 qui contient tous les logiciels nécessaires pour un serveur FAI. Il configurera également un cache de paquets local (en utilisant apt-cacher-ng). Une fois l'installation terminée, redémarrez la machine. Lors du premier démarrage du nouveau système, il configurera automatiquement le nfsroot. Cela peut prendre quelques minutes.
+In the grub menu select +faiserver, fixed IP+. This will install a host called
+faiserver with IP 192.168.33.250 which contains all software needed
+for a FAI server. It will also set up a local package cache (using
+apt-cacher-ng). Once the installation is finished, reboot the
+machine. During the first boot of the new system, it will
+automatically set up the nfsroot. This may take some minutes.
 
-Après cela, vous pouvez démarrer des hôtes supplémentaires en utilisant le démarrage réseau. Pour chaque nouvel hôte, vous devez utiliser une valeur différente pour -u, qui sera utilisée pour générer des adresses MAC différentes et utiliser des noms de fichier d'image de disque différents.
+After that you can start additional hosts using network boot. For
+every new host, you have to use a different value for `-u`, which will be used for
+generating different MAC addresses and using different disk image file
+names.
 
+----
 fai-kvm -Vn -u 2 pxe
+----
 
-Ces clients d'installation vous montreront un menu, où vous pouvez sélectionner le type d'installation que vous souhaitez effectuer. Si le client d'installation ne trouve pas le serveur, c'est généralement parce que fai-monitor ne fonctionne plus. Cela peut se produire si vous redémarrez le faiserver après l'installation. Pour remédier à cela, exécutez simplement fai-monitor sur le faiserver et relancez le démarrage du client.
+Those install clients will show you a menu, where you can select which
+type of installation you like to perform. If the install client does
+not find the server, it is usually because fai-monitor is no longer
+running on it. This can happen, if you reboot the faiserver after the
+installation. To remedy this, simply run fai-monitor on the faiserver
+and re-attempt the client boot.
 
-Un autre client pourrait être lancé avec:
-
+Another client could be started with:
+----
 fai-kvm -Vn -u 3 pxe
+----
 
-Vous pouvez démarrer autant de machines dans le réseau que les périphériques de prise sont disponibles. Toutes ces machines peuvent se connecter à l'Internet extérieur, mais sont seulement accessibles à partir de votre machine hôte.
-Vue d'ensemble et concepts
+You can start as many machines in the network as tap devices are
+available. All these machines can connect to the outside internet but are
+only reachable from your host machine.
 
-FAI est un système non interactif permettant d'installer, de personnaliser et de gérer les configurations de systèmes et de logiciels Linux sur les ordinateurs ainsi que sur les machines virtuelles et les environnements chroot, des petits réseaux aux grandes infrastructures et clusters. Vous pouvez prendre un ou plusieurs PC vierges, mettre sous tension et après quelques minutes, Linux est installé, configuré et exécuté sur l'ensemble du cluster, sans aucune interaction nécessaire. Ainsi, il s'agit d'une méthode évolutive pour installer et mettre à jour un cluster sans surveillance avec peu d'efforts impliqués. FAI utilise le système d'exploitation Linux et une collection de scripts shell et Perl pour le processus d'installation. Les modifications apportées aux fichiers de configuration du système d'exploitation peuvent être effectuées par CFEngine, shell (bash et zsh), Perl, Python, Ruby et attendent des scripts.
+== [[overview]]Overview and Concepts
 
-Le groupe cible de FAI sont des administrateurs système qui doivent installer Linux sur une ou même des centaines d'ordinateurs. Parce qu'il s'agit d'un outil d'installation à usage général, il peut être utilisé pour l'installation d'un cluster Beowulf, d'une batterie de rendu ou d'un laboratoire Linux ou d'une salle de classe. De plus, des réseaux Linux de grande envergure avec différents matériels ou différentes exigences d'installation sont faciles à établir à l'aide de FAI. Mais n'oubliez pas de planifier votre installation. Le chapitre[plan]contient quelques conseils utiles pour ce sujet.
-Conditions Générales
+FAI is a non-interactive system to install, customize and manage Linux
+systems and software configurations on computers as well as virtual
+machines and chroot environments, from small networks to large
+infrastructures and clusters. You can take one or more virgin PCs,
+turn on the power and after a few minutes Linux is installed,
+configured and running on the whole cluster, without any interaction
+necessary. Thus, it's a scalable method for installing and updating a
+cluster unattended with little effort involved. FAI uses the
+Linux operating system and a collection of shell and Perl scripts for
+the installation process. Changes to the configuration files of the
+operating system can be made by CFEngine, shell (bash and zsh), Perl,
+Python, Ruby and expect scripts.
 
-Premièrement, certains termes utilisés dans ce manuel sont décrits.
+FAI's target group are system administrators who have to install Linux
+onto one or even hundreds of computers. Because it's a general purpose
+installation tool, it can be used for installing a Beowulf cluster, a
+rendering farm or a Linux laboratory or a classroom. Also large-scale
+Linux networks with different hardware or different installation
+requirements are easy to establish using FAI. But don't forget to plan
+your installation. Chapter <<plan>> has some useful hints for this
+topic.
 
-Installer le serveur
+=== [[terms]] Important Terms
 
-    Il fournit les services DHCP, TFTP et NFS ainsi que les données de configuration pour tous les clients d'installation. Dans les exemples de ce manuel, cet hôte s'appelle faiserver. L'hôte où le package fai-server est installé.
-Installer le client
+First, some terms used in this manual are described.
 
-    n hôte qui sera installé à l'aide de FAI et une configuration fournie par le serveur d'installation. Aussi appelé client pour courte. Dans ce manuel, les hôtes d'exemple sont appelés demohost, xfcehost, gnomehost … Cet ordinateur doit démarrer à partir de son interface réseau à l'aide de PXE.
-Espace de configuration
+install server::
+It provides DHCP, TFTP and NFS services and the configuration data for
+all install clients. In the examples of this manual this host is
+called 'faiserver'. The host where the package 'fai-server' is installed.
 
-    Une structure de sous-répertoire contenant plusieurs fichiers. Ces fichiers décrivent les détails de la manière dont l'installation des clients sera effectuée. Toutes les données de configuration sont stockées ici. Il est également appelé config space pour le court. Il comprend des informations sur:
+install client::
+A host which will be installed using FAI and a configuration provided
+by the install server. Also called client for short. In this manual,
+the example hosts are called 'demohost, xfcehost, gnomehost ...'
+This computer should boot from its network interface using PXE.
 
-        Disposition du disque dur dans un format similaire à fstab
+configuration space::
+A subdirectory structure containg several files. Those files describe
+the details of how the installation of the clients will be
+performed. All configuration data is stored here. It's also called
+config space for short. It includes information about:
 
-        Systèmes de fichiers locaux, leurs types, points de montage et options de montage
+* Hard disk layout in a format similar to fstab
+* Local file systems, their types, mount points and mount options
+* Software packages
+* Keyboard layout, time zone, Xorg configuration, remote file
+  systems, user accounts, printers ...
 
-        Logiciels
++
+The package _fai-doc_ includes a sample configuration space including
+examples for hosts using the XFCE and GNOME environment amongst other
+examples.
 
-        Disposition du clavier, fuseau horaire, configuration Xorg, systèmes de fichiers distants, comptes utilisateurs, imprimantes ...
 
-    Le package fai-docinclut un exemple d'espace de configuration incluant des exemples pour les hôtes utilisant l'environnement XFCE et GNOME parmi d'autres exemples.
-nfsroot, NFS-Root
+nfsroot, NFS-Root::
+A file system located on the install server. During the installation
+process it's the complete file system for the install clients. All
+clients share the same nfsroot, which they mount read only. The
+nfsroot needs about {nfsrootsize}MB of free disk space.
 
-    Un système de fichiers situé sur le serveur d'installation. Pendant le processus d'installation, c'est le système de fichiers complet pour les clients d'installation. Tous les clients partagent le même nfsroot, qu'ils montent en lecture seule. Le nfsroot a besoin d'environ 690 Mo d'espace disque libre.
-TFTP
+TFTP::
+Serves clients the initrd and kernel that is used for the installation process.
+Along with the file system served by NFS, these two make up a temporary
+OS in which the installations are performed.
 
-    Sert aux clients l'initrd et le noyau utilisés pour le processus d'installation. Avec le système de fichiers servi par NFS, ces deux composent un OS temporaire dans lequel les installations sont exécutées.
-Classes FAI
+FAI classes::
+Classes are names which determine which configuration file is
+selected. If a client belongs to class WEBSERVER, it will be configured
+as a webserver, the class DESKTOP for e.g. determines which software
+packages will be installed.
 
-    Les classes sont des noms qui déterminent quel fichier de configuration est sélectionné. Si un client appartient à la classe WEBSERVER, il sera configuré en tant que serveur Web, la classe DESKTOP pour, par exemple, détermine les progiciels qui seront installés.
-profil
+profile::
+A FAI profile is just a list of FAI classes assiged to a profile name,
+which is extended by a description of this profile. I.e. one could have
+two "Webserver" profiles, one including the APACHE class another including the NGINX class,
+to then install the respective webserver solution.
 
-    Un profil FAI est juste une liste de classes FAI assiged à un nom de profil, qui est étendu par une description de ce profil. C'est-à-dire que l'on peut avoir deux profils "Webserver", l'un incluant la classe APACHE, y compris la classe NGINX, pour ensuite installer la solution webserver respective.
-les tâches
+tasks::
+The installation of a client consists of several parts, which are called tasks.
+Tasks are predefined subroutines which perform a certain part of the
+FAI. The following FAI tasks are performed during an installation
+on the install clients.
 
-    L'installation d'un client se compose de plusieurs parties, appelées tâches. Les tâches sont des sous-programmes prédéfinis qui effectuent une certaine partie de la FAI. Les tâches FAI suivantes sont exécutées au cours d'une installation sur les clients d'installation.
+____
+  confdir		# get the config space
+  setup			# some initialization, start sshd on demand
+  defclass		# define FAI classes
+  defvar		# define variables
+  action		# evaluate FAI_ACTION
+  install		# Start the installation
+  partition		# partition the harddisks, create file systems
+  mountdisks		# mount the file systems
+  extrbase		# extract the base.tar.xz
+  debconf		# do the Debian debconf preseeding
+  repository		# prepare access to the package repository
+  updatebase		# Set up package tools and update packages
+  instsoft		# install software packages
+  configure		# call customization scripts
+  finish		# do some cleanup, show installation statistics
+  tests			# call tests if defined
+  chboot		# call fai-chboot on the install server
+  savelog		# save log files to local and remote location
+  faiend		# reboot host, eject CD if needed
+____
+____
 
-confdir               # get the config space
-setup                 # some initialization, start sshd on demand
-defclass              # define FAI classes
-defvar                # define variables
-action                # evaluate FAI_ACTION
-install               # Start the installation
-partition             # partition the harddisks, create file systems
-mountdisks            # mount the file systems
-extrbase              # extract the base.tar.xz
-debconf               # do the Debian debconf preseeding
-repository            # prepare access to the package repository
-updatebase            # Set up package tools and update packages
-instsoft              # install software packages
-configure             # call customization scripts
-finish                # do some cleanup, show installation statistics
-tests                 # call tests if defined
-chboot                # call fai-chboot on the install server
-savelog               # save log files to local and remote location
-faiend                # reboot host, eject CD if needed
+These are tasks, which are only executed when a different action is performed
 
-Il s'agit de tâches qui ne sont exécutées que lorsqu'une action différente est exécutée
+  dirinstall 	       # install a chroot environment
+  softupdate	       # only do the system configuration
+  sysinfo              # print detailed system information
+  inventory            # print short hardware inventory list
+____
 
-dirinstall           # install a chroot environment
-softupdate           # only do the system configuration
-sysinfo              # print detailed system information
-inventory            # print short hardware inventory list
+For a more in-depth description of _tasks_ , see <<tasks>>.
 
-Pour une description plus détaillée des tâches , voir [tâches].
+Note that you are not limited to the FAI tasks. You can also define additional programs or scripts which will be run
+on particular occasions. They are called _hooks_.
 
-Notez que vous n'êtes pas limité aux tâches FAI. Vous pouvez également définir des programmes ou des scripts supplémentaires qui seront exécutés à certaines occasions. On les appelle des hooks.
+hooks::
+Hooks are plugins, they can add additional functionality to the installation process
+or even replace entire tasks of FAI. Hooks are explained in detail in
+<<hooks>>.
 
-hooks
+=== [[classc]]The class concept
 
-    Les Hooks sont des plugins, ils peuvent ajouter des fonctionnalités supplémentaires au processus d'installation ou même remplacer des tâches entières de FAI. Les Hooks sont expliqués en détail dans [hooks].
+Classes are used in nearly all tasks of the installation. Classes
+determine which configuration files to choose from a list of available
+alternatives. To determine which config files to use, FAI searches the
+list of defined classes and uses all configuration files that match a
+class name footnote:[It's also possible to use only the configuration
+file with the highest priority since the order of classes define a
+priority from low to high within the list of classes.  ]. The following loop implements
+this function in pseudo shell code:
 
-Le concept de classe
-
-Les classes sont utilisées dans presque toutes les tâches de l'installation. Les classes déterminent quels fichiers de configuration choisir parmi une liste d'alternatives disponibles. Pour déterminer les fichiers de configuration à utiliser, FAI recherche la liste des classes définies et utilise tous les fichiers de configuration correspondant à un nom de classe[5]. La boucle suivante implémente cette fonction en pseudo code shell:
-
+----
 for class in $all_classes; do
    if [ -r $config_dir/$class ]; then      # if a file with name $class exists
       your_command $config_dir/$class      # call a command with this file name
       # exit if only the first matching file is needed
    fi
 done
+----
 
-La caractéristique très intéressante de ceci est que vous pouvez ajouter une nouvelle alternative de configuration et elle sera automatiquement utilisée par FAI sans changer le code, si le fichier de configuration utilise un nom de classe.
+The very nice feature of this is that you can add a new configuration
+alternative and it will automatically be used by FAI without changing
+the code, if the configuration file uses a class name.
 
-C'est parce que la boucle détecte automatiquement les nouveaux fichiers de configuration qui doivent être utilisés. L'idée d'utiliser des classes en général et d'utiliser certains fichiers correspondant à un nom de classe pour une configuration est adoptée à partir des scripts d'installation par Casper Dik pour Solaris. Cette technique s'est avérée très utile et facile.
+This is because the loop automatically detects new configuration files
+that should be used.
+The idea of using classes in general and using certain files matching
+a class name for a configuration is adopted from the installation
+scripts by Casper Dik for Solaris. This technique proved to be very
+useful and easy.
 
-Vous pouvez regrouper plusieurs hôtes partageant les mêmes fichiers de configuration en utilisant la même classe. Vous pouvez également diviser l'ensemble des données de configuration pour tous les clients en plusieurs classes et les utiliser comme des briques de lego et construire la configuration entière pour un seul client en assemblant les briques ensemble.
+You can group multiple hosts that share the same configuration
+files by using the same class. You can also split the whole
+configuration data for all clients into several classes and use them
+like lego bricks and build the entire configuration for a single
+client by assembling the bricks together.
 
-Si un client appartient à la classe A, nous disons que la classe A est définie pour ce client. Une classe n'a pas de valeur, elle est juste définie ou non définie.
 
-Les classes déterminent comment l'installation est effectuée. Par exemple, un client d'installation peut être configuré pour obtenir le bureau XFCE en y ajoutant simplement la classe XFCE . Naturellement, des configurations plus granulaires sont également possibles. Par exemple, les classes peuvent décrire comment le disque dur doit être partitionné, ils peuvent définir quels paquets logiciels seront installés ou quelles étapes de personnalisation seront exécutées.
+If a client belongs to class _A_, we say the class _A_
+is defined for this client. A class has no value, it is just defined or
+undefined.
 
-Souvent, une configuration client est créée en modifiant ou en ajoutant uniquement les classes auxquelles ce client appartient, ce qui rend l'installation d'un nouveau client très facile. Ainsi, aucune information supplémentaire ne doit être ajoutée à l'espace de configuration si les classes existantes suffisent à vos besoins.
+Classes determine how the installation is performed. For example, an install
+client can be configured to get the XFCE desktop by just adding the
+class _XFCE_ to it. Naturally, also more granular configurations are possible. For instance, classes can describe how the hard disk should be partitioned, they can
+define which software packages will be installed, or which
+customization steps are performed.
 
-Comme vous pouvez le voir, les classes sont un pilier central de la personnalisation de votre espace de configuration et de l'installation de votre client. Pour définir vos propres classes, reportez-vous à [définition des classes].
-Configurer votre faiserver
+Often, a client configuration is created by only changing or appending the
+classes to which this client belongs, making the installation of a new
+client very easy. Thus no additional information needs to be added to
+the configuration space if the existing classes suffice for your
+needs.
 
-Voici comment configurer le serveur d'installation en quelques minutes. Les étapes suivantes sont nécessaires:
+As you can see, classes are a central pillar of customizing your configuration space and with that your client installation. On how to define your own classes, refer to <<defining classes>>.
 
-    Configurer le serveur d'installation
+== [[setup]]Setup your faiserver
 
-        Installer des packages FAI
+Here's how to set up the install server in a few minutes. Following
+steps are needed:
 
-        Créez le nfsroot
+. Set up the install server
+.. Install FAI packages
+.. Create the nfsroot
+.. Copy the examples to the config space
+.. Configure network daemons
+.. Create the PXELINUX configurations
+. Boot and install clients
 
-        Copiez les exemples dans l'espace de configuration
 
-        Configurer les démons réseau
+=== Install the FAI packages
 
-        Créer les configurations PXELINUX
+* Install the key of the FAI project package repository:
+* Add the URL of the package repository of the FAI project.
+* Install the package 'fai-quickstart' on your install server.
 
-    Démarrage et installation des clients
-
-Installer les paquetages FAI
-
-    Installez la clé du référentiel de package de projet FAI:
-
-    Ajoutez l'URL du référentiel de packages du projet FAI.
-
-    Installez le paquet fai-quickstart sur votre serveur d' installation .
-
+----
 # wget -O - http://fai-project.org/download/074BCDE4.asc | apt-key add -
 # echo "deb http://fai-project.org/download jessie koeln" > /etc/apt/sources.list.d/fai.list
 # apt-get update
 # aptitude install fai-quickstart
+----
 
-Cela installera également les paquets pour les démons de serveur DHCP, TFTP et NFS.
-Créez le nfsroot
+This will also install the packages for DHCP, TFTP and NFS server daemons.
 
-    Activez également le référentiel de package du projet FAI dans un autre fichier sources.list qui est utilisé lors de la construction du nfsroot. Ensuite, activez l'utilisateur de journal pour FAI.
+=== Create the nfsroot
 
+* Also enable the package repository of the FAI project in a different
+  _sources.list_ file which is used when building the nfsroot. Then,
+  enable the log user for FAI.
+----
 # sed -i -e 's/^#deb/deb/' /etc/fai/apt/sources.list
 # sed -i -e 's/#LOGUSER/LOGUSER/' /etc/fai/fai.conf
+----
 
-    Par défaut, FAI utilise http://httpredir.debian.org comme mirror de paquets, qui devrait tenter de trouver un référentiel de paquets rapide pour vous. [6] Maintenant, nous pouvons exécuter fai-setup(8) [7] Et vérifier si tout s'est bien passé. Le fichier journal est écrit dans /var/log/fai/fai-setup.log.
+* By default, FAI uses http://httpredir.debian.org as package
+  mirror, which should attempt to find a fast package repository for you. footnote:[If you want to use a faster mirror, adjust the URL
+  in _/etc/fai/apt/sources.list_ and +FAI_DEBOOTSTRAP+ in _/etc/fai/nfsroot.conf_ before calling fai-setup.]
+Now, we can run `fai-setup(8)` footnote:[This will call `fai-make-nfsroot(8)` internally.]
+and check if everything went well.
+The log file is written to /var/log/fai/fai-setup.log.
 
+----
 # fai-setup -v
+----
 
-    Ce sont quelques-unes des lignes que vous verrez à la fin de fai-setup . Un exemple complet de fai-setup.log est disponible sur la page Web FAI à l'adresse http://fai-project.org/logs/fai-setup.log.
 
+* These are some of the lines you will see at the end of
+  _fai-setup_. A complete example of 'fai-setup.log' is available on
+  the FAI web page at http://fai-project.org/logs/fai-setup.log.
+
+----
 FAI packages and related packages inside the nfsroot:
 dracut             044+189-2
 dracut-network     044+189-2
@@ -465,46 +573,80 @@ Please don't forget to fill out the FAI questionnaire after you've finished your
 
 FAI setup finished.
 Log file written to /var/log/fai/fai-setup.log
+----
 
-    Fai-setup a créé le LOGUSER, le nfsroot et a ajouté des lignes supplémentaires à /etc/exports. Les sous-répertoires ajoutés à /etc/exports sont exportés via NFS v3, de sorte que tous les clients d'installation dans le même sous-réseau peuvent les monter via NFS.
+* fai-setup has created the LOGUSER, the nfsroot and has added
+  additional lines to _/etc/exports_. The subdirectories added to
+  _/etc/exports_ are exported via NFS v3, so all install clients in the
+  same subnet can mount them via NFS.
 
-Création de l'espace de configuration
 
-Installez les exemples simples dans l'espace de configuration [8].
+=== Creating the configuration space
 
+Install the simple examples into the configuration space
+footnote:[These files need not belong to the root account.].
+
+----
 $ cp -a /usr/share/doc/fai-doc/examples/simple/* /srv/fai/config/
+----
 
-Ces exemples contiennent la configuration pour certains hôtes d'exemple. Selon le nom d'hôte utilisé, votre ordinateur sera configuré comme suit:/p>
+These examples contain configuration for some sample
+hosts. Depending on the host name used, your computer will be
+configured as follows:
 
-demohost
+demohost::
+A machine which needs only a small hard disk. This machine is
+configured with network as DHCP client, and an account demo is
+created.
 
-    Une machine qui n'a besoin que d'un petit disque dur. Cette machine est configurée avec le réseau en tant que client DHCP, et une démo de compte est créée.
-xfcehost
+xfcehost::
+A XFCE desktop is installed, using LVM, and the account demo is created.
 
-    Un bureau XFCE est installé, utilisant LVM, et la démo du compte est créée.
-gnomehost
+gnomehost::
+A GNOME desktop is installed, and the account demo is created.
 
-    Un bureau GNOME est installé et la démo du compte est créée.
-other host names
+other host names::
+Hosts with another host name will most notably use the classes FAIBASE,
+DHCPC and GRUB.
 
-    Les hôtes disposant d'un autre nom d'hôte utiliseront notamment les classes FAIBASE, DHCPC et GRUB.
+All hosts will have an account called _demo_ with password _fai_. The
+root account also has the password _fai_.
 
-ous les hôtes auront un compte appelé demo avec mot de passe fai. Le compte root a également le mot de passe fai.
+If the FAI flag +menu+ is added, instead of using the host name for
+determing the type of installation, a menu is presented, and the user
+can choose a profile for the installation.
 
-Si l'indicateur FAI menu est ajouté, au lieu d'utiliser le nom d'hôte pour déterminer le type d'installation, un menu est présenté et l'utilisateur peut choisir un profil pour l'installation.
-Configurer les démons réseau
+=== Configure the network daemons
 
-Pour démarrer le client d'installation via PXE, le serveur d'installation a besoin d'un DHCP et d'un démon TFTP en cours d'exécution. Le paquet fai-quickstart a déjà installé les progiciels pour ces daemons. En outre, le paquetage du serveur NFS pour l'exportation du nfsroot et de l'espace de configuration a été installé.
-Configuration du démon DHCP
+For booting the install client via PXE, the install server needs a DHCP and a
+TFTP daemon running. The package _fai-quickstart_ has already installed the
+software packages for those daemons. Additionally the package of the NFS
+server for exporting the nfsroot and the config space was installed.
 
-déalement, votre faiserver doit également être votre serveur DHCP. Si ce n'est pas le cas, demandez à l'administrateur responsable du serveur DHCP de le configurer conformément à cette section. En option, il est possible d'éviter cela en utilisant la fonctionnalité [autodiscover] diffusée dans FAI 5.0.
 
-n exemple pour dhcpd.conf(5) est fourni avec le paquet fai-doc. Commencez à utiliser cet exemple et regardez toutes les options qui y sont utilisées.
+==== [[bootdhcp]]Configuration of the DHCP daemon
 
+Ideally, your faiserver should also be your DHCP server. If that is
+not the case, instruct the admin responsible of the DHCP server to
+configure it according to this section. Optionally, it is possible to
+avoid that by using the <<autodiscover>> feature released in FAI 5.0.
+
+
+An example for `dhcpd.conf(5)` is provided with the _fai-doc_
+package. Start using this example and look at all options used therein.
+
+----
 # cp /usr/share/doc/fai-doc/examples/etc/dhcpd.conf /etc/dhcp/
+----
 
-Les seules informations spécifiques FAI contenues dans ce fichier de configuration sont de définir le filename de fai/pxelinux.0 et de définir next-server et server-name sur le nom de votre serveur d'install . Toutes les autres informations sont uniquement des données liées au réseau, qui est utilisé dans presque toutes les configurations DHCP. Ajustez ces paramètres de réseau à vos besoins locaux.
+The only FAI specific information inside this configuration file is to
+set +filename+ to +fai/pxelinux.0+ and to set +next-server+ and
++server-name+ to the name of your install server. All other
+information is only network related data, which is used in almost all
+DHCP configurations.  Adjust these network parameters to your local
+needs.
 
+----
 deny unknown-clients;
 option dhcp-max-message-size 2048;
 use-host-decl-names on;
@@ -519,36 +661,69 @@ subnet 192.168.33.0 netmask 255.255.255.0 {
    next-server faiserver;
    filename "fai/pxelinux.0";
 }
+----
 
-Si vous apportez des modifications à la configuration DHCP, vous devez redémarrer le démon.
+If you make any changes to the DHCP configuration, you must
+restart the daemon.
 
+----
 # /etc/init.d/isc-dhcp-server restart
+----
 
-Si vous disposez de plusieurs interfaces réseau, vous pouvez définir l'interface que le serveur écoutera dans/etc/default/isc-dhcp-server. Par défaut, le démon DHCP écrit ses messages de journalisation dans /var/log/daemon.log.
-Ajout d'une entrée d'hôte au DHCP
+If you have multiple network interfaces, you
+can define on which interface the server will listen in
+_/etc/default/isc-dhcp-server_. By default, the DHCP daemon writes its
+log messages to '/var/log/daemon.log'.
 
-L'adresse MAC est donnée par le matériel de la carte réseau. Pour chaque client d'installation, vous collectez son adresse MAC et la mappez à une adresse IP et à un nom d'hôte. Tout d'abord, nous ajoutons l'adresse IP et le nom d'hôte à /etc/hosts [9].
 
+==== Adding a host entry to DHCP
+
+The MAC address is given by the hardware of the network card. For each
+install client you collect its MAC address and to map it to an IP address and to a host
+name. First, we add the IP address and the hostname to _/etc/hosts_
+footnote:[You may also add this into your Domain Name System (DNS)].
+----
 192.168.33.100    demohost
+----
 
-Le mappage de l'adresse MAC à l'adresse IP est effectué dans le fichier dhcpd.conf. Ici, nous ajoutons une entrée d'hôte en dhcp-edit(8) la commande dhcp-edit(8) . Ici, vous devez remplacer 01:02:03:AB:CD:EF avec le MAC que vous avez trouvé.
-
+The mapping from the MAC address to the IP address is done in the
+_dhcpd.conf_ file. Here, we add a host entry using the command `dhcp-edit(8)`.
+Here you have to replace 01:02:03:AB:CD:EF ith the MAC you have found.
+----
 # dhcp-edit demohost 01:02:03:AB:CD:EF
+----
 
-Après avoir appelé cette commande, c'est ce que l'entrée hôte dans dhcpd.conf ressemblera à:
-
+After calling this command, this is what the host entry in
+_dhcpd.conf_ will look like:
+----
 host demohost {hardware ethernet 01:02:03:AB:CD:EF;fixed-address demohost;}
+----
 
-TFTP
 
-Normalement, vous n'avez pas besoin d'apporter de modifications à la configuration dameon TFTP. Les fichiers fournis par TFTP sont situés dans /srv/tftp/fai.
-NFS
+==== TFTP
 
-La commande fai-setup a déjà configuré le démon NFS et ajouté quelques lignes au fichier de configuration /etc/exports. Il exporte les répertoires en utilisant NFS v3.
-Création de la configuration PXELINUX
+Normally, you do not need any changes to the TFTP dameon
+configuration. The files which are provided by TFTP are located in
+_/srv/tftp/fai_.
 
-La dernière étape avant de démarrer votre client pour la première fois est de spécifier quelle configuration le client doit démarrer lors de l'amorçage PXE. Nous fai-chboot(8) la commande fai-chboot(8) pour créer une configuration pxelinux pour chaque client d'installation. Cela comprend des informations sur le noyau, l'initrd, l'espace de configuration et certains paramètres d'amorçage. Vous devriez lire la page de manuel, qui vous donne quelques bons exemples. Voici la commande pour démarrer l'installation de l'hôte demohost.
 
+==== NFS
+
+The command `fai-setup` has already set up the NFS daemon add added
+some lines to the configuration file _/etc/exports_.
+It exports the directories using NFS v3.
+
+=== Creating the PXELINUX configuration
+
+The last step before booting your client for the first time
+is to specify what configuration the client should boot when doing PXE
+boot. We use the command `fai-chboot(8)` to create a pxelinux
+configuration for each install client. This includes information about
+the kernel, the initrd, the config space and some boot parameters. You
+should read the manual page, which gives you some good examples.
+Here's the command for starting the installation for the host demohost.
+
+----
 $ fai-chboot -IFv -u nfs://faiserver/srv/fai/config demohost
 Booting kernel vmlinuz-3.16.0-4-amd64
  append initrd=initrd.img-3.16.0-4-amd64 ip=dhcp
@@ -557,100 +732,153 @@ Booting kernel vmlinuz-3.16.0-4-amd64
 
 demohost has 192.168.33.100 in hex C0A82164
 Writing file /srv/tftp/fai/pxelinux.cfg/C0A82164 for demohost
+----
 
-À ce stade, vous devriez avoir une configuration faiserver de travail et vos clients devraient démarrer dans FAI et être en mesure d'installer l'un des exemples.
+At this point, you should have a working faiserver setup and your clients should boot into FAI and be able to install one of the examples.
 
-Dans la section suivante, vous pouvez lire la planification de votre installation, adapter votre espace de configuration à vos besoins particuliers et étendre FAI à l'aide de hooks.
-Serveur personnalisé
+In the following section, you can read about planning your installation, tailoring your configuration space to your particular needs and extending FAI using hooks.
 
-Le faiseur et sa configuration n'est nullement statique. Il est possible de personnaliser et d'étendre votre serveur. Pour cela, reportez-vous à la section [Personnalisation de votre installation du serveur d'installation] dans [avancé].
-Planifiez votre installation
+=== [[custom server]]Custom server
 
-Avant de commencer votre installation, vous devriez investir beaucoup de temps dans la planification de votre installation. Une fois que vous êtes satisfait de votre concept d'installation, FAI peut faire toutes les tâches ennuyeuses et répétitives pour transformer vos plans en réalité. FAI ne peut pas faire de bonnes installations si votre concept est imparfait ou manque de quelques détails importants. Commencez à planifier l'installation en répondant aux questions suivantes:
+The faiserver and its setup is by no means static. It is possible to customize and extend your server. For this, please refer to the <<Customizing your install server setup>> section in <<advanced>>.
 
-    Est-ce que je vais créer un cluster Beowulf ou dois-je installer des machines de bureau?
+== [[plan]]Plan your installation
 
-    À quoi ressemble ma topologie LAN?
+Before starting your installation, you should invest a lot of time into
+planning your installation. Once you're happy with your installation
+concept, FAI can do all the boring and repetitive tasks to turn your
+plans into reality. FAI can't do good installations if your concept is
+imperfect or lacks some important details. Start planning the
+installation by answering the following questions:
 
-    Ai-je un matériel uniforme? Le matériel sera-t-il uniforme à l'avenir?
 
-    Le matériel a-t-il besoin d'un noyau spécial?
+* Will I create a Beowulf cluster, or do I  have to install some desktop machines?
+* What does my LAN topology look like?
+* Do I have uniform hardware?  Will the hardware stay uniform in the future?
+* Does the hardware need a special kernel?
+* How should the hosts be named?
+* How should the local hard disks be partitioned?
+* Which applications will be run by the users?
+* Do the users need a queuing system?
+* What software should be installed?
+* Which daemons should be started, and what  should the configuration for these look like?
+* Which remote file systems should be mounted?
+* How should backups be performed?
 
-    Comment nommer les hôtes?
+You also have to think about user accounts, printers, a mail system,
+cron jobs, graphic cards, dual boot, NIS, NTP, timezone, keyboard
+layout, exporting and mounting directories via NFS and many other
+things. So, there's a lot to do before starting an installation. And
+remember that knowledge is power, and it's up to you to use
+it. Installation and administration is a process, not a product. FAI
+can't do things you don't tell it to do.
 
-    Comment les disques durs locaux doivent-ils être partitionnés?
+But you need not start from scratch. Look at the files and scripts in
+the configuration space. There are a lot of things you can use for
+your own installation. A good paper called "Bootstrapping an
+Infrastructure" with more aspects of building an infrastructure is
+available at http://www.infrastructures.org/papers/bootstrap/bootstrap.html
 
-    Quelles applications seront éxécuté par les utilisateurs?
+=== [[c3]]The configuration space and its subdirectories
 
-    Les utilisateurs ont-ils besoin d'un système de mise en file d'attente?
+The configuration space is the collection of information about how exactly
+to install a client. The central configuration space for all install
+clients is located on the install server in '/srv/fai/config' and its
+subdirectories. This will be mounted by the install clients to
+'/var/lib/fai/config'. The main installation command `fai(8)` uses all
+these subdirectories in the order listed except for hooks.
 
-    Quel logiciel doit être installé?
+_class/_::
+Scripts and files to
+define classes and variables.
 
-    Quels démons devraient être lancés, et à quoi devrait ressembler la configuration?
+_disk_config/_::
+Configuration files for disk partitioning, software RAID, LVM and file system creation.
 
-    Quels systèmes de fichiers distants doivent être montés?
-
-    Comment effectuer les sauvegardes? How should backups be performed?
-
-Vous devez également penser à des comptes d'utilisateur, des imprimantes, un système de courrier, des travaux de cron, des cartes graphiques, l'initialisation double, le NIS, le NTP, le fuseau horaire, la disposition de clavier, l'exportation et le montage des annuaires via NFS et beaucoup d'autres choses. Donc, il ya beaucoup à faire avant de commencer une installation. Et rappelez-vous que la connaissance est le pouvoir, et c'est à vous de l'utiliser. L'installation et l'administration sont un processus et non un produit. FAI ne peut pas faire les choses que vous ne lui dites pas de faire.
-
-Mais vous ne devez pas commencer à partir de zéro. Examinez les fichiers et les scripts dans l'espace de configuration. Il ya beaucoup de choses que vous pouvez utiliser pour votre propre installation. Un bon article intitulé «Bootstrapping a Infrastructure» avec d'autres aspects de la construction d'une infrastructure est disponible sur http://www.infrastructures.org/papers/bootstrap/bootstrap.html
-L'espace de configuration et ses sous-répertoires
-
-L'espace de configuration est la collection d'informations sur la façon exacte d'installer un client. L'espace de configuration central pour tous les clients d'installation se trouve sur le serveur d'installation dans /srv/fai/config et ses sous-répertoires. Cela sera monté par les clients d'installation dans /var/lib/fai/config. La commande d'installation principale fai(8) utilise tous ces sous-répertoires dans l'ordre indiqué sauf pour les hooks.
-
-class/
-
-    Scripts et fichiers pour définir des classes et des variables.
-disk_config/
-
-    Fichiers de configuration pour le partitionnement de disque, RAID logiciel, LVM et création de système de fichiers.
-basefiles/
-
-    Normalement , le fichier base.tar.xz (situé à l' intérieur du nfsroot) est extrait sur le client d'installation après la création des nouveaux systèmes de fichiers et avant l'installation du package. Il s'agit d'une image de base minimale, créée juste après avoir appelé debootstrap lors de la création du nfsroot sur le serveur d'installation. Si vous voulez installer une autre distribution que la nfsroot, vous pouvez mettre un fichier tar dans le sous-répertoire basefiles/ et le nommer après une classe. Ensuite, la commande ftar(8) est utilisée pour extraire le fichier tar en fonction des classes définies. Ainsi, le fichier doit être nommé CLASS.tar.xzet non CLASS.base.tar.xz . Cela se fait dans la tâche extrbase. Utilisez cette option si vous souhaitez installer une autre distribution ou une version différente de celle exécutée pendant l'installation.
-
-    Ce fichier de base peut également être reçu en fonction des classes FAI via HTTP ou FTP en définissant la variable FAI_BASEFILEURL. FAI téléchargera un fichier CLASSNAME.tar.xz (ou tgz, ou tar.gz, ...) à partir de cette URL, si CLASSNAME correspond à une classe FAI.
-
-    Exemple:
-
+_basefiles/_::
+Normally the file 'base.tar.xz' (located inside the nfsroot) is extracted on the install
+client after the new file systems are created and before package are
+installed. This is a minimal base image, created right after calling
+debootstrap during the creation of the nfsroot on the install
+server. If you want to install another distribution than the nfsroot
+is, you can put a tar file into the subdirectory 'basefiles/' and name
+it after a class. Then the command `ftar(8)` is used to extract the
+tar file based on the classes defined. Thus the file has to be named 'CLASS.tar.xz' not 'CLASS.base.tar.xz'. This is done in task
+_extrbase_. Use this if you want to install another distribution or
+version than that running during the installation.
++
+This basefile can also be received based on FAI classes via HTTP or FTP
+by defining the variable FAI_BASEFILEURL. FAI will download a file
+CLASSNAME.tar.xz (or tgz, or tar.gz,...) from this URL, if CLASSNAME
+matches a FAI class.
++
+Example:
+----
 FAI_BASEFILEURL=http://fai-project.org/download/basefiles
+----
+The folder must support directory listing. FAI will not probe for potentially matching files.
 
-Le dossier doit prendre en charge la liste des répertoires. FAI ne recherchera pas de fichiers potentiellement correspondants.
+See chapter <<otherdists>> for how to install different distributions.
 
-Voir le chapitre [otherdists] pour savoir comment installer différentes distributions.
+_debconf/_::
+This directory holds all `debconf(7)` data. The format is the same
+that is used by `debconf-set-selections(8)`.
 
-debconf/
+_package_config/_::
+Files with class names contain lists of software packages to be
+installed or removed by `install_packages(8)`. Files named
+'<CLASS>.asc' are added to the list of keys used by apt (using
+`apt-key(8)`) for trusted package repositories.
 
-    Ce répertoire contient toutes les données debconf(7). Le format est le même que celui utilisé par debconf-set-selections(8).
-package_config/
+_scripts/_::
+Scripts for your local site customization. Used by `fai-do-scripts(1)`.
 
-    Les fichiers contenant des noms de classe contiennent des listes de progiciels à installer ou à désinstallé par install_packages(8). Les fichiers nommés <CLASS>.asc sont ajoutés à la liste des clés utilisées par apt (à l'aide d'apt-key(8) ) pour les dépôts de paquets approuvés.
-scripts/
+_files/_::
+Files used by customization scripts.  Most files are located in a
+subtree structure which reflects the ordinary directory tree. For
+example, the templates for 'nsswitch.conf' are located in
+'$FAI/files/etc/nsswitch.conf' and are named according to the classes
+that they should match: '$FAI/files/etc/nsswitch.conf/NIS' is the
+version of '/etc/nsswitch.conf' to use for the NIS class. Note that
+the contents of the files directory are not automatically copied to
+the target machine, rather they must be explicitly copied by
+customization scripts using the `fcopy(8)` command.
 
-    Scripts pour la personnalisation de votre site local. Utilisé par fai-do-scripts(1).
-files/
+_hooks/_::
+Hooks are user defined programs or scripts, which are called during
+the installation process. The can extend or replace the default tasks.
+The file name must be of format 'taskname.CLASSNAME[.sh]'.
+A hook called +updatebase.DEBIAN+ is executed prior to the task `updatebase`
+and only if the install client belongs to the class DEBIAN.
 
-    Les Fichiers utilisés par les scripts de personnalisation. La plupart des fichiers se trouvent dans une structure de sous-arborescence qui reflète l'arborescence de répertoires ordinaire. Par exemple, les modèles de nsswitch.conf se trouvent dans $FAI/files/etc/nsswitch.conf et sont nommés en fonction des classes auxquelles ils doivent correspondre: $FAI/files/etc/nsswitch.conf/NIS est la version de /etc/nsswitch.conf à utiliser pour la classe NIS. Notez que le contenu du répertoire n'est pas automatiquement copié sur la machine cible, mais qu'il doit être explicitement copié par des scripts de personnalisation à l'aide de la commande fcopy(8) .
-hooks/
 
-    Les hooks sont des programmes ou des scripts définis par l'utilisateur, qui sont appelés pendant le processus d'installation. cela peut étendre ou remplacer les tâches par défaut. Le nom du fichier doit être de format taskname.CLASSNAME[.sh]. Un hook appelé updatebase.DEBIAN est exécuté avant la mise à jour de la tâche updatebaseet seulement si l'installation du client appartient à la classe DEBIAN.
+=== [[defining classes]]Defining classes
 
-Définition des classes
+There are different possibilities to define classes:
 
-Il existe différentes possibilités pour définir des classes:
+. Some default classes are defined for every host:     DEFAULT, LAST and its host name.
+. Classes may be listed within a file.
+. Classes may be dynamically defined by scripts.
 
-    Certaines classes par défaut sont définies pour chaque hôte: DEFAULT, LAST et son nom d'hôte.
+The last option is a very nice feature, since these scripts will
+define classes is a very flexible way. For example, several classes
+may be defined only if certain hardware is identified or a class is
+defined depending on the network subnet information.
 
-    Les classes peuvent être répertoriées dans un fichier.
+All names of classes, except the host name, are written in
+uppercase. They must not contain a hyphen, a hash, a semicolon or a
+dot, but may contain underscores and digits.
 
-    Les classes peuvent être dynamiquement définies par des scripts.
+The task _defclass_ calls the command `fai-class(1)` to define
+classes. All scripts matching _^[0-9][0-9]*_ (they start with two
+digits) in the subdirectory
+_$FAI/class_ are executed for defining classes. Everything that is printed
+to STDOUT is automatically defined as a class. For more
+information on defining class, read the manual pages for
+`fai-class(1)`. The script _50-host-classes_ (see below a stripped
+version) is used to define classes depending on the host name.
 
-La dernière option est une fonctionnalité très intéressante, puisque ces scripts définiront des classes est un moyen très flexible. Par exemple, plusieurs classes peuvent être définies uniquement si certains matériels sont identifiés ou si une classe est définie en fonction des informations de sous-réseau du réseau.
-
-Tous les noms de classes, sauf le nom d'hôte, sont écrits en majuscules.ILs ne doivent pas contenir un trait d'union, un dièse, un Point-Virgule OÜ un point, mais PEUVENT contenir des characters de soulignement et des Chiffres.
-
-La Tache defclass Appelle la commande fai-class(1) pour definir les classes. Tous les scripts correspondant ^[0-9][0-9]* (qui Commencent Avec Deux Chiffres) Dans le sous-repertoire $FAI/class sont exécutées afin de definir les classes. Tout ce qui is affiché sur STDOUT est automatiquement definie Comme une classe. pour Plus d'informations sur Les définisions de Classe , lire les pages de manuel versent fai-class(1). Le script 50-host-classes (voir ci - dessous la version allégée) est utilisé pour les définir des classes en fonction du nom d'hôte.
-
+----
 # use a list of classes for our demo machines
 case $HOSTNAME in
     demohost)
@@ -662,60 +890,109 @@ case $HOSTNAME in
     *)
         echo "FAIBASE GRUB DHCPC" ;;
 esac
+----
 
-Les noms d'hôtes doivent Rarement Être utilisé Pour Les Fichiers de configuration dans l'Espace de configuration.à la place une classe Doit Être definie et ensuite ajouté Pour un hôte Donné. En effet, la Plupart du Temps les Données de configuration ne sont pas Spécifiques au d'nom hôte, mais peut etre partager entre differants hôtes./p>
+Host names should rarely be used for the configuration files in the
+configuration space. Instead, a class should be defined and then added
+for a given host. This is because most of the time the configuration
+data is not specific for one host, but can be shared among several
+hosts.
 
-L'ordre des classes est important car Elle Définit la priorité des classes de Faible à Élevé.
-Définition des Variables
+The order of the classes is important because it defines the priority
+of the classes from low to high.
 
-La Tache defvar definit les variables pour l'installation du client. Les variables sont définies par les scripts Dans la class/*.var. Toutes les variables Globales PEUVENT Être définies Dans DEFAULT.var. Pour certains groupes d'hôtes utiliser un Fichier de classe ou Pour un seul hôte utiliser le Fichier $HOSTNAME .var . Ici aussi, il est utile d'étudier Tous les exemples.
+=== [[classvariables]]Defining variables
 
-Les variables suivantes sont utilisées dans les exemples et peuvent etre aussi utiles pour votre installation:
+The task _defvar_ defines the variables for the install
+client. Variables are defined by scripts in _class/*.var_. All global
+variables can be set in 'DEFAULT.var'. For certain groups of hosts use
+a class file or for a single host use the file +$HOSTNAME+ _.var_. Also
+here, it's useful to study all the examples.
 
-FAI_ACTION
+The following variables are used in the examples and may also be
+useful for your installation:
 
-    Réglez les actions que doit éffectuer FAI. Normalement, ceci se fait par fai-chboot(8). Si vous ne pouvez pas utiliser cette commande, définir la variable dans le script LAST.var.
-FAI_ALLOW_UNSIGNED
+FAI_ACTION::
+Set the action FAI should perform. Normally this is done by
+`fai-chboot(8)`. If you can't use this command, define this variable
+i.e. in the script 'LAST.var'.
 
-    Si défini à 1, FAI Permet l'installation de de paquets à partir de référentiels non Signés.
-CONSOLEFONT
+FAI_ALLOW_UNSIGNED::
+If set to 1, FAI allows the installation of packages from unsigned
+repositories.
 
-    La police de qui est chargée lors de l'installation par setfont(8).
-KEYMAP
+CONSOLEFONT::
+Is the font which is loaded during installation by `setfont(8)`.
 
-    Définit les Fichiers de mappage du clavier Dans /usr/share/keymaps et $FAI/files. Vous ne Devez pas spécifier le chemin complet, puisque ce fichier sera localisé automatiquement.
-rootpw
+KEYMAP::
+Defines the keyboard map files in '/usr/share/keymaps' and
+'$FAI/files'. You need not specify the full path, since this file
+will be located automatically.
 
-    Le mot de passe root chiffré pour le nouveau système. Vous pouvez utiliser crypt(3), md5 et d' Autres types de hachage pour le mot de passe. Utilisez mkpasswd(1) pour créer le hachage d'un certain mot de passe. Par exemple, pour Générer le hachage MD5 pour l'utilisation du mot de passe.
-
+ROOTPW::
+The encrypted root password for the new system. You can use
+`crypt(3)`, md5 and other hash types for the password. Use
+`mkpasswd(1)` for creating the hash for a certain password.
+For example, to generate a md5 hash for the password use
+----
 $ echo "yoursecrectpassword" | mkpasswd -Hmd5 -s
+----
 
-UTC
 
-    Réglez l'horloge du matériel à UTC si UTC=yes. Sinon, régler l'horloge à l'heure locale. Voir clock(8)pour en plus d'informations.
-TIMEZONE
+UTC::
+Set hardware clock to UTC if _UTC=yes_. Otherwise set clock to local
+time. See `clock(8)` for more information.
 
-    Est-ce que le fichier d'initialisation par rapport à /usr/share/zoneinfo/ indique votre fuseau horaire. Par exemple: TIMEZONE=Europe/Berlin.
-MODULESLIST
+TIMEZONE::
+Is the file relative to '/usr/share/zoneinfo/' which indicates your
+time zone. E.g.: _TIMEZONE=Europe/Berlin_.
+_
 
-    Une liste des modules du Noyau qui sont chargés pendent Le démarrage du nouveau systême (Écrit dans /etc/modules).
+MODULESLIST::
+A list of kernel modules which are loaded during boot of the new system (written to
+/etc/modules).
 
-Configuration du disque dur
 
-L'outil setup-storage(8) lit le fichier dans $FAI/disk_config pour la configuration du disque. Ce fichier décrit comment tous les disques Locaux devrons etre partitionné, Quels types de Systèmes de Fichiers doivent etre écris (Comme ext3/4, xfs, btrfs), et où ils seront Montés. Vous pouvez aussi créer des configurations RAID logiciel et LVM en Utilisant le Fichier de configuration. Il Est aussi possible de la mise en Conservation de le partitionnage du disque ou de conserver Les Donnees - sur CERTAINES partitions.
+=== [[diskconfig]]Hard disk configuration
 
-Pendant le Processus d'installation de tous les Systèmes de Fichiers Locaux Sont Montés par rapport à /target. Par exemple, si vous Specifiez le Point de montage /home Dans un Fichier de configuration de disque, ce sera le répertoire /target/home pendant le Processus d'installation et deviendra /home pour le nouveau systéme Installé.
-Extraction du fichier de base
-Debconf préconfiguration
-L'Accès au dépôt de paquetages
-configuration du progiciel
+The tool `setup-storage(8)` reads a file in '$FAI/disk_config' for the
+disk configuration. This file describes how
+all the local disks will be partitioned, which file systems types should be
+created (like ext3/4, xfs, btrfs), and where they are
+mounted to. You can also create software RAID and LVM setups using this
+config file. It's also possible to preserve the disk layout or to
+preserve the data on certain partitions.
 
-Avant l'installation de de paquets, FAI va ajouter le contenu de Tous les Fichiers nommés package_config/class.asc à la liste des clés apt. Si votre depo locale est signé par votre keyid AB12CD34 vous pouvez Facilement ajouter cette clé, aussi FAI l'utilisera pendant l'installation. Utilisez cette commande pour Créer le fichier CLASS.asc:
+During the installation process all local file systems are mounted
+relative to '/target'. For example if you specify the mount point
+'/home' in a disk configuration file this will be the directory
+'/target/home' during the installation process und will become '/home'
+for the new installed system.
 
+=== [[extrbase]]Extract base file
+
+=== [[debconf]]Debconf preseeding
+
+=== [[repository]]Access to the package repository
+
+=== [[packageconfig]]Software package configuration
+
+Before installing packages, FAI will add the content of all files
+named _package_config/class.asc_ to the list of apt keys. If your local
+repository is signed by your keyid AB12CD34 you can easily add this key,
+so FAI will use it during installation. Use this command for creating
+the 'CLASS.asc' file:
+
+----
 faiserver$ gpg -a --export AB12CD34 > /srv/fai/config/package_config/MYCLASS.asc
+----
 
-Le script install_packages(8) installe les Logiciels Sélectionnés. Il lira tous les fichiers de configuration Dans $FAI/package_config Dont le nom correspond aux classes definie. La syntaxe est tres simple.
 
+The script `install_packages(8)` installs the selected software
+packages. It reads all configuration files in '$FAI/package_config'
+whose file name matches a defined class. The syntax is very simple.
+
+----
 # an example package class
 
 PACKAGES taskinst
@@ -731,78 +1008,191 @@ gpm xdm
 PACKAGES aptitude GRUB
 lilo- grub
 
-Commentaires Commencent par un Dièse et se terminent à la fin de la ligne. Chaqué commande de paquetage commence par Le mot PACKAGES Suivi par un nom de commande, Ce qui correspond à l'outil de package Comme apt-get, aptitude ou yum par exemple. la commande qui définit la commandent qui sera utilisé pour installer les paquets nommés après cette commande. La liste de toutes les commandes disponibles peuvent Être listé en utilisant install_packages -H. Les paquets d'outils pris en charges sont: aptitude, apt-get, smart, yast, yum, rpm, zypper
+----
 
-hold
+Comments are starting with a hash (#) and are ending at the end of the
+line. Every package command begins with the word _PACKAGES_ followed by a
+command name, which maps to a different package tool like apt-get,
+aptitude or yum for e.g. The command defines which command will be used to
+install the packages named after this command. The list of all
+available commands can be listed using _install_packages -H_.
+Supported package tools are: _aptitude, apt-get, smart, yast,
+yum, rpm, zypper_
 
-    Mettez un paquet en attente. Ce Paquet ne sera pas pris en charges par dpkg, pas exemple non mis à niveau.
-install
+hold::
+Put a package on hold. This package will not be handled by dpkg, e.g
+not upgraded.
 
-    Installez Tous les paquets (en utilisant apt-get) Qui sont précise dans les lignes Suivantes. Si un tiret est ajouté au nom du paquet (sans espace intermédiaire), le paquet sera supprimé, pas installé. Tous les noms de paquets sont vérifiées pour les fautes d'orthographe. Tout paquet qui n'existe pas, seront retiré de la liste des paquets à l'installation. Soyer donc prudentes de ne pas mal orthographier les noms de paquets.
-install-norec
+install::
+Install all packages (using `apt-get`) that are specified in the following lines. If a
+hyphen is appended to the package name (with no intervening space),
+the package will be removed, not installed. All package names are
+checked for misspellings.  Any package which does not exist, will be
+removed from the list of packages to install. So be careful not to
+misspell any package names.
 
-    Comme install,mais sans installer les paquets recommandés.
-remove
+install-norec::
+Like install but without installing the recommended packages.
 
-    Supprimer tous les paquets qui sont péciser dans les lignes suivantes. Annexer un + au nom du paquet si le paquet doit Être installé.
-taskinst
+remove::
+Remove all packages that are specified in the following lines. Append
+a + to the package name if the package should be installed.
 
-    Installez tous les paquets appartenant aux tâches qui sont spécifiées dans les lignes suivantes à l'aide de tasksel(1). Vous pouvez aussi utiliser aptitude pour installer les tâches.
-aptitude
+taskinst::
+Install all packages belonging to the tasks that are specified in the
+following lines using `tasksel(1)`. You can also use _aptitude_ for
+installing tasks.
 
-    Installez Ttus les paquets avec la commande aptitude. Ce sera la Valeur par défaut à l'avenir et pourra remplacer apt-get et taskinst. Aptitudes peut aussi installer les paquets
-aptitude-r
+aptitude::
+Install all packages with the command `aptitude`. This will be the
+default in the future and may replace apt-get and taskinst. Aptitude
+can also install task packages.
 
-    Idem aptitude avec l'option --with-recommends.
-unpack
+aptitude-r::
+Same as aptitude with option _--with-recommends_.
 
-    Télécharge les paquets et décompresse seulement. Ne configure pas le paquet.
-dselect-upgrade
+unpack::
+Download package and unpack only. Do not configure the package.
 
-    Defini la sélections des paquets en Utilisant les lignes suivantes et installe ou supprime les paquets précisés. Ces lignes sont le résultat de la commande dpkg --get-selections. Il est recommandé de ne pas utiliser ce format, puisque vous devez aussi specifiez tous les paquets qui ne sont pas installés en raison d'une dépendance ou recommandation. Il vaut mieux juste spécifier le paquet que vous voulez avoir, et de laisser FAI (et apt-get) résoudre les dépendances.
+dselect-upgrade::
+Set package selections using the following lines and install or remove
+the packages specified. These lines are the output of the command
+_dpkg --get-selections_. It's not recommended to use this format,
+since you are also specifying all packages which are only installed
+because of a dependency or a recommends. It's better just to specify
+the pacakge you like to have, and to let FAI (and apt-get) resolv the
+dependencies.
 
-Plusieurs lignes avec des listes de noms de paquets séparés par des espaces suivent les directive PACKAGES. Toutes les dépendances sont résolues. Les paquetages avec suffixe - (par exemple, lilo-) seront supprimés au lieu d'être installés. L'ordre des paquet n'a pas d'importance. Si vous souhaitez installer des paquets d'une autre version que la valeur par défaut, vous pouvez ajouter le nom de la version au nom du paquet comme dans openoffice.org/etch-backports. Vous pouvez également spécifier une certaine version comme apt=0.3.1. Plus d'informations sur ces fonctionnalités sont décrites dans aptitude(8).
 
-Une ligne qui contient la commande PRELOADRM, télécharge un fichier à l'aide de wget(1) dans un répertoire avant d'installer les packages. À l'aide du file: URL, ce fichier est copié de $FAI_ROOT vers le répertoire de téléchargement. Par exemple, le package realplayer a besoin d'une archive pour installer le logiciel, donc cette archive est téléchargée dans le répertoire /root. Après l'installation des paquets, ce fichier sera supprimé. Si le fichier ne doit pas être supprimé, utilisez plutôt la commande PRELOAD.
+Multiple lines with lists of space separated names of packages follow
+the PACKAGES lines. All dependencies are resolved. Packages with
+suffix _-_ (eg. _lilo-_) will be removed instead of installed. The
+order of the packages is of no matter.  If you like to install
+packages from another release than the default, you can append the
+release name to the package name like in
+_openoffice.org/etch-backports_. You can also specify a certain
+version like _apt=0.3.1_. More information on these features are
+described in `aptitude(8)`.
 
-Il est possible d'ajouter une liste de noms de classes après la commande pour apt-get. Ainsi, cette commande PACKAGE ne sera exécutée que si la classe correspondante est définie. Ainsi, vous pouvez combiner de nombreux petits fichiers dans le fichier DEFAULT. ATTENTION! Utilisez cette fonctionnalité uniquement dans le fichier DEFAULT pour garder tout simple. Voir ce fichier pour quelques exemples.
+A line which contains the _PRELOADRM_ commands, downloads a file using
+`wget(1)` into a directory before installing the packages. Using the
+_file:_ URL, this file is copied from +$FAI_ROOT+ to the download
+directory.  For example the package `realplayer` needs an archive to
+install the software, so this archive is downloaded to the directory
+'/root'. After installing the packages this file will be removed. If
+the file shouldn't be removed, use the command _PRELOAD_ instead.
 
-Si vous souhaitez supprimer un nom de paquet d'une certaine classe faisait partie avant de cette classe , vous ne devez pas supprimer le nom du paquet classe, mais plutôt de lui ajouter un tiret (-). Cela garantira que le paquet est enlevé pendant une mise a jour sur des hôtes qui étaient Installé en utilisant l'ancienne définition de classe qui comprenait ce nom de paquet.
+It's possible to append a list of class names after the command for
+apt-get. So this _PACKAGE_ command will only be executed when the
+corresponding class is defined. So you can combine many small files
+into the file DEFAULT. WARNING! Use this feature only in the file
+DEFAULT to keep everything simple. See this file for some examples.
 
-Si vous spécifiez un paquet qui n'existe pas, ce paquet sera supprimé automatiquement de la liste d'installation uniquement si la commande install est utilisée.
-Scripts de personnalisation
+If you want to remove a package name from a certain class was part of
+this class before, you should not remove the package name from the
+class file, but instead append a dash (-) to it. This will make sure
+that the package is remove during a softupdate on hosts which were
+installed using the old class definition which included this package
+name.
 
-La commande fai-do-scripts(1) est appelée pour exécuter tous les scripts dans ce répertoire. Si un répertoire avec un nom de classe existe, tous les scripts correspondant à ^[0-9][0-9]* sont exécutés par ordre alphabétique. Il est donc possible d'utiliser des scripts de différentes langues (shell, cfengine, Perl, Python, Ruby, expect,..) pour une classe.
+If you specify a package that does not exist this package will be
+removed automatically from the installation list only if the command _install_ is used.
 
-Ces scripts écrivent leur sortie dans différents fichiers journaux, selon le type de script. Par exemple, Tous les scripts shell écrivent leur journal dans shell.log.
-Scripts shell
+=== [[cscripts]] Customization scripts
 
-La plupart des scripts sont des scripts Bourne shell. Les scripts shell sont utiles si la tâche de configuration ne doit seulement appeler certaines commandes shell ou créer un fichier à partir de zéro. Afin de ne pas écrire beaucoup de scripts courts, il est possible d'utiliser la commande ifclass pour tester si certaines classes sont définies.
+The command `fai-do-scripts(1)` is called to execute all scripts in
+this directory. If a directory with a class name exists, all scripts
+matching '^[0-9][0-9]*' are executed in alphabetical order. So it's
+possible to use scripts of different languages (shell, cfengine,
+Perl, Python, Ruby, expect,..) for one class.
 
+Thoses scripts write their output to different log files, depending on
+the type of script. For e.g. all shell scripts write their log to
+`shell.log`.
+
+
+
+==== [[shell]]Shell scripts
+
+Most scripts are Bourne shell scripts. Shell scripts are useful if the
+configuration task only needs to call some shell commands or create a
+file from scratch. In order not to write many short scripts, it's
+possible to use the `ifclass` command for testing if certain classes
+are defined.
+
+----
 ifclass -o A B C
+----
 
-Vérifie si l'une des classes A, B ou C est définie. L'utilisation de -a (AND logique) vérifie si toutes les classes d'une liste sont définies. La commande ifclass C vérifie si seule la classe C est définie.
+checks if one of classes A, B or C are defined. Using -a (logical
+AND) checks if all classes of a list are defined. The command 'ifclass
+C' checks if only class C is defined.
 
-Pour copier des fichiers avec des classes, utilisez la commande fcopy(8). Si vous voulez extraire une archive à l'aide de classes, utilisez ftar(8). Pour ajouter des lignes à un fichier de configuration, utilisez ainsl(1) au lieu de simplement echo string >> filename..
+For copying files with classes, use the command
+`fcopy(8)`. If you want to extract an archive using classes, use
+`ftar(8)`. For appending lines to a configuration file use `ainsl(1)`
+instead of just +echo string >> filename+.
 
-FAI prend également en charge les scripts zsh(1) pendant la tâche de personnalisation. Dans les scripts, la variable $classes contient une liste séparée par des espaces avec les noms de toutes les classes définies.
-Scripts cfengine
 
-CFEngine dispose d'un riche ensemble de fonctions pour modifier les fichiers de configuration existants, par exemple LocateLineMatching, ReplaceAll, InsertLine, AppendIfNoSuchLine, HashCommentLinesContaining. Mais il ne peut pas traiter les variables qui sont indéfinies. Si une variable n'est pas définie, l'ensemble du script cfengine s'arrêtera.
+FAI also supports 'zsh(1)' scripts during the
+customization task. Within scripts, the variable +$classes+ holds a space
+separated list with the names of all defined classes.
 
-Plus d'informations peuvent être trouvées dans la page de manuel cfengine(8) ou sur la page d'accueil cfengine http://www.cfengine.org.
-Hooks
+==== [[cfengine]]Cfengine scripts
 
-Les Hooks vous permettent de spécifier des fonctions ou des programmes qui sont exécutés à certaines étapes du processus d'installation. Avant qu'une tâche soit appelée, FAI recherche les hooks existants pour cette tâche et les exécute. Comme on peut s'y attendre, les classes sont également utilisées lors de l'appel de hooks. Les hooks sont exécutés pour chaque classe définie. Vous n'avez qu'à créer le hook avec le nom de la classe désirée et il sera utilisé. Si plusieurs hooks pour une tâche existent, ils sont appelés dans l'ordre défini par les classes. Si debug est inclus dans $FAI_FLAG l'option -d est passée à tous les hooks, donc vous pouvez déboguer vos propres hooks. Si certaines tâches par défaut doivent être ignorées, utilisez la sous-routine skiptask et une liste de tâches par défaut comme paramètres. Dans les exemples fournis, les hooks de la classe CENTOS ignorent certaines tâches spécifiques de Debian.
+CFEngine has a rich set of functions to edit existing configuration
+files, e.g _LocateLineMatching, ReplaceAll, InsertLine,
+AppendIfNoSuchLine, HashCommentLinesContaining_. But it can't handle
+variables which are undefined. If a variable is undefined, the whole
+cfengine script will abort.
 
-Le répertoire $FAI/hooks/ contient tous les hooks. Un hook est un fichier exécutable qui suit le nom de tâche taskname.CLASSNAME[.sh] (par exemple, repository.CENTOS ou savelog.LAST.sh), un nom de tâche et un nom de classe séparés par un point, éventuellement suivi de '.sh. Le nom de la tâche spécifie la tâche devant précéder l'exécution de ce hook, si la classe spécifiée est définie pour le client d'installation. Voir la section [tasks] pour une liste complète des tâches par défaut pouvant être utilisées.
+More information can be found in the manual page `cfengine(8)` or at
+the cfengine homepage http://www.cfengine.org.
 
-Un hook du formulaire hookprefix.classname ne peut pas définir de variables pour le script d'installation, car il s'agit d'un sous-processus. Mais vous pouvez utiliser n'importe quel exécutable binaire ou n'importe quel script que vous avez écrit. Les hooks qui ont le suffixe .sh (par exemple, 'partition.DEFAULT.sh) doivent être des scripts Bourne shell et sont sourcé. Il est donc possible de redéfinir des variables pour les scripts d'installation.
 
-Dans la première partie de FAI, tous les hooks avec le préfixe confdir sont appelés. Ces hooks ne peuvent pas être localisés dans l'espace de configuration, car il n'est pas encore disponible. Par conséquent, ces hooks sont les seuls hooks situés dans $nfsroot/$FAI/hooks sur le serveur d'installation. Tous les autres hooks se trouvent dans $FAI_CONFIGDIR/hooks sur le serveur d'installation.
+=== [[hooks]]Hooks
 
-Tous les hooks appelés avant la définition des classes ne peuvent utiliser que les classes suivantes: DEFAULT $HOSTNAME LAST. Si un hook pour la classe DEFAULT doit être appelé uniquement si aucun hook pour la classe $HOSTNAME n'est disponible, insérez ces lignes sur le hook par défaut:
+Hooks let you specify functions or programs which are run at certain
+steps of the installation process. Before a task is called,
+FAI searches for existing hooks for this task and executes them. As
+you might expect, classes are also used when calling hooks. Hooks are
+executed for every defined class. You only have to create the hook
+with the name for the desired class and it will be used.  If several
+hooks for a task exists, they are called in the order defined by the
+classes.  If _debug_ is included in +$FAI_FLAG+ the option _-d_ is
+passed to all hooks, so you can debug your own hooks.  If some default
+tasks should be skipped, use the subroutine _skiptask_ and a list of
+default tasks as parameters. In the examples provided, the hooks of
+the class CENTOS skips some Debian specific tasks.
 
+The directory '$FAI/hooks/' contains all hooks. A hook is an executable
+file following the naming scheme 'taskname.CLASSNAME[.sh]' (e.g.
+'repository.CENTOS' or 'savelog.LAST.sh), a task name and a
+class name separated by a dot, optionally followed by '.sh'. The
+task name specifies which task to precede executing this hook, if the
+specified class is defined for the installing client.  See section
+<<tasks>> for a complete list of default tasks that can be used.
+
+A hook of the form _hookprefix.classname_ can't define variables for
+the installation script, because it's a subprocess. But you can use
+any binary executable or any script you wrote. Hooks that have the
+suffix _.sh_ (e.g. 'partition.DEFAULT.sh) must be Bourne
+shell scripts and are sourced. So it's possible to redefine variables
+for the installation scripts.
+
+In the first part of FAI, all hooks with prefix _confdir_ are called.
+Those hooks can not be located in the config space, since it's not yet
+available. Therefore these hooks are the only hooks located in
++$nfsroot+'/$FAI/hooks' on the install server. All other hooks are
+found in '$FAI_CONFIGDIR/hooks' on the install server.
+
+
+All hooks that are called before classes are defined can only use the
+following classes: _DEFAULT $HOSTNAME LAST_. If a hook for class
+_DEFAULT_ should only be called if no hook for class +$HOSTNAME+ is
+available, insert these lines to the default hook:
+
+----
 hookexample.DEFAULT:
 
 #! /bin/sh
@@ -813,173 +1203,238 @@ scriptname=$(basename $0 .DEFAULT)
 # here follows the actions for class DEFAULT
 .
 .
+----
 
-Quelques exemples de ce que les hooks pourraient être utilisés:
+Some examples for what hooks could be used:
 
-    Charger les modules du noyau avant que les classes soient définies dans $FAI/class.
+- Load kernel modules before classes are defined in '$FAI/class'.
 
-    Envoyez un courriel à l'administrateur si l'installation est terminée.
+- Send an email to the administrator if the installation is finished.
 
-    Installez un client sans disque et sautez le partitionnement de disque local.
+- Install a diskless client and skip local disk partitioning.
 
-    Jetez un oeil à hooks/debconf.IMAGE pour savoir comment cloner une machine en utilisant une image de système de fichiers.
+- Have a look at +hooks/debconf.IMAGE+ for how to clone a machine using a file system image.
 
-FAI flags
+=== [[faiflags]]FAI flags
 
-La variable $FAI_FLAGS contient une liste de flags séparés par des espaces. Les flags suivants sont connus:
+The variable +$FAI_FLAGS+ contains a space separated list of
+flags. The following flags are known:
 
-verbose
+verbose::
+Create verbose output during installation. This should always be the
+first flag, so consecutive definitions of flags will be verbosely
+displayed.
 
-    Créez une sortie verbeuse pendant l'installation. Cela doit toujours être le premier flag, de sorte que les définitions consécutives des flags seront affichées verbeusement.
-debug
+debug::
+Create debug output. No unattended installation is performed. During
+package installation you have to answer all questions of the
+postinstall scripts on the client's console. A lot of debug
+information will be printed out. This flag is only useful for FAI
+developers.
 
-    Créer une sortie de débogage. Aucune installation sans assistance n'est effectuée. Pendant l'installation du paquet, vous devez répondre à toutes les questions des scripts postinstall sur la console du client. Beaucoup d'informations de débogage seront imprimées. Ce flag n'est utile que pour les développeurs FAI.
-sshd
+sshd::
+Start the ssh daemon to enable remote logins.
+You can then log in as _root_ to all install clients during the
+installation. The default password is _fai_ and can be changed by
+setting `FAI_ROOTPW` in `nfsroot.conf(5)`. To log in from your server
+to the install client (named demohost in this example) use:
 
-    Démarrez le démon ssh pour activer les connexions à distance. Vous pouvez ensuite vous connecter en tant que root à tous les clients d'installation pendant l'installation. Le mot de passe par défaut est fai et peut être modifié en définissant FAI_ROOTPW dans nfsroot.conf(5). Pour vous connecter à partir de votre serveur vers le client d'installation (nommé demohost dans cet exemple), utilisez:
-
+----
 $ ssh root@demohost
 Warning: Permanently added 'demohost,192.168.33.100' to the list of known hosts.
 root@demohost's password:
+----
 
-Ce n'est que le mot de passe root pendant le processus d'installation, pas pour le nouveau système installé. Vous pouvez également vous connecter sans mot de passe lorsque vous utilisez $SSH_IDENTITY.
+This is only the root password during the
+installation process, not for the new installed system. You can also
+log in without a password when using +$SSH_IDENTITY+.
 
-createvt
 
-    Créez deux terminaux virtuels et exécutez un bash si ctrl-c est tapé dans le terminal de console. Vous pouvez accéder aux terminaux supplémentaires en tapant Alt-F2 ou Alt-F3. Sinon, aucun terminal n'est disponible et la saisie ctrl-c va redémarrer le client d'installation. La définition de ce flag est utile pour le débogage. Si vous voulez une installation qui ne devrait pas être interruptible, ne définissez pas ce flag.
-menu
+createvt::
+Create two virtual terminals and execute a bash if _ctrl-c_ is typed
+in the console terminal. The additional terminals can be accessed by
+typing _Alt-F2_ or _Alt-F3_. Otherwise, no terminals are available and
+typing _ctrl-c_ will reboot the install client. Setting this flag is
+useful for debugging. If you want an installation which should not be
+interruptible, do not set this flag.
 
-    Cela permet à un menu utilisateur de sélectionner un profil. Tous les fichiers class/*.profile sont lus et un menu basé sur des curses sera créé.
-reboot
+menu::
+This enables a user menu for selecting a profile. All files
++class/*.profile+ are read and a curses based menu will be created.
 
-    Redémarrez le client d'installation une fois l'installation terminée sans taper RETURN sur la console. Si ce drapeau n'est pas défini, et que error.log contient quelque chose, le client d'installation s'arrêtera et attendra que vous appuyez sur RETURN. Si aucune erreur ne s'est produite, le client redémarre automatiquement automatiquement.
-halt
+reboot::
+Reboot the install client after installation is finished without
+typing RETURN on the console. If this flag is not set, and error.log
+contains anything, the install client will stop and wait that you
+press RETURN. If no errors occurred, the client will always reboot
+automatically.
 
-    Arrêtez le client d'installation à la fin de l'installation, au lieu de redémarrer dans le nouveau système.
-initial
+halt::
+Halt the install client at the end of the installation, instead of
+rebooting into the new system.
 
-    Utilisé par setup-storage(8). Les partitions marquées avec preserve_reinstall sont préservées à moins que ce flag ne soit défini. Souvent, ce drapeau est placé dans un fichierclass/*.var en utilisant le paramètre flag_initial=1.
+initial::
+Used by `setup-storage(8)`. Partitions marked with +preserve_reinstall+
+are preserved unless this flag is set. Often, this flag is set in a
+file 'class/*.var' by using setting 'flag_initial=1'.
 
-FAI installe votre planification
-La première partie d'une installation
 
-Après le démarrage du noyau, il monte le système de fichiers racine via NFS à partir du serveur d'installation et démarre le script /usr/sbin/fai[10]. Ce script contrôle la séquence de l'installation. Aucun autre script dans /etc/init.d/ n'est utilisé.
 
-L'espace de configuration est rendu disponible via la méthode configurée (un montage NFS par défaut) du serveur d'installation au chemin défini dans $FAI [11].
-Messages de boot
+== [[install]] FAI installs your plan
 
-Lorsque vous démarrez le client d'installation à partir de la carte réseau avec PXE, vous obtiendrez des messages comme ceci:
+=== The early part of an installation
 
-Managed PC Boot Agent (MBA) v4.00
-Pre-boot eXecution Environment (PXE) v2.00
-DHCP MAC ADDR: 00 A2 A3 04 05 06
-DHCP.../
+After the kernel has booted, it mounts the root file system via NFS
+from the install server and starts the script
+'/usr/sbin/fai' footnote:[Since the root file system on the clients is mounted via
+NFS, `fai` is located in
+'/srv/fai/nfsroot/usr/sbin' on the install
+server.]. This script controls the sequence of the
+installation. No other scripts in '/etc/init.d/' are used.
 
-CLIENT MAC ADDR: 00 A2 A3 04 05 06  GUID: 3D6C4552
-CLIENT IP: 192.168.33.100 MASK: 255.255.255.0  DHCP IP: 192.168.33.250
-GATEWAY IP: 192.168.33.1
+The configuration space is made available via the configured method
+(an NFS mount by default) from the install server to the path defined
+in '$FAI' footnote:['$FAI' is an internal variable used by the FAI
+scripts. By default the path is _/var/lib/fai/config_.]
 
-!PXE entry point found (we hope) at 9854:0106 via plan A
-UNDI code segment at: 9854 len 5260
-UNDI data segment at: 921D len 63A2
-Getting cached packet  01 02 03
-My Ip address seems to be C0A82164 192.168.33.100
-ip=192.168.33.100:192.168.33.250:192.168.33.1:255.255.255.0
-BOOTIF=01-00-A2-A3-04-05-06
-SYSUUID=
-TFTP prefix: fai/
-Trying to load pxelinux.cfg/C0A82164
 
-Loading vmlinuz-3.16.0-4-amd64..................
-Loading initrd.img-3.16.0-4-amd64......................ready.
+=== [[bootmesg]]Boot messages
 
-À ce stade, le client d'installation a réussi à recevoir le réseau Config via DHCP et le noyau et initrd via TFTP. Il démarre maintenant Le noyau Linux et l'initrd. Si tout allait bien, l'initrd Monte nfsroot[12] Et les scripts FAI sont lancés. La première chose que vous voyez est le message en rouge de copyright FAI.
+When booting the install client from network card with PXE you will some
+messages like this:
+include::includes/bootexample.txt[]
 
-             -------------------------------------------------
-                   Fully Automatic Installation  -  FAI
+At this point the install client has successfully received the network
+config via DHCP and the kernel and initrd via TFTP. It now boots the
+Linux kernel and the initrd. If everything went right, the initrd
+mounts the nfsroot footnote:['/srv/fai/nfsroot' from the install
+server via NFS] and the FAI scripts are started. The first
+thing you see is the red FAI copyright message.
 
-                   5.3.3~bpo8+2  (c) 1999-2017
-               Thomas Lange  <lange@informatik.uni-koeln.de>
-             -------------------------------------------------
+include::includes/fai-1st-part.txt[]
 
-Calling task_confdir
-Kernel currently running: Linux 3.16.0-4-amd64 x86_64 GNU/Linux
-Kernel parameters: BOOT_IMAGE=vmlinuz-3.16.0-4-amd64 initrd=initrd.img-3.16.0-4-amd64 \
- rw aufs ip=dhcp root=192.168.33.250:/srv/fai/nfsroot FAI_FLAGS=verbose,sshd,createvt\
- FAI_CONFIG_SRC=nfs://faiserver/srv/fai/cskoeln FAI_ACTION=install quiet\
- BOOTIF=01-00-a2-a3-04-05-06
-Reading /tmp/fai/boot.log
-FAI_FLAGS: verbose sshd createvt
-Setting SERVER=faiserver. Value extracted from FAI_CONFIG_SRC.
+You can also see the list of FAI classes, that are defined for this
+host. This list is very important for the rest of the installation.
+
+The first task is called _confdir_, which is responsible for getting
+access to the config space. Here, we use an NFS mount from the install
+server as you can see on the console (and later in the logs).
+
+----
 FAI_CONFIG_SRC is set to nfs://faiserver/srv/fai/config
 Configuration space faiserver:/srv/fai/config mounted to /var/lib/fai/config
-Calling task_setup
-FAI_FLAGS: verbose sshd createvt
-15 Jan 13:22:37 ntpdate[1533]: step time server 192.168.33.250 offset -0.342793 sec
-Press ctrl-c to interrupt FAI and to get a shell
-Starting FAI execution - 20170115_132237
-Calling task_defclass
-fai-class: Defining classes.
-Executing /var/lib/fai/config/class/10-base-classes.
-10-base-classes      OK.
-Executing /var/lib/fai/config/class/20-hwdetect.source.
-Loading kernel module md-mod
-20-hwdetect.source   OK.
-Executing /var/lib/fai/config/class/50-host-classes.
-50-host-classes      OK.
-List of all classes: DEFAULT LINUX AMD64 FAIBASE DHCPC DEMO GRUB client01 LAST
+----
 
-Vous pouvez également voir la liste des classes FAI, qui sont définies pour ce hôte. Cette liste est très importante pour le reste de l'installation.
+Before the installation is started (+$FAI_ACTION=install+) the computer
+beeps three times. So, be careful when you hear three beeps but you do
+not want to perform an installation and let FAI erase all yout data on
+the local disk!
 
-La première tâche est appelée confdir, qui est chargée de Accès à l'espace de configuration. Ici, nous utilisons un montage NFS à partir de l'installation Comme vous pouvez le voir sur la console (et plus tard dans les journaux).
 
-FAI_CONFIG_SRC is set to nfs://faiserver/srv/fai/config
-Configuration space faiserver:/srv/fai/config mounted to /var/lib/fai/config
+=== [[reboot]]Rebooting the computer into the new system
 
-Avant de lancer l'installation ($FAI_ACTION=install), l'ordinateur Bip trois fois. Donc, faites attention quand vous entendez trois bips mais vous Ne voulez pas effectuer une installation et laisser FAI effacer toutes vos données sur Le disque local!
-Redémarrage de l'ordinateur dans le nouveau système
+For rebooting the computer during or at the end of the installation you
+should use the command `faireboot` in favour of the normal reboot command.
+Use `faireboot` also if logged in from remote. If the installation
+hasn't finished, use _faireboot -s_, so the log files are also copied
+to the install server.
 
-Pour redémarrer l'ordinateur pendant ou à la fin de l'installation, vous devez utiliser la commande faireboot en faveur de la commande de redémarrage normal. Utilisez aussi faireboot si vous êtes connecté depuis la télécommande. Si l'installation n'est pas terminée, utilisez faireboot -s, donc les fichiers journaux sont également copiés sur le serveur d'installation.
+If the installation has finished successfully, the computer should boot a
+small Debian system. You can login as user _demo_ or _root_ with password _fai_.
 
-Si l'installation est terminée, l'ordinateur doit démarrer un petit système Debian. Vous pouvez vous connecter en tant que demo ou root avec le mot de passe fai.
-Démarrage de FAI (tâche confdir)
+=== [[isetup]]Starting FAI (task confdir)
 
-Une fois le client d'installation démarré, seul le script /usr/sbin/fai est exécuté. Il effectuera une initialisation minimale. La variable $FAI_CONFIG_SRC [13] est utilisée pour accéder à l'espace de configuration FAI qui est alors disponible dans le répertoire $FAI [14]. FAI ne se déroulera pas sans l'espace de configuration.
-Définition de classes et de variables (tâches defclass et defvar)
+After the install client has booted only the script '/usr/sbin/fai' is
+executed. It will do some minimal initialization. The variable
++$FAI_CONFIG_SRC+ footnote:[It it defined on the kernel command line]
+is used to get access to the FAI configuration space which is then
+available in the directory +$FAI+ footnote:[/var/lib/fai/config]. FAI
+will not proceed without the config space.
 
-La commande fai-class(1) exécute des scripts dans $FAI/class pour définir des classes. Si les scripts écrivent une chaîne sur stdout, cela sera défini comme une classe. Lisez tous les détails dans la page de manuel de fai-class(1).
 
-Après avoir défini les classes, chaque fichier correspondant à .var avec un préfixe qui correspond à une classe définie provient de variables définies. Il doit contenir le code shell vaild.
-Partitionnement de disques locaux, création de systèmes de fichiers (tâches de partitionnement)
+=== [[iclass]]Defining classes and variables (tasks defclass and defvar)
 
-Pour le partitionnement du disque, un fichier de configuration de disque de $FAI/disk_config est sélectionné à l'aide de classes.
+The command `fai-class(1)` executes scripts in '$FAI/class' for defining
+classes. If the scripts write a string to stdout, this will be defined
+as a class. Read all the details in the man page of `fai-class(1)`.
 
-Le format de la configuration du disque est similaire à un fichier fstab.
 
-L'outil de partitionnement setup-storage(8) exécute toutes les commandes nécessaires à la création de la disposition de la partition du disque, du RAID logiciel, du LVM et de la création des systèmes de fichiers. Lisez la page de manuel de setup-storage(8) pour une description détaillée et quelques exemples du format.
-Préréglage Debconf (tâche debconf)
+After defining the classes, every file matching _.var_ with a prefix
+which matches a defined class is sourced to define variables. It must
+contain vaild shell code.
 
-Les fichiers dans $FAI/debconf sont utilisés par debconf(7) habituel en présselectionnant si les noms de fichier correspondent à un nom de classe.
-Installation de progiciels (tâche instsoft)
+=== [[ipartition]]Partitioning local disks, creating file systems (task partition)
 
-La commande install_packages(8) lit les fichiers de configuration à partir de $FAI/package_config en classe et installe des progiciels sur le nouveau système de fichiers.
+For the disk partitioning exactly one disk configuration file from
+'$FAI/disk_config' is selected using classes.
 
-Il installe les paquets en utilisant apt-get(8), aptitude(1), yum ou d'autres outils de paquetage sans aucune interaction manuelle nécessaire. Les paquets sont également résolus par les outils de paquets.
+The format of the disk configuration is similar to a fstab file.
 
-Le format des fichiers de configuration est décrit dans [packageconfig].
-Personnalisation spécifique au site (task configure)
+The partitioning tool `setup-storage(8)` performs all commands
+necessary for creating the disk partition layout, software RAID, LVM
+and for creating the file systems. Read the manual page of
+`setup-storage(8)` for a detailed description and some examples of the
+format.
 
-Souvent, les configurations par défaut des progiciels ne répondent pas à vos besoins spécifiques au site. Vous pouvez appeler des scripts arbitraires qui ajustent la configuration du système. Par conséquent, la commande fai-do-scripts(1) exécute des scripts dans $FAI/scripts d'une manière basée sur la classe. Il est possible d'avoir plusieurs scripts de différents types (shell, cfengine, ...) à exécuter pour une classe.
 
-L'ensemble de scripts par défaut dans $FAI/scripts inclut des exemples d'installation de machines Debian et CentOS. Ils définissent le mot de passe root, ajoutent un compte utilisateur démo, paramétrent le fuseau horaire, configurent le réseau pour DHCP ou utilisent une adresse IP fixe,la configuration grub et plus encore. Ils devraient faire un travail raisonnable pour votre installation. Vous pouvez les modifier ou ajouter de nouveaux scripts pour répondre à vos besoins locaux.
+=== [[ipreseed]]Debconf preseeding (task debconf)
+Files in '$FAI/debconf' are used for the usual `debconf(7)` presseding
+if the file names match a class name.
 
-Plus d'informations sur ces scripts sont décrits dans [cscripts].
-Enregistrement des fichiers journaux (tâche savelog)
+=== [[ipackages]]Installing software packages (task instsoft)
 
-Lorsque toutes les tâches sont terminées, les fichiers journaux sont écrits dans /var/log/fai/$HOSTNAME/install/[15] sur le nouveau système et sur le compte sur le serveur d'installation si $LOGUSER est défini. Il est également possible de spécifier un autre hôte comme enregistrement en enregistrant la destination via la variable $LOGSERVER. Si $LOGSERVER n'est pas défini, FAI utilise la variable $SERVER qui n'est définie que lors d'une installation initiale (par get-boot-info). Assurez-vous de définir $LOGSERVER dans un script class/*.var si vous utilisez l'action softupdate.
+The command `install_packages(8)` reads the config files from
+'$FAI/package_config' in a class based manner and installs software
+packages on the new file system.
 
-De plus, deux liens symboliques seront créés pour indiquer le dernier répertoire écrit. Le last lien symbolique pointe vers le répertoire journal de la dernière action FAI exécutée. Les liens symboliques last-install et last-sysinfo pointent vers le répertoire avec la dernière action correspondante. Par défaut, les fichiers journaux seront copiés sur le serveur de journal à l'aide de scp. Vous pouvez utiliser la variable $FAI_LOGPROTO dans le fichier fai.conf(5) pour choisir une autre méthode d'enregistrement des journaux sur le serveur distant. Voici un exemple de structure de lien symbolique:
+It installs the packages using `apt-get(8)`, `aptitude(1)`, `yum` or other
+package tools without any manual interaction needed. Package
+dependecies are also resolved by the package tools.
 
+The format of the configuration files is described in <<packageconfig>>.
+
+=== [[icscripts]]Site specific customization (task configure)
+
+Often the default configurations of the software packages will not
+meet your site-specific needs. You can call arbitrary scripts which
+adjust the system configuration. Therefore the command
+`fai-do-scripts(1)` executes scripts in '$FAI/scripts' in a class
+based manner. It is possible to have several scripts of different
+types (shell, cfengine, ...) to be executed for one class.
+
+The default set of scripts in '$FAI/scripts' include examples for
+installing Debian and CentOS machines. They set the root password, add
+a demo user account, set the timezone, configure the network for DHCP
+or using a fixed IP address, setup grub and more.
+They should do a reasonable job for your installation. You can edit
+them or add new scripts to match your local needs.
+
+More information about these scripts are described in <<cscripts>>.
+
+
+=== [[isavelog]]Saving log files (task savelog)
+
+When all tasks are finished, the log files are written to
+_/var/log/fai/$HOSTNAME/install/_
+footnote:['/var/log/fai/localhost/install/' is a link to this
+directory.] on the new system and to the account on the install server
+if +$LOGUSER+ is defined. It is also possible to specify
+another host as log saving destination through the variable
++$LOGSERVER+. If +$LOGSERVER+ is not defined, FAI uses the variable
++$SERVER+ which is only defined during an initial installation (by
+get-boot-info). Make sure to set +$LOGSERVER+ in a _class/*.var_ script
+if you are using the action _softupdate_.
+
+Additionally, two symlinks will be created to indicated the last
+directory written to. The symlink 'last' points to the log directory
+of the last FAI action performed. The symlinks 'last-install' and
+'last-sysinfo' point to the directory with of the last corresponding
+action. By default log files will be copied to the log
+server using scp. You can use the variable +$FAI_LOGPROTO+ in file
+'fai.conf(5)' to choose another method for saving logs to the remote
+server. Here's an example of the symlink structure:
+
+----
 lrwxrwxrwx   1 fai fai   23 Dec  2  2013 last-sysinfo -> sysinfo-20131202_161237
 drwxr-xr-x   2 fai fai 4096 Dec  2  2013 sysinfo-20131202_161237
 drwxr-xr-x   2 fai fai 4096 Feb 14  2014 install-20140214_142150
@@ -987,138 +1442,289 @@ drwxr-xr-x   2 fai fai 4096 Dec  2 11:47 install-20141202_113918
 lrwxrwxrwx   1 fai fai   23 Dec  4 13:22 last-install -> install-20141204_131351
 lrwxrwxrwx   1 fai fai   23 Dec  4 13:22 last -> install-20141204_131351
 drwxr-xr-x   2 fai fai 4096 Dec  4 13:22 install-20141204_131351
+----
 
-Vous trouverez des exemples de fichiers journaux à l'adresse http://fai-project.org/logs.
-Redémarrez le nouveau système installé
+Examples of the log files can be found at http://fai-project.org/logs.
 
-Avant de redémarrer, le client d'installation appelle fai-chboot -d <hostname> sur le serveur d'installation, pour désactiver sa propre configuration PXELINUX. Sinon, il redémarrera l'installation lors de la prochaine initialisation. Normalement, cela devrait démarrer le nouveau système installé à partir de son second périphérique d'amorçage, le disque dur local.
 
-À la fin, le système est automatiquement redémarré si "reboot" a été ajouté à $FAI_FLAGS.
-Chapitre avancés de FAI
-Vérification des paramètres reçus des serveurs DHCP
+=== [[ireboot]]Reboot the new installed system
 
-Si le client d'installation démarre, vous pouvez vérifier si toutes les informations provenant du démon DHCP sont correctement reçues. Les informations reçues sont écrites dans /tmp/fai/boot.log. Un exemple de résultat d'une requête DHCP peut être trouvé dans les fichiers journaux d'exemple.
-Surveillance de plusieurs installations clientes
+Before rebooting, the install client calls `fai-chboot -d <hostname>`
+on the install server, to disable its own PXELINUX
+configuration. Otherwise, it would restart the installation during the
+next boot. Normally this should boot the new installed system from
+its second boot device, the local hard disk.
 
-Vous pouvez surveiller l'installation de tous les clients d'installation avec la commande fai-monitor(8). Tous les clients vérifient si ce démon est en cours d'exécution sur le serveur d'installation (ou sur l'ordinateur défini par la variable $monserver). Chaque fois qu'une tâche démarre ou se termine, un message est envoyé. Le démon du moniteur FAI imprime ces messages à la sortie standard. Il ya aussi un frontend graphique disponible, appelé fai-monitor-gui(1).
+At the end, the system is automatically rebooted if "reboot" was added to
++$FAI_FLAGS+.
 
+
+
+== [[advanced]]Advanced FAI topics
+
+
+=== [[checkbootp]]Checking parameters received from DHCP servers
+
+If the install client boots you can check
+if all information from the DHCP daemon are received
+correctly. The received information is written to
+'/tmp/fai/boot.log'. An example of the result of a DHCP request can be
+found in the sample log files.
+
+
+
+
+=== [[fai-monitor]]Monitoring multiple client installations
+
+You can monitor the installation of all install clients with the
+command `fai-monitor(8)`. All clients check if this daemon is running
+on the install server (or the machine defined by the variable
++$monserver+). Each time a task starts or ends, a message is sent. The
+FAI monitor daemon prints this messages to standard output. There's
+also a graphical frontend available, called `fai-monitor-gui(1)`.
+
+----
 $  fai-monitor | fai-monitor-gui - &
+----
 
-Collecte d'adresses Ethernet pour plusieurs hôtes
 
-Vous devez collecter toutes les adresses Ethernet (MAC) des clients à l'installation et affecter un nom d'hôte et une adresse IP à chaque client. Pour collecter les adresses MAC, démarrez vos clients pour l'installation. Vous pouvez déjà le faire avant que n'importe quel démon DHCP s'exécute dans votre sous-réseau. Ils échoueront à démarrer (en raison du manque de DHCP ou de TFTP manquant), mais vous pouvez toujours collecter les adresses MAC.
+=== [[mac]]Collecting Ethernet addresses for multiple hosts
 
-Pendant que les clients d'installation démarrent, ils envoient des paquets de diffusion au LAN. Vous pouvez enregistrer les adresses MAC de ces hôtes en exécutant simultanément la commande suivante sur le serveur:
+You have to collect all Ethernet (MAC) addresses of the install
+clients and assign a host name and IP address to each client. To
+collect the MAC addresses, boot your install clients.
+You can already do this before any DHCP daemon is running in your
+subnet. They will fail to boot (because of the missing DHCP or missing TFTP),
+but you can still collect the MAC addresses.
 
+While the install clients are booting, they send broadcast packets to the
+LAN. You can log the MAC addresses of these hosts by running the
+following command simultaneously on the server:
+
+----
 faiserver# tcpdump -qtel broadcast and port bootpc >/tmp/mac.list
+----
 
-Une fois que les hôtes ont été envoyés, certains paquets de diffusion annule tcpdump en tapant ctrl-c. Vous obtenez une liste de toutes les adresses MAC uniques avec ces commandes:
+After the hosts have been sent some broadcast packets abort `tcpdump`
+by typing _ctrl-c_. You get a list of all
+unique MAC addresses with these commands:
 
+----
 faiserver$ perl -ane 'print "\U$F[0]\n"' /tmp/mac.list|sort|uniq
+----
 
-Après cela, vous n'avez qu'à assigner ces adresses MAC aux noms d'hôte et aux adresses IP (/etc/ethers et /etc/hosts ou aux cartes NIS correspondantes). Avec ces informations, vous pouvez configurer votre démon DHCP (voir la section [bootdhcp]). [16]
-Débogage du trafic réseau
+After that, you only have to assign these MAC addresses to host names
+and IP addresses ('/etc/ethers' and '/etc/hosts' or corresponding NIS
+maps). With this information you can configure your `DHCP`
+daemon (see the section <<bootdhcp>>). footnote:[I recommend to write the MAC
+addresses (last three bytes will suffice if you have network cards
+from the same vendor) and the host name in the front of each chassis.]
 
-Si le client ne peut démarrer correctement à partir de la carte réseau, utilisez tcpdump(8) pour rechercher des paquets Ethernet entre le serveur d'installation et le client. Recherchez également les entrées de plusieurs fichiers journaux effectués par tftpd(8) et dhcpd(8) :
 
+==== Debugging the network traffic
+
+If the client can't successfully boot from the network card, use
+`tcpdump(8)` to look for Ethernet packets between the install server
+and the client. Search also for entries in several log files made by
+`tftpd(8)` and `dhcpd(8)` :
+
+----
 faiserver$ egrep "tftpd|dhcpd" /var/log/*
+----
 
-Détails du démarrage PXE
 
-Ici, nous décrivons les détails du démarrage PXE, qui ne sont nécessaires que si vous avez des problèmes lors du démarrage de vos clients d'installation.
+=== [[pxeboot]]Details of PXE booting
 
-Presque toutes les cartes réseau modernes prennent en charge l'environnement de démarrage PXE. PXE est l'environnement d'exécution de pré-lancement. Cela nécessite le chargeur de démarrage PXELINUX et une version spéciale du démonTFTP, disponible dans les paquets Debian pxelinux et tftpd-hpa. Le démarrage PXE nécessite également un serveur DHCP, afin que la carte réseau puisse configurer ses paramètres IP. Il s'agit de la séquence d'une amorce PXE:
+Here we describe the details of PXE booting, which are only needed if
+you have problems when booting your install clients.
 
-    La carte réseau du client envoie son adresse MAC
+Almost all modern bootable network cards support the PXE boot environment.
+PXE is the Preboot Execution Environment.
+This requires the PXELINUX bootloader and a special version of the _TFTP_
+daemon, which is available in the Debian packages +pxelinux+ and
++tftpd-hpa+. PXE booting also needs a DHCP server, so that the network
+card can configure its IP parameters. This is the sequence of a PXE boot:
 
-    Le serveur DHCP répond à la configuration IP du client
+* Network card of the client sends its MAC address
+* DHCP server replies with IP configuration for the client
+* Network card configures IP
+* Install client gets the pxelinux.0 binary via TFTP
+* Get the pxelinux.cfg/C0A8210C configuration file via TFTP
+* C0A8210C is the IP address of the client in hexadecimal
+* This configuration contains kernel, initrd and additional kernel
+command line parameters, which was created by `fai-chboot`.
+* Get the kernel and initrd via TFTP.
 
-    La carte réseau configure son IP
 
-    Le client d'installation obtient le binaire pxelinux.0 via TFTP
-
-    Obtenez le fichier de configuration pxelinux.cfg/C0A8210C via TFTP
-
-    C0A8210C est l'adresse IP du client en hexadécimal
-
-    Cette configuration contient le noyau, initrd et les paramètres de ligne de commande supplémentaires du noyau, qui a été créé par fai-chboot.
-
-    Obtenez le noyau et initrd via TFTP.
-
-Exemple d'un fichier pxelinux.cfg:
-
+Example of a pxelinux.cfg file:
+----
 default fai-generated
 
 label fai-generated
 kernel vmlinuz-3.16.0-4-amd64
 append initrd=initrd.img-3.16.0-4-amd64 ip=dhcp  root=/srv/fai/nfsroot aufs  FAI_FLAGS=verbose,sshd,createvt FAI_CONFIG_SRC=nfs://faiserver/srv/fai/config FAI_ACTION=install
+----
 
-Voir /usr/share/doc/syslinux/pxelinux.doc pour des informations plus détaillées sur PXELINUX. Il existe un nouveau binaire lpxelinux qui prend également en charge le chargement du noyau et de l'initrd via FTP ou HTTP. La commande fai-chboot(8) prend en charge cette option avec l'option -U.
-Personnalisation de la configuration de votre serveur d'installation
+See '/usr/share/doc/syslinux/pxelinux.doc' for more detailed
+information about PXELINUX. There's a new lpxelinux binary which also
+support loading the kernel and initrd via FTP or HTTP. The command
+'fai-chboot(8)' supports this with the option '-U'.
 
-    Miroir de paquetage local/plus rapide
 
-    Loguser différent
+=== [[Customizing your install server setup]]Customizing your install server setup
 
-    Local root password dans nfsroot
+- local/faster package mirror
+- different loguser
+- local root pw inside nfsroot
 
-La configuration du paquet FAI (et non les données de configuration pour les clients d'installation) est définie dans fai.conf(5). Les définitions qui sont utilisées uniquement pour créer le nfsroot sont situées dans nfsroot.conf(5). Vérifiez ces variables importantes dans nfsroot.conf avant d'appeler fai-setup ou fai-make-nfsroot.
+The configuration for the FAI package (not the configuration data for
+the install clients) is defined in 'fai.conf(5)'. Definitions that are
+only used for creating the nfsroot are located in
+'nfsroot.conf(5)'. Check these important variables in 'nfsroot.conf'
+before calling 'fai-setup' or 'fai-make-nfsroot'.
 
-FAI_DEBOOTSTRAP
+FAI_DEBOOTSTRAP::
+Building the nfsroot uses the command debootstrap(8)`. It needs the location of a Debian mirror and the
+name of the distribution (wheezy, jessie, stretch, sid) for which the basic Debian
+system should be built. Do not use different distributions here and in
+'/etc/fai/apt/sources.list'. This will create a broken nfsroot.
 
-    La construction de nfsroot utilise la commande debootstrap(8). Il a besoin de l'emplacement d'un miroir Debian et du nom de la distribution (wheezy, jessie, stretch, sid) pour lequel le système Debian de base devrait être construit. N'utilisez pas de distributions différentes ici et dans /etc/fai/apt/sources.list. Cela créera un nfsroot brisé.
-NFSROOT_ETC_HOSTS
+NFSROOT_ETC_HOSTS::
+This variable is only needed if the clients do not have access to a DNS server.
+This multiline variable is added to /etc/hosts inside the
+nfsroot. Then the install clients can access those hosts by name
+without using DNS.
 
-    Cette variable n'est nécessaire que si les clients n'ont pas accès à un serveur DNS. Cette variable multiligne est ajoutée à /etc/hosts dans le nfsroot. Ensuite, les clients d'installation peuvent accéder à ces hôtes par leur nom sans utiliser DNS.
 
-Le contenu de /etc/fai/apt/sources.list est utilisé par le serveur d'installation et par les clients. Si votre serveur d'installation a plusieurs cartes réseau et différents noms d'hôte pour chaque carte (comme pour un serveur Beowulf), utilisez le nom du serveur d'installation qui est connu des clients d'installation.
+The content of '/etc/fai/apt/sources.list' is
+used by the install server and also by the clients. If your install
+server has multiple network cards and different host names for each
+card (as for a Beowulf server), use the install server name which is
+known by the install clients.
 
-Si vous avez des problèmes lors de l'exécution de fai-setup, ils proviennent habituellement de fai-make-nfsroot(8) qui est appelé par la commande précédente. L'ajout de -v vous donne une sortie plus détaillée qui vous aide à repérer l'erreur. La sortie est écrite dans /var/log/fai/fai-make-nfsroot.log. [17]
 
-L'installation crée également le compte fai (défini par $LOGUSER) s'il n'est pas déjà disponible. Vous pouvez donc ajouter un utilisateur avant d'appeler fai-setup(8) à l'aide de la commande adduser(8) et utiliser ce compte local pour enregistrer des fichiers journaux. Les fichiers journaux de tous les clients d'installation sont enregistrés dans le répertoire de base de ce compte. Vous devriez changer le groupe principal de ce compte, donc ce compte a des droits d'écriture sur /srv/tftp/fai pour appeler fai-chboot pour créer la configuration PXE pour les hôtes.
+If you have problems running `fai-setup`, they usually stem from
+`fai-make-nfsroot(8)` which is called by former command. Adding '-v'
+gives you a more verbose output which helps you pinpoint the
+error. The output is written to
+'/var/log/fai/fai-make-nfsroot.log'. footnote:[For debugging purpose
+it may help to enter the chroot environment manually using this
+command.  'faiserver# chroot /srv/fai/nfsroot bash']
 
-Lorsque vous apportez des modifications à fai.conf, nfsroot.conf, le nfsroot doit être reconstruit en appelant fai-make-nfsroot(8). Si vous souhaitez uniquement installer un nouveau paquet kernel sur nfsroot, ajoutez les flags -k ou -K à fai-make-nfsroot. Cela ne recréera pas votre nfsroot, mais ne mettra à jour que vos noyaux et les modules du noyau dans le nfsroot ou ajoutera des paquets supplémentaires dans le nfsroot.
-Création d'un CD FAI ou d'une clé USB
 
-Vous pouvez facilement créer un CD d'installation (ou clé USB) pour votre installation réseau. Cela permettra d'effectuer la même installation et la même configuration à partir du CD sans avoir besoin du serveur d'installation. Par conséquent, vous devez créer un miroir partiel de tous les paquets Debian nécessaires à vos classes FAI (à l'aide de fai-mirror(1)). Ensuite, la commande fai-cd(8) mettra ce miroir, le nfsroot et l'espace de configuration sur un CD amorçable. C'est tout!
+The setup also creates the account _fai_ (defined by +$LOGUSER+) if
+not already available. So you can add a user before calling
+`fai-setup(8)` using the command `adduser(8)` and use this as your
+local account for saving log files. The log files of all install
+clients are saved to the home directory of this account. You should
+change the primary group of this
+account, so this account has write permissions to '/srv/tftp/fai' in
+order to call fai-chboot for creating the PXE configuration for the hosts.
 
-Ce CD d'installation contient toutes les données nécessaires à l'installation. La commande fai-cd(8) place le nfsroot, l'espace de configuration et un sous-ensemble du miroir Debian sur un CD-ROM. Un miroir de paquets partiel est créé à l'aide de la commande fai-mirror(1) qui contient tous les paquetages utilisés par les classes utilisées dans votre espace de configuration. Un échantillon d'image ISO est disponible à l'adresse http://fai-project.org/fai-cd.
 
-Avec la commande dd(1), vous pouvez également créer une clé USB bootable en écrivant simplement le contenu du fichier ISO sur votre clé USB (ici le stick est /dev/sdf).
+When you make changes to 'fai.conf', 'nfsroot.conf' the
+nfsroot has to be rebuilt by calling `fai-make-nfsroot(8)`. If you
+only like to install a new kernel package to the nfsroot add the flags _-k_ or
+_-K_ to +fai-make-nfsroot+. This will not recreate your nfsroot, but
+only updates your kernel and kernel modules inside the nfsroot or add
+additional packages into the nfsroot.
 
+
+=== [[cdboot]]Creating a FAI CD or and USB stick
+
+You can easily create an installation CD (or USB stick) of your
+network installation setup. This will perform the same installation
+and configuration from CD without the need of the install server.
+Therefore you need to create a partitial mirror of all Debian packages
+needed for your FAI classes (using `fai-mirror(1)`). Then the command
+`fai-cd(8)` will put this mirror, the nfsroot and the config space
+onto a bootable CD. That's it!
+
+
+This installation CD contains all data needed for the
+installation. The command `fai-cd(8)` puts the nfsroot, the
+configuration space and a subset of the Debian mirror onto a
+CD-ROM. A partial package mirror is created using the command
+`fai-mirror(1)` which contains all packages that are used by the
+classes used in your configuration space.  A sample ISO image is
+available at http://fai-project.org/fai-cd.
+
+Using the command `dd(1)` you can also create a bootable USB
+stick by just writing the content of the ISO file to your USB stick
+(here the stick is _/dev/sdf_).
+
+----
  faiserver# dd if=fai-cd.iso of=/dev/sdf bs=1M
+----
 
-Il ne s'agit pas d'un live CD du serveur d'installation.
-Création d'images de disque VM à l'aide de FAI
+This is no live CD of the install server.
 
-En utilisant la commande fai-diskimage(8), vous pouvez créer des images de disques de machines Linux qui peuvent être utilisées avec une machine virtuelle comme KVM, VMware, VirtualBox ou un service cloud comme OpenStack, GCE, EC2 et autres. Le processus d'installation exécute les tâches FAI normales sur une image de disque brut. Après l'installation, vous pouvez démarrer l'image disque et avoir un système en cours d'exécution. L'image disque peut également être convertie au format qcow2.
 
+=== [[diskimage]]Creating VM disk images using FAI
+
+Using the command `fai-diskimage(8)` you can create Linux machine disk
+images, which can be used with a virtual machine like KVM, VMware,
+VirtualBox or a cloud service like OpenStack, GCE, EC2 and others. The
+installation process performs the normal FAI tasks on a raw disk
+image. After the installation you can boot the disk image and have a
+running system. The disk image can also be converted to qcow2 format.
+
+----
  faiserver# export FAI_BASEFILEURL=http://fai-project.org/download/basefiles/
  faiserver# fai-diskimage -u cloud3 -S 2G -cDEBIAN,JESSIE64,AMD64,FAIBASE,GRUB_PC,CLOUD,GCE disk.raw
+----
+Creates the file disk.raw for a host called cloud3, with a small set
+of software packages.
 
-Crée le fichier disk.raw pour un hôte appelé cloud3, avec un petit ensemble de progiciels.
-
+----
  # export FAI_BASEFILEURL=http://fai-project.org/download/basefiles/
  # cl=DEFAULT,DHCPC,DEBIAN,AMD64,FAIBASE,GRUB_PC,UBUNTU,XENIAL,XENIAL64,XORG
  # fai-diskimage -v -u foobar -S5G -c$cl ubuntu.qcow2
+----
+Creates a disk image called ubuntu.qcow2 for a Ubuntu 16.04 desktop
+with hostname set to foobar.
 
-Crée une image de disque appelée ubuntu.qcow2 pour un bureau Ubuntu 16.04 avec un nom d'hôte défini sur foobar.
 
-Vous ne devez pas configurer le nfsroot lorsque vous utilisez uniquement fai-diskimage. Mais vous avez besoin d'un fichier de base dans votre espace de configuration. Vous pouvez télécharger une image de base Debian à partir de http://fai-project.org/download/basefile et copier ceci dans votre espace de configuration. Si vous avez déjà configuré le nfsroot, vous pouvez copier le fichier de base Debian depuis le nfsroot dans votre espace de configuration à l'aide de cette commande:
-
+You do not neet to setup the nfsroot when only using
+fai-diskimage. But you need a basefile in your configuration
+space. You can download a Debian base image from
+http://fai-project.org/download/basefile and copy this into your
+config space. If you already have set up the nfsroot you can copy the
+Debian basefile from the nfsroot into your config space by using this
+command:
+----
  $ cp /srv/fai/nfsroot/var/tmp/base.tar.xz
  $ /srv/fai/config/basefiles/JESSIE64.tar.xz
+----
 
-Système de sauvetage FAI
+=== [[sysinfo]]FAI rescue system
 
-Si vous définissez la variable $FAI_ACTION sur sysinfo (par exemple en utilisant fai-chboot -S), le client n'installera pas de nouveau système, mais collectera beaucoup d'informations système. Si vous définissez $FAI_ACTION sur inventory, vous ne recevrez que quelques informations sur le matériel. Les deux actions peuvent être utilisées pour FAI comme un système de sauvetage.
+If you set the variable +$FAI_ACTION+ to _sysinfo_ (for e.g. by using
++fai-chboot -S+), the client will not install a new system, but will
+collect a lot of system information.
+If you set +$FAI_ACTION+ to _inventory_ you will only get a few
+hardware information.
+Both actions can be used for FAI as a rescue system.
 
-Tapez ctrl-c pour obtenir un shell ou utilisez Alt-F2 ou Alt-F3 et vous obtiendrez un autre terminal de console, si vous avez ajouté createvt à $FAI_FLAGS.
+Type _ctrl-c_ to get a shell or use _Alt-F2_ or _Alt-F3_ and you will get
+another console terminal, if you have added _createvt_ to +$FAI_FLAGS+.
 
-Vous avez maintenant un système Linux en cours d'exécution sur le client d'installation sans utiliser le disque dur local. Utilisez-le comme système de secours si votre disque local est endommagé ou si l'ordinateur ne peut pas démarrer correctement à partir du disque dur. Vous obtiendrez un shell et vous pouvez exécuter diverses commandes (dmesg, lsmod, df, lspci, ...). Regardez le fichier journal dans /tmp/fai. Vous y trouverez de nombreuses informations sur le processus d'amorçage.
+You now have a running Linux system on the install client without
+using the local hard disk. Use this as a rescue system if your local
+disk is damaged or the computer can't boot properly from hard
+disk. You will get a shell and you can execute various commands
+(`dmesg`, `lsmod`, `df`, `lspci`, ...). Look at the log file in
+'/tmp/fai'. There you can find much information about the boot
+process.
 
-FAI monte tous les systèmes de fichiers qu'il trouve sur les disques locaux en lecture seule. Il vous indique également sur quelle partition un fichier /etc/fstab existe. Lorsqu'une seule table de système de fichiers est trouvée, les partitions sont montées selon ces informations. Voici un exemple:
 
+
+FAI mounts all file systems it finds on the local disks read only. It
+also tells you on which partition a file '/etc/fstab' exists. When
+only one file system table is found, the partitions are mounted
+according to this information. Here's an example:
+
+----
 demohost:~# df
 Filesystem      1K-blocks      Used Available Use% Mounted on
 rootfs            4099064    414088   3645296  11% /
@@ -1134,341 +1740,659 @@ aufs              4099064    414088   3645296  11% /
 /dev/sda7          553376     16840    536536   4% /target/tmp
 /dev/sda8         2221628    275936   1832840  14% /target/usr
 /dev/sda6          577096    172924    374856  32% /target/var
+----
 
-Cette méthode peut être utilisée comme un environnement de secours! Si vous avez besoin d'un système de fichiers avec accès en lecture/écriture, utilisez la commande rwmount:
+*This method can be used as a rescue environment!* If you need a file
+system with read-write access use the `rwmount` command:
 
+----
 demohost# rwmount /target/home
+----
 
-FAI sans NFS
+=== [[nonfs]]FAI without NFS
 
-Pour démarrer dans FAI et commencer la séquence d'installation sans utiliser le protocole NFS. Vous démarrez la machine cliente en utilisant PXE comme d'habitude, puis récupérez une image contenant le nfsroot via http.
+To boot into FAI and begin the installation sequence
+without using the NFS protocol. You boot the client machine using PXE as
+usual and then retrieve an image containing the nfsroot via http.
 
-Pour créer une image, utilisez l'argument -S de fai-cd
+To create an image, use fai-cd's -S argument
 
+----
 faiserver# fai-cd -S squash.img
+----
 
-Déplacez cette image vers un répertoire à partir duquel elle peut être demandée via http (généralement un répertoire desservi par le serveur web)
+Move this image to a directory from which it can be requested via http
+(usually a directory served by the webserver)
 
-Pour demander maintenant l'image squashfs, ajoutez ce qui suit à votre ligne de commande du noyau, p. Dans votre fichier de configuration pxelinux pour le client.
+To now request the squashfs image, add the following to your kernel
+command line, e.g. in your pxelinux configuration file for the client.
 
+----
 root=live:http://faiserver/cskoeln/squash.img
+----
 
-Remplacez faiserver par le nom de domaine ou IP de la machine à laquelle votre image de squash est servie.
-Installation d'autres distributions à l'aide d'un nfsroot Debian
+Replace faiserver with the domain name or IP of the machine your
+squash image is served from.
 
-Vous pouvez installer toutes sortes de distributions Linux à partir d'un seul nfsroot Debian. Par conséquent, vous devez créer un fichier base.tar.xz de la distribution que vous souhaitez installer et le placer dans le répertoire basefiles. Puis nommez-le UBUNTU1404.tar.xz par exemple. Un client d'installation appartenant à la classe UBUNTU1404 extrait ensuite ce fichier de base dans son système de fichiers vide. De plus, vous devez ajuster les sources.list ou les fichiers de configuration similaires nécessaires pour spécifier l'emplacement du référentiel de paquets.
 
-L'outils rinse(8) est utilisé pour créer des fichiers de base pour la distribution comme CentOS, openSUSE, Scientific Linux Cern ou Fedora. Certains fichiers de base peuvent être téléchargés à partir de http://fai-project.org/download/basefiles/.
+=== [[otherdists]]Installing other distributions using a Debian nfsroot
 
-Le script mk-basefile dans /usr/share/doc/fai-doc/examples/simple/basefiles/ aide à créer ces fichiers de base.
-Création d'environnements chrooter et virtualiser
+You can install all sorts of Linux distributions from a single Debian
+nfsroot. Therefore you have to create a base.tar.xz of the distribution
+you like to install and place it info the `basefiles` directory. Then
+name it UBUNTU1404.tar.xz for example. An install client which belongs
+to the class UBUNTU1404 then extracts this base file into its empty
+file system. Additionally you have to adjust the 'sources.list' or
+similar configuration files which are needed for specifying the
+location of the package repository.
 
-Si vous devez créer certains environnements chroot, ou un environnement de virtualisation où vous ne pouvez ni ne voulez exécuter un programme d'installation Debian normal pour accéder à un système opérationnel (par exemple, les domaines hôtes Xen), il ya l'action FAI dirinstall. En appelant
+The tool `rinse(8)` is used for creating base files for distribution
+like CentOS, openSUSE, Scientific Linux Cern or Fedora.
+Some basefiles can be downloaded from
+http://fai-project.org/download/basefiles/.
 
+The script +mk-basefile+ in
+'/usr/share/doc/fai-doc/examples/simple/basefiles/' helps creating
+this base files.
+
+=== [[dirinstall]]Creating chroot and virtualization environments
+
+If you have to create some chroot environments, or a virtualization
+environment where you neither can nor want to run a normal Debian
+Installer in to get to a working system (for example, Xen guest
+domains), there is the FAI action _dirinstall_.
+By calling
+
+----
 faiserver# fai <options> dirinstall <target-directory>
+----
 
-Et en utilisant l'option -c <classes> ou -N vous obtenez une installation FAI, sans l'action de partitionnement, directement dans le répertoire cible. Le nom d'hôte de l'installation cible peut être spécifié à l'aide de -u <host-name>
+and using either the option _-c <classes>_ or _-N_ you get a FAI
+installation, without the partitioning action, right into the target
+directory. The host name for the target installation can be specified
+using _-u <host-name>_
 
-Ceci, par exemple, peut être utilisé pour combiner FAI avec l'outil xen-tools, qui vous aide à construire des domaines invités Xen. xen-tools est très agréable pour générer des fichiers de configuration et bloquer des périphériques pour de nouveaux invités basés sur des commandes simples et/ou des fichiers de configuration, mais ils ne peuvent assigner qu'un seul rôle par installation pour la personnalisation. Les FAI-utilisateurs ont besoin et veulent plus, car ils sont utilisés pour avoir le système de classe. Ils les obtiennent même dans les installations xen-tools, en utilisant le code suivant en tant que rôle xen-tools script:
+This, for example, can be used to combine FAI with the tool
+_xen-tools_, which helps you to build Xen guest domains. _xen-tools_
+are very nice for generating configuration files and block devices for
+new guests based on simple commands and/or configuration files, but
+they can only assign one role per installation for customization.
+FAI-users need and want more, as they are used to have the class
+system.  They get them even in xen-tools installations, by using the
+following code as a xen-tools role script:
 
+----
 #!/bin/sh
 TARGET=$1
 CMD="fai -N  -v -u ${hostname} dirinstall $TARGET"
 echo running $CMD
 $CMD
+----
 
-Ensuite, vous voulez définir la variable install=0 de la configuration xen-tools pour cet hôte.
-Utilisation de FAI pour les mises à jour
+Then, you will want to set the variable _install=0_ the xen-tools
+config for that host.
 
-FAI peut également effectuer des mises à jour de systèmes déjà en cours d'exécution, sans réinstallation à partir de zéro. C'est ce qu'on appelle softupdate. Un FAI softupdate ignore les tâches qui ne sont pas adaptées à la mise à jour d'un système en cours d'exécution, comme le partitionnement des disques durs et la création de systèmes de fichiers. Au lieu de cela, il exécute uniquement les tâches de mise à jour et d'installation des progiciels et de l'appel des scripts de personnalisation.
+=== [[softupdate]]Using FAI for updates
+FAI can also do updates of already running systems, without a
+re-installation from scratch.
+This is called softupdate. A FAI softupdate skips the tasks which are
+not suitable for updating a running system, like partitioning the
+hard disks and creating file systems. Instead, it only executes the
+tasks for updating and installing software packages and calling the
+customization scripts.
 
-Pour exécuter un appel softupdate:
-
+To run a softupdate call:
+----
 # fai -v -s nfs://faiserver/srv/fai/config softupdate
+----
 
-Par défaut, un softupdate utilise la liste des classes définies lors de l'installation initiale. Assurez-vous de définir la variable $LOGSERVER (effectuée dans un fichier class/*.var) si FAI doit enregistrer les fichiers journaux sur une machine distante.
+By default, a softupdate uses the list of classes defined during the
+initial installation. Make sure to set the variable +$LOGSERVER+ (done
+in a _class/*.var_ file) if FAI should save the log files to a remote
+machine.
 
-C'est à vous, comment démarrer un softupdate sur un plus grand nombre d'hôtes. Vous pouvez faire le softupdate sur une base régulière via cron ou vous pouvez utiliser des outils comme clusterssh(1) pour démarrer un softupdate via un push sur une liste d'hôtes.
 
-Gardez à l'esprit que les scripts de personnalisation sont exécutés chaque fois que vous faites un softupdate. Cela signifie qu'ils doivent être idempotents, c'est-à-dire que le résultat de leur fonctionnement doit toujours produire le même résultat, même lorsqu'ils fonctionnent plus d'une fois.
+It's up to you, how to start a softupdate on a bigger number of hosts.
+You may do the softupdate on a regular basis via cron or you can use tools
+like `clusterssh(1)` to start a softupdate via a push on a list of
+hosts.
 
-Par exemple, l'ajout d'une ligne à un fichier ne doit pas se faire via ce code:
 
+Keep in mind, that the customization scripts are run every time you do
+a softupdate. That means, they have to be *idempotent* i.e. the result
+of their operation should always produce the same result, even when
+they run more than once.
+
+For example appending a line to a file must not done via this code:
+
+----
 $ echo "some strings" >> /etc/fstab
+----
+Instead use the command `ainsl(1)` in a shell script or use cfengine's
+function _AppendIfNoSuchLine_.
 
-Utilisez plutôt la commande ainsl(1) dans un script shell ou utilisez la fonction AppendIfNoSuchLine de cfengine.
 
-Toutes les commandes du script de personnalisation doivent être capables de modifier le système de fichiers cible s'il est disponible dans /target lors de l'installation initiale ou si c'est le système de fichiers normal relatif à / pendant le softtupdate.
+All commands in the customization script must be capable of modifying
+the target file system wether it's available in _/target_ during the
+initial installation or wether it's the normal file system relative to
+_/_ during softupdate.
 
-Voici quelques variables qui aident à écrire ces scripts:
+Here are some variable that help writing these scripts:
 
-$target
++$target+:: Points to the root directory of the client, which
+is_/target_ during installation and _/_ during a softupdate.
 
-    Pointe vers le répertoire racine du client, qui est /target pendant l'installation et / pendant un softupdate.
-$FAI_ROOT
++$FAI_ROOT+:: It's the same value as +$target+. For historic reasons
+we have both these variables in FAI.
 
-    C'est la même valeur que $target. Pour des raisons historiques, nous avons ces deux variables dans FAI.
-$ROOTCMD
++$ROOTCMD+::
+In case of the installation this is an alias for 'chroot $target' in case of
+softupdate it's just empty. You can prepend this to commands if you need to run a
+command inside the clients target file system via chroot.
 
-    Dans le cas de l'installation, il s'agit d'un alias pour chroot $target en cas de softupdate c'est juste vide. Vous pouvez ajouter ceci aux commandes si vous avez besoin d'exécuter une commande dans le système de fichiers cible des clients via chroot.
-$FAI_ACTION
 
-    Si vous devez appeler le code en fonction de l'action FAI effectuée, vous pouvez utiliser cette variable. Il contient l'action actuellement exécutée: install, softupdate, dirinstall, sysinfo, inventory ou votre propre action définie.
++$FAI_ACTION+::
+If you need to call code depending on the FAI action performed, you
+can use this variable. It contains the currently executed action:
+_install_, _softupdate_, _dirinstall_, _sysinfo_, _inventory_ or your
+own defined action.
 
-Comment installer un système d'exploitation 32 bits à partir d'un système d'exploitation 64 bits
+=== [[archcross]]How to install 32bit OS from a 64bit OS
 
-Pour installer un ordinateur avec un système d'exploitation 32 bits, vous avez besoin d'un nfsroot i386. La création de cette nfsroot 32 bits sur un serveur d'installation exécutant amd64 est assez simple. Installez et configurez les paquets FAI. Copiez ensuite vos fichiers de configuration FAI dans un nouveau sous-répertoire.
+To install a computer with a 32bit OS, you need an i386 nfsroot.
+Creating this 32bit nfsroot on an install server running amd64 is
+quite simple. Install and set up the FAI packages. Then copy your FAI
+config files to a new subdirectory.
 
+----
 faiserver# cp -a /etc/fai /etc/fai-i386
+----
 
-Modifiez la variable $FAI_DEBOOTSTRAP_OPTS dans /etc/fai-i386/nfsroot.conf et ajoutez l'option --arch i386. Choisissez également un répertoire différent pour votre nouveau nfsroot. Voici les deux lignes après l'édition.
+Edit the variable +$FAI_DEBOOTSTRAP_OPTS+ in
+'/etc/fai-i386/nfsroot.conf' and add the option +--arch
+i386+. Also choose a different directory for your new nfsroot. Here
+are the two lines after editing.
 
+----
 NFSROOT=/srv/fai/nfsroot-i386
 FAI_DEBOOTSTRAP_OPTS="--arch i386 --exclude=info --include=aptitude""
+----
 
-Appelez maintenant fai-make-nfsroot qui crée le nfsroot 32 bits dans /srv/fai/nfsroot-i386
+Now call fai-make-nfsroot which creates the 32bit nfsroot in
+'/srv/fai/nfsroot-i386'
 
+----
 faiserver# fai-make-nfsroot -v -C/etc/fai-i386
+----
 
-La création d'un miroir partiel utilisant fai-mirror(1) nécessaire à un CD amorçable ou une clé USB est également possible sur une architecture différente. Vous devez spécifier l'architecture lors de l'appel de fai-mirror.
+Creating a partitial mirror using `fai-mirror(1)` that is needed for
+a bootable CD or USB stick is also possible on a different architecture.
+You have to specify the architecture when calling fai-mirror.
 
+----
 $ fai-mirror -m800 -B -a i386 -v -cDEFAULT,DEBIAN,FAIBASE,I386 /srv/mirror-i386
+----
 
-C'est tout!
-Divers conseils et détails
-La liste des tâches
+That's all!
 
-La plupart des tâches de l'installation sont définies comme des sous-routines qui sont définies dans /usr/lib/fai/subroutines (par exemple task_instsoft). Certains sont des scripts shell externes situés dans /usr/lib/fai/. Ils sont appelés via un sous-programme supérieur appelé task. Ce sous-programme appelle les hooks si disponibles, puis appelle la tâche (définie comme task_<name>). Une tâche et ses hooks peuvent être ignorés à la demande en utilisant la commande skiptask().
 
-Suit maintenant la description de toutes les tâches, énumérées dans l'ordre dans lequel elles sont exécutées.
+== [[hints]]Various hints and details
 
-confdir
 
-    Les paramètres ajoutés au noyau peuvent définir des variables, le démon syslog est démarré. La liste des périphériques réseau est stockée dans $netdevices. Ensuite, des paramètres supplémentaires sont extraits d'un serveur DHCP. Le fichier de configuration du résolveur DNS est créé.
+=== [[tasks]]The list of tasks
 
-    L'emplacement de l'espace de configuration est défini par la variable $FAI_CONFIG_SRC.
+Most tasks of the installation are defined as subroutines which are
+defined in '/usr/lib/fai/subroutines' (e.g. +task_instsoft+).
+Some are external shell scripts located in '/usr/lib/fai/'.
+They are called via a superior subroutine called _task_.
+This subroutine calls hooks if available and then calls the task (defined as
+__task_<name>__). A task and its hooks can be
+skipped on demand by using the command _skiptask()_.
 
-    Ensuite, le fichier $FAI/hooks/subroutines est sourcé s'il existe. En utilisant ce fichier, vous pouvez définir vos propres sous-programmes ou remplacer la définition des sous-programmes FAI.
-setup
+Now follows the description of all tasks, listed in the order
+they are executed.
 
-    Cette tâche définit l'heure du système, tous les $FAI_FLAGS sont définis et deux terminaux virtuels supplémentaires sont ouverts à la demande. Un démon de shell sécurisé est lancé à la demande pour les connexions à distance.
-defclass
 
-    Appellez fai-class(1) pour définir des classes à l'aide de scripts et de fichiers dans $FAI/class et classes de /tmp/fai/additional-classes et la variable $ADDCLASSES. La liste de toutes les classes définies est stockée dans la variable $classes et enregistrée dans /tmp/fai/FAI_CLASSES.
-defvar
+confdir::
+The kernel appended parameters may define variables, the syslog daemon is
+started. The list of network devices is stored in
++$netdevices+. Then additional parameters are fetched from a DHCP
+server. The DNS resolver configuration file is created.
++
+The location of the configuration space is defined by the variable
++$FAI_CONFIG_SRC+.
++
+After that, the file '$FAI/hooks/subroutines' is sourced if it
+exists. Using this file, you can define your own subroutines or
+override the definition of FAI's subroutines.
 
-    Sourcez tous les fichiers $FAI/class/*.var pour chaque classe définie. Si un hook a écrit quelques définitions de variables dans le fichier $LOGDIR/additional.var, ce fichier est également sourcé.
-action
 
-    En fonction de la valeur de $FAI_ACTION, ce sous-programme décide de l'action FAI à exécuter. Les actions disponibles par défaut sont: sysinfo, install, inventory, dirinstall et softupdate. Si $FAI_ACTION a une autre valeur, une action définie par l'utilisateur est appelée si un fichier $FAI/hooks/$FAI_ACTION existe. Ainsi, vous pouvez facilement définir vos propres actions.
-sysinfo
+setup::
+This task sets the system time, all +$FAI_FLAGS+ are defined and two
+additional virtual terminals are opened on demand. A secure shell
+daemon is started on demand for remote logins.
 
-    Appelée lorsque aucune installation n'est effectuée mais que l'action est sysinfo. Il affiche des informations sur le matériel détecté et monte les disques durs locaux en lecture uniquement sur /target/partitionname ou en regard d'un fichier fstab trouvé à l'intérieur d'une partition. Les fichiers journaux sont stockés sur le serveur d'installation.
-inventory
+defclass::
+Calls `fai-class(1)` to define classes using scripts and files in
+'$FAI/class' and classes from '/tmp/fai/additional-classes' and the
+variable +$ADDCLASSES+. The list of all defined classes is stored in
+the variable +$classes+ and saved to '/tmp/fai/FAI_CLASSES'.
 
-    Une courte liste des informations système est imprimée.
-install
+defvar::
+Sources all files '$FAI/class/*.var' for every defined class. If a
+hook has written some variable definitions to the file
+'$LOGDIR/additional.var', this file is also sourced.
 
-    Cette tâche contrôle la séquence d'installation. Vous entendrez trois bips avant le début de l'installation. Le travail principal consiste à appeler d'autres tâches et à enregistrer la sortie dans /tmp/fai/fai.log. Si vous avez des problèmes pendant l'installation, regardez tous les fichiers dans /tmp/fai/. Vous trouverez des exemples de fichiers journaux à l'adresse http://fai-project.org/logs/.
-dirinstall
+action::
+Depending on the value of +$FAI_ACTION+ this subroutine decides which
+action FAI should perform. The default available actions are:
+_sysinfo_, _install_, _inventory_, _dirinstall_ and _softupdate_.  If +$FAI_ACTION+ has another
+value, a user defined action is called if a file
+'$FAI/hooks/$FAI_ACTION' exists. So you can easily define your own
+actions.
 
-    Installez dans un répertoire, et non pas sur un disque local. Utilisez-le pour créer des environnements chrootés.
-softupdate
+sysinfo::
+Called when no installation is performed but the action is
+_sysinfo_. It shows information about the detected hardware and mounts
+the local hard disks read only to '/target/+partitionname+' or with
+regard to a 'fstab' file found inside a partition. Log files are
+stored to the install server.
 
-    Cette tâche, exécutée à l'intérieur d'un système en cours d'exécution via l'interface de ligne de commande fai(8), effectue un softupdate. Voir le chapitre [softupdate] pour plus de détails.
-partition
+inventory::
+A short list of system information is printed.
 
-    Appelle setup-storage(8) pour partitionner les disques durs et créer des systèmes de fichiers. La tâche écrit des définitions de variables pour la partition et le périphérique racine et de démarrage ($ROOT_PARTITION, $BOOT_PARTITION, $BOOT_DEVICE) dans /tmp/fai/disk_var.sh et crée un fichier fstab pour le nouveau système.
-mountdisks
+install::
+This task controls the installation sequence. You will hear three
+beeps before the installation starts. The major work is to call other
+tasks and to save the output to '/tmp/fai/fai.log'. If you have any
+problems during installation, look at all files in '/tmp/fai/'. You
+can find examples of the log files
+at http://fai-project.org/logs/.
 
-    Montez les partitions créées en fonction du fichier /tmp/fai/fstab créé par rapport à $FAI_ROOT.
-extrbase
+dirinstall::
+Install into a directory, not onto a local disk. Use this for creating
+chroot environments.
 
-    Extrait un système minimal après lequel un chroot peut y être introduit. Par défaut, le fichier tar base /var/tmp/base.tar.xz sera extrait. Les fichiers correspondant à un nom de classe dans $FAI/basefiles/ sont également utilisés pour décompresser un autre fichier tar selon les classes définies. Cela peut être utilisé pour installer des distributions Linux différentes de celles utilisées pour créer le nfsroot. Le fichier par défaut base.tar.xz est un instantané d'un système Debian de base créé par debootstrap(8) Cette tâche utilise la variable FAI_BASEFILEURL pour extraire le fichier de base via FTP ou HTTP si elle est définie.
-debconf
+softupdate::
+This task, executed inside a running system via the `fai(8)` command
+line interface, performs a softupdate.  See chapter <<softupdate>> for
+details.
 
-    Appelle fai-debconf(1) pour définir les valeurs de la base de données de préconfiguration de debconf.
-repository
+partition::
+Calls `setup-storage(8)` to partition the hard
+disks and to create file systems. The task writes variable definitions
+for the root and boot partition and device (+$ROOT_PARTITION,
+$BOOT_PARTITION, $BOOT_DEVICE+) to '/tmp/fai/disk_var.sh' and creates
+a 'fstab' file for the new system.
 
-    Préparez l'accès au référentiel de paquets en préparant la configuration apt. Cela peut également ajouter des clés de référentiel via apt-key(8) en classe à partir de fichiers comme CLASSNAME.asc dans le répertoire package_config.
-updatebase
+mountdisks::
+Mounts the created partitions according to the created
+'/tmp/fai/fstab' file relative to +$FAI_ROOT+.
 
-    Met à jour les paquets de base du nouveau système et met à jour la liste des paquets disponibles. Il falsifie également certaines commandes (appelées diversions) à l'intérieur du nouveau système installé à l'aide de dpkg-divert(8), de sorte qu'aucun démon ne sera démarré pendant l'installation.
-instsoft
+extrbase::
+Extracts a minimal system after that a chroot can be made into it. By
+default the base tar file '/var/tmp/base.tar.xz' will be
+extracted. Also files matching a class name in $FAI/basefiles /` are used for unpacking a
+different tar file depending on classes defined. This can be used for
+installing different Linux distributions than the one used for
+creating the nfsroot. The default file 'base.tar.xz' is a snapshot of a
+basic Debian system created by `debootstrap(8)`
+This task uses the variable +FAI_BASEFILEURL+ for fetching the base
+file via FTP or HTTP if it's defined.
 
-    Installe les progiciels souhaités en utilisant des fichiers de classe dans $FAI/package_config/.
-configure
+debconf::
+Calls `fai-debconf(1)` to set the values for the debconf preseeding database.
 
-    Appelle les scripts dans $FAI/scripts/ et ses sous-répertoires pour chaque classe définie.
-tests
+repository::
+Prepare access to the package repository by preparing the apt
+configuration. This can also add repository keys via
+`apt-key(8)` in a class based manner from files like _CLASSNAME.asc_
+in the directory _package_config_.
 
-    Appelle les scripts de test dans $FAI/tests/ et ses sous-répertoires pour chaque classe définie.
-finish
 
-    Démonte tous les systèmes de fichiers dans le nouveau système installé et supprime les diversions de fichiers à l'aide de la commande fai-divert.
-chboot
+updatebase::
+Updates the base packages of the new system and updates the list of
+available packages. It also fakes some commands (called diversions)
+inside the new installed system using `dpkg-divert(8)`, so no daemons
+will be started during the installation.
 
-    Modifie la configuration PXE d'un hôte sur le serveur d'installation qui indique quelle configuration PXELINUX doit être chargée lors de la prochaine initialisation à partir de la carte réseau via TFTP. Par conséquent, la commande fai-chboot(8) est exécutée à distance sur le serveur d'installation.
-savelog
+instsoft::
+Installs the desired software packages using class files in
+'$FAI/package_config/'.
 
-    Enregistre les fichiers journaux sur le disque local et sur le compte $LOGUSER sur $LOGSERVER (par défaut sur le serveur d'installation).
-faiend
+configure::
+Calls scripts in '$FAI/scripts/' and its subdirectories for every
+defined class.
 
-    Attendez que les travaux en arrière-plan se terminent (par exemple, emacs compile des fichiers lisp) et redémarre automatiquement les clients d'installation ou attend la saisie manuelle avant le redémarrage.
+tests::
+Calls test scripts in '$FAI/tests/' and its subdirectories for every
+defined class.
 
-Tests automatisés
+finish::
+Unmounts all file systems in the new installed system and removes
+diversions of files using the command `fai-divert`.
 
-Après l'exécution des scripts de personnalisation, FAI exécutera certains tests si disponibles. En utilisant ces tests, vous pouvez vérifier les erreurs de l'installation. Les scripts de test sont appelés via fai-do-scripts(1) et doivent ajouter leurs messages à $LOGDIR/test.log. Un module Perl comprenant des sous-routines utiles peut être trouvé dans Faitest.pm. Un test peut également définir une nouvelle classe pour exécuter d'autres tests lors du prochain démarrage via la variable $ADDCLASSES.
-Découvrir automatiquement
+chboot::
+Changes the PXE configuration for a host on the install server which
+indicates which PXELINUX configuration to load on the next boot from network
+card via TFTP. Therefore the `fai-chboot(8)` command is executed
+remotely on the install server.
 
-Dans FAI 5.0, nous avons publié une fonctionnalité qui permet aux clients de rechercher le faiserver dans leur sous-réseau respectif. Cela soulève la nécessité de récupérer l'adresse MAC de chaque client et de configurer le démon DHCP.
+savelog::
+Saves log files to local disk and to the account +$LOGUSER+ on
++$LOGSERVER+ (defaults to the install server).
 
-Cela se fait en démarrant à partir d'une petite autodiscover FAI bootmedium (CD, USB, etc.), qui peut être créée via la commande:
+faiend::
+Wait for background jobs to finish (e.g. emacs compiling lisp files)
+and automatically reboots the install clients or waits for manual
+input before reboot.
 
+
+=== [[itests]]Automated tests
+
+After the customization scripts are executed, FAI will execute some
+tests if available. Using these test, you can check for errors of the
+installation. Test scripts are called via
+`fai-do-scripts(1)` and should append its messages to
+_$LOGDIR/test.log_. A Perl module including some useful subroutines
+can be found in _Faitest.pm_. A test can also define a new class for
+executing another tests during next boot via the variable
++$ADDCLASSES+.
+
+
+=== [[autodiscover]] Autodiscover
+
+In FAI 5.0 we released a feature that allows clients to search for the
+faiserver in their respective subnetwork. This lifts the necessity of
+having to collect every client's MAC address and configuring the DHCP
+daemon.
+
+This is done by booting from a small FAI autodiscover bootmedium (CD,
+USB, etc.), which can be created via the command:
+
+----
 faiserver# fai-cd -A autodiscover.iso
+----
 
-L'image a une taille d'environ 25 Mo et analyse le sous-réseau d'un serveur FAI. Par défaut, il affiche un menu avec tous les profils disponibles dans l'espace de configuration de la même manière que le drapeau de menu. Dans ce menu, vous pouvez sélectionner le type d'installation que vous souhaitez effectuer.
+The image is roughly 25MB in size and scans the  subnet  for
+a  FAI server. By  default it shows a menu with all profiles available
+in the configuration space in the same manner as the 'menu' flag
+does. From this menu, you can select the installation type you wish to
+perform.
 
-Pour que les clients puissent trouver le faiserver, le faiserver doit exécuter fai-monitor.
-Modification du périphérique d'amorçage
+For the clients to find the faiserver, the faiserver must run
+fai-monitor.
 
-La modification de la séquence d'amorçage s'effectue normalement dans la configuration du BIOS. Mais vous ne pouvez pas changer le BIOS d'un système Linux en cours d'exécution.
+=== [[changeboot]]Changing the boot device
 
-Ainsi, la séquence d'amorçage du BIOS restera inchangée et votre ordinateur devrait toujours démarrer en premier à partir de sa carte réseau et le deuxième périphérique d'amorçage devrait être le disque local. Ensuite, vous pouvez changer le périphérique d'amorçage du client en créant différentes configurations PXELINUX. Cela définira si une installation doit être effectuée, ou si le client doit démarrer à partir du disque local. Cela se fait à l'aide de fai-chboot(8).
-Comment créer un miroir Debian local
+Changing the boot sequence is normally done in the BIOS setup. But you
+can't change the BIOS from a running Linux system.
 
-Le script mkdebmirror [18] peut être utilisé pour créer votre propre miroir Debian local. Ce script utilise la commande debmirror(1). Un miroir Debian partiel pour l'architecture i386 et amd64 pour Debian 8.0 (aka jessie) sans les paquets source nécessite environ 56 Go d'espace disque. L'accès au miroir via HTTP sera la méthode par défaut dans la plupart des cas. Pour afficher plus de résultats à partir du script, appelez mkdebmirror -v. Un compte root n'est pas nécessaire pour créer et maintenir le miroir Debian.
+So, the boot sequence of the BIOS will remain unchanged and
+your computer should always boot first from its network card and the
+second boot device should be the local disk. Then you can
+change the boot device of the client by creating different PXELINUX
+configurations. This will define if an installation
+should be performed, or if the client should to boot from local
+disk. This is done using `fai-chboot(8)`.
 
-Pour utiliser l'accès HTTP au miroir Debian local, installez un serveur Web et créez un lien symbolique vers le répertoire local où se trouve votre miroir:
 
+=== [[debian-mirror]]How to create a local Debian mirror
+
+The script `mkdebmirror` footnote:[You can find the script in
+'/usr/share/doc/fai-doc/examples/utils/'] can be used for creating
+your own local Debian mirror. This script uses the command
+`debmirror(1)`. A partial Debian mirror for i386 and amd64 architecture for
+Debian 8.0 (aka jessie) without the source packages needs about
+{mirrorsize}GB of disk space. Accessing the mirror via HTTP will be the
+default way in most cases. To see more output from the script call
++mkdebmirror -v+. A root account is not necessary to create and
+maintain the Debian mirror.
+
+To use HTTP access to the local Debian mirror, install a web server
+and create a symlink to the local directory where your mirror is
+located:
+
+----
 faiserver# apt-get install apache2
 faiserver# ln -s /files/scratch/debmirror /var/www/html/debmirror
+----
 
-Créez un fichier sources.list(5) dans /etc/fai/apt qui donne accès à votre miroir Debian. Ajoutez également l'adresse IP du serveur HTTP à la variable $NFSROOT_ETC_HOSTS dans nfsroot.conf si les clients d'installation n'ont pas de résolution DNS.
-Petits conseils
+Create a file `sources.list(5)` in '/etc/fai/apt' which gives access
+to your Debian mirror. Also add the IP-address of the
+HTTP server to the variable +$NFSROOT_ETC_HOSTS+ in
+'nfsroot.conf' if the install clients have no DNS resolving.
 
-    Lorsque vous utilisez l'accès HTTP à un miroir Debian, la partition locale /var sur tous les clients d'installation doit être suffisamment grande pour conserver les paquets Debian téléchargés. N'essayez pas avec moins de 250 Moctets à moins que vous sachiez pourquoi. Vous pouvez limiter le nombre de paquets installés à la fois avec la variable $MAXPACKAGES.
 
-    Vous pouvez supprimer le logo rouge sur le client d'installation en appelant simplement une fois reset. Il ne s'affichera pas si vous créez un fichier à l'aide de cette commande sur le serveur d'installation:
+=== Small hints
 
+
+- When using HTTP access to a Debian mirror, the local _/var_ partition
+on all install clients must be big enough to keep the downloaded
+Debian packages. Do not try with less than 250 Mbytes unless you know
+why. You can limit the number of packages installed at a time with the
+variable +$MAXPACKAGES+.
+
+- You can remove the red logo on the install client by simply calling
+`reset` once. If will also not appear if you create a file using this
+command on the install server:
+
+----
 touch /srv/fai/nfsroot/.nocolorlogo
+----
 
-    Une liste des variables utilisées par FAI peut être trouvée à http://wiki.fai-project.org/wiki/Variables.
+- A list of variables used by FAI can be found at
+http://wiki.fai-project.org/wiki/Variables.
 
-    Vous pouvez raccourcir certains scripts de personnalisation en utilisant une seule commande fcopy fcopy -r /.
+- You can shorten some customization scripts by using one single fcopy
+command _fcopy -r /_.
 
-    Si vous reconstruisez le nfsroot, vous allez créer une nouvelle clé hôte ssh dans le nfsroot. La connexion à un client d'installation peut échouer, car la clé hôte change. Vous pouvez utiliser ceci:
+- If you rebuild the nfsroot, you will create a new ssh host key inside
+the nfsroot. Then logging in to an install client may fail, because
+the host key changes. You can use this:
 
+----
 $ ssh -o StrictHostKeyChecking=no root@installclient
+----
 
-    Vous pouvez également supprimer l'entrée hôte de votre client d'installation dans votre fichier ~/.ssh/known_hosts à l'aide de la commande ssh-keygen -R.
+- You can also delete the host entry on your install client in your
+_~/.ssh/known_hosts_ file by using the _ssh-keygen -R_ command.
 
-    Dans les tâches chboot et savelog, une connexion utilisant un shell sécurisé est ouverte au serveur FAI (voir [isavelog]). Pour garantir que cela fonctionne de manière non interactive, une entrée appropriée dans NFSROOT/root/.ssh/known_hosts doit être créée. Lors de l'utilisation de fai-setup, cela se fait automatiquement, mais il peut s'avérer nécessaire de l'éditer manuellement si le nom de votre serveur FAI n'a pas été correctement déterminé. Si vous trébuchez sur des connexions ssh qui nécessitent de taper "yes" pour accepter la clé hôte pendant l'installation, vérifiez le contenu de votre fichier NFSROOT/root/.ssh/known_hosts
+- In the tasks chboot and savelog, a connection using secure shell is
+opened to the FAI server (see <<isavelog>>). To ensure that this works
+non-interactively, a proper entry in 'NFSROOT/root/.ssh/known_hosts'
+must be created. When using fai-setup, this is done automatically, but
+it may require manual editing in case the name of your FAI server was
+not determined correctly.  If you stumble over ssh connections that
+require typing "yes" to accept the host key during installation,
+please check the contents of your 'NFSROOT/root/.ssh/known_hosts file'
 
-    Une liste de tous les disques durs locaux est stockée dans $disklist. Il est défini après l'appel de set_disk_info.
+- A list of all local hard disks is
+stored in +$disklist+. It's defined after `set_disk_info` is called.
 
-    Utilisez fai-divert -a si un script postinst appelle un programme de configuration, par exemple Le script postinst pour package apache appelle apacheconfig, qui nécessite une entrée manuelle. Vous pouvez fausser le programme de configuration pour que l'installation puisse être entièrement automatique.
+- Use `fai-divert -a` if a postinst script calls a configuration
+program, e.g. the postinst script for package apache calls
+apacheconfig, which needs manual input. You can fake the configuration
+program so the installation can be fully automatic.
 
-    Parfois, l'installation semble s'arrêter, mais souvent il ya seulement un script postinstall d'un logiciel qui nécessite une entrée manuelle de la console. Passez à un autre terminal virtuel et regardez quel processus fonctionne avec des outils comme top(1) et pstree(1). Vous pouvez ajouter debug à FAI_FLAGS pour faire en sorte que le processus d'installation affiche toutes les sorties des scripts postinst sur la console et obtenir son entrée aussi à partir de la console.
+- Sometimes the installation seems to stop, but often there's only a
+postinstall script of a software package that requires manual input
+from the console. Change to another virtual terminal and look which
+process is running with tools like `top(1)` and `pstree(1)`. You can
+add _debug_ to _FAI_FLAGS_ to make the installation process show all
+output from the postinst scripts on the console and get its input also
+from the console.
 
-    Comment puis-je définir des classes sur la ligne de commande du noyau?
 
-    Lisez la page de manuel de fai-class(8). Si vous souhaitez définir des classes supplémentaires (par exemple A, B, C) sur la ligne de commande du noyau, ajoutez ceci: ADDCLASSES=A,B,C
+- How can I define classes on the kernel command line?
++
+Read the man page of `fai-class(8)`. If you like to define some
+additional classes (for e.g. A,B,C) on the kernel command line add this: _ADDCLASSES=A,B,C_
 
-    Comment utiliser un noyau personnalisé dans le nfsroot?
 
-    Construisez votre noyau personnalisé en construisant un paquet kernel à l'aide de make-kpkg(8) et utilisez l'option --initrd. Copiez ce paquet Debian dans un référentiel local et ajoutez-le à /etc/fai/sources.list. Ajoutez le nom de votre package à /etc/fai/NFSROOT. Ensuite appeler
+- How to use a custom kernel inside the nfsroot?
++
+Build your customized kernel by building a kernel package using
+`make-kpkg(8)` and use the option `--initrd`. Copy this Debian package
+to a local repository and add it to /etc/fai/sources.list. Add the
+name of your package to /etc/fai/NFSROOT. Then call
++
+----
+# fai-make-nfsroot -k
+----
 
-    # fai-make-nfsroot -k
+- Can I use a 4.X kernel?
++
+Yes. Using FAI 5.1 and dracut 044+150-1 overlayfs (instead of aufs) is
+supported, so is kernel 4.x. When using Debian jessie, you may use a
+kernel from backports or have a look at
+https://lists.uni-koeln.de/pipermail/linux-fai/2016-March/011283.html
 
-    Puis-je utiliser un noyau 4.X?
+- How to use the nfsroot as system for diskless clients?
++
+http://wiki.fai-project.org/wiki/Use_nfsroot_for_diskless_clients
 
-    Oui. L'utilisation de FAI 5.1 et dracut 044+150-1 overlayfs (au lieu d'aufs) est prise en charge, de même que le noyau 4.x. Lorsque vous utilisez Debian jessie, vous pouvez utiliser un noyau de backports ou consulter https://lists.uni-koeln.de/pipermail/linux-fai/2016-March/011283.html
 
-    Comment utiliser le nfsroot comme système pour les clients sans disque?
+- How to server multiple nfsroot directories on one FAI server?
++
+If you want to serve multiple nfsroot directories,
+you need to create specific config directories in '/etc' for FAI, like
+'/etc/fai-jessie' and '/etc/fai-stretch'. Then you need to set the
++$NFSROOT+ variables to different directories and run
 
-    http://wiki.fai-project.org/wiki/Use_nfsroot_for_diskless_clients
-
-    Comment faire pour servir plusieurs arborescence nfsroot sur un serveur FAI?
-
-    Si vous souhaitez diffuser plusieurs répertoires nfsroot, vous devez créer des répertoires de configuration spécifiques dans /etc pour FAI, comme /etc/fai-jessie et /etc/fai-stretch. Ensuite, vous devez définir les variables $NFSROOT dans différents répertoires et exécuter
-
+----
 faiserver#fai-make-nfsroot -c /etc/fai-jessie
+----
 
-flag_reboot (FAI_FLAGS)
 
-Si flag_reboot est défini, en ajoutant "reboot" à $FAI_FLAGS, votre ordinateur client redémarrera après la fin de la tâche. Ceci est vrai pour les installations de réseau ainsi que pour les installations de bootmedium.
-CentOS reboot
+=== flag_reboot (FAI_FLAGS)
 
-Après l'installation, CentOS nécessite habituellement un redémarrage supplémentaire, en raison des correctifs de sécurité SELinux qui sont appliqués après l'installation.
-Fichiers journaux
+If flag_reboot is set, by adding "reboot" to +$FAI_FLAGS+, your client
+machine will reboot after the task faiend has finished. This is true
+for network as well as bootmedium installations.
 
-FAI crée plusieurs fichiers journaux. Pendant l'installation, ils sont stockés dans /tmp/fai sur le client d'installation lui-même. A la fin de l'installation, ils seront copiés sur le serveur d'installation (voir [isavelog]). Une fois le client d'installation redémarré dans son système nouvellement installé, vous pouvez trouver les journaux FAI dans /var/log/fai. Les fichiers journaux sont également créés lors de l'action softupdate ou dirinstall.
 
-Sur le faiserver, vous pouvez trouver les fichiers journaux (distants) sous le répertoire ~fai.
+=== CentOS reboot
+After the installation CentOS usually requires one additional reboot,
+because of the SELinux security fixes that are applied post-installation.
 
-Les exemples de fichiers journaux des ordinateurs installés avec succès sont disponibles sur http://fai-project.org/logs. Ce sont quelques fichiers journaux qui sont créés par FAI.
 
-FAI_CLASSES
+=== [[logfiles]]Log files
 
-    Contient une liste de toutes les classes définies.
-dmesg.log
+FAI is creating several log files. During installation they are stored
+in '/tmp/fai' on the install client itself. At the end of the
+installation they will be copied to the install server (see
+<<isavelog>>). After the install client rebooted into his newly
+installed system, you can find the FAI logs in '/var/log/fai'.
+Log files are also created when doing the softupdate or dirinstall
+action.
 
-    lA sortie de la commande dmesg. Contient des messages utiles de la mémoire tampon du noyau.
-fai.log
+On the faiserver, you can find the (remote) log files under the ~fai
+directory.
 
-    Le fichier journal principal. Contient toutes les informations importantes. Vous devez toujours lire ce fichier.
-boot.log
+Sample log files from successfully installed computers are
+available on http://fai-project.org/logs.
+These a some log files which are created by FAI.
 
-    Une liste de variables de paramètres de réseau, principalement définis par le démon DHCP.
-format.log
+FAI_CLASSES::
+Contains a list of all classes defined.
 
-    Sortie de l'outil de partition setup-storage(8).
-shell.log
+dmesg.log::
+Output of the `dmesg` command. Contains useful messages of the kernel
+ring buffer.
 
-    La sortie de tous les scripts shell, utilisés pour la personnalisation.
-variables.log
+fai.log::
+The main log file. Contains all important information. You should
+*always* read this file.
 
-    Une liste de toutes les variables shell qui sont disponibles au cours d'une installation.
-error.log
+boot.log::
+A list of variables of network parameters, mostly defined by the DHCP daemon.
 
-    Résumé des erreurs possibles dans tous les fichiers journaux.
-disk_var.sh
+format.log::
+Output of the partition tool `setup-storage(8)`.
 
-    Une liste des variables contenant des informations sur les périphériques et les partitions à partir desquelles la partition racine et une liste de périphériques de swap. Ces informations sont utilisées par certains scripts de personnalisation (par exemple GRUB_PC/10-setup).
+shell.log::
+Output of all shell scripts, that are used for customization.
 
-Si le processus d'installation se termine, le hook savelog.LAST.sh recherche tous les fichiers journaux pour les erreurs courantes et les écrit dans le fichier error.log. Donc, vous devriez d'abord regarder dans ce fichier pour les erreurs. Le fichier status.log vous donne également le code de sortie de la dernière commande exécutée dans un script. Pour être sûr, vous devriez rechercher plus de détails dans tous les fichiers journaux.
-Comment utiliser HTTP pour le démarrage PXE
+variables.log::
+A list of all shell variables which are available during an
+installation.
 
+error.log::
+A summary of possible errors in all log files.
+
+disk_var.sh::
+A list of variables that contain information about devices and
+partitions to boot from, the root partition and a list of swap
+devices. These information is used by some customization scripts
+(e.g. _GRUB_PC/10-setup_).
+
+
+
+
+If the installation process finishes, the hook 'savelog.LAST.sh'
+searches all log files for common errors and writes them to the file
+'error.log'. So, you should first look into this file for errors. Also
+the file 'status.log' give you the exit code of the last command
+executed in a script. To be sure, you should look for more details in
+all log files.
+
+
+=== How to use HTTP for PXE boot
+
+----
 cp /usr/lib/PXELINUX/lpxelinux.0 /srv/tftp/fai/pxelinux.0
+----
 
-Activer l'accès HTTP au répertoire tftp:
+Enable HTTP access to the tftp directory:
 
+----
 cd /var/www/html
 ln -s /srv/tftp/fai
+----
 
-Ajoutez -U URL à l'appel fai-chboot. Par exemple:
+Add '-U URL' to the 'fai-chboot' call. For example:
 
+----
 fai-chboot -U http://faiserver/fai -IFv .......
+----
 
-Dépannage
-Erreurs d'amorçage
+== [[troubleshoot]]Troubleshooting
 
-Le message d'erreur suivant indique que votre client d'installation n'obtient pas de réponse d'un serveur DHCP. Vérifiez vos câbles ou démarrez le démon dhcpd(8) avec le debug flag activé.
+=== [[booterror]]Boot errors
 
-PXE-E51: No DHCP or BOOTP offers received
-Network boot aborted
+The following error message indicates that your install client doesn't
+get an answer from a DHCP server. Check your cables or start the
+`dhcpd(8)` daemon with the debug flag enabled.
 
-Si vous ne voyez pas le message suivant, le noyau d'installation n'a pas pu détecter votre carte réseau, par exemple en raison d'un pilote manquant:
+____
+  PXE-E51: No DHCP or BOOTP offers received
+  Network boot aborted
+____
 
+If you do not see the following message, the install kernel could not
+detect your network card, for example because of a missing driver:
+
+----
 Starting dhcp for interface eth0
 dhcp: PREINIT eth0 up
 dhcp: BOND setting eth
+----
 
-Vérifiez l'initrd dans le nfsroot (lsinird) si le pilote du noyau de votre carte réseau est inclus et vérifiez si vous souhaitez ajouter le paquet firmware-linux-nonfree dans /etc/fai/NFSROOT et reconstruisez l'initrd en appelant fai-make-nfsroot -k. Vous pouvez également ajouter un pilote à /srv/fai/nfsroot/etc/dracut.conf dans la ligne add_drivers+=.
+Check the initrd in the nfsroot (`lsinird`) if the kernel driver of your network
+card is included there and check if you like to add the package
+'firmware-linux-nonfree' in +/etc/fai/NFSROOT+ and rebuild the initrd
+by calling `fai-make-nfsroot -k`.
+You may also add a driver to +/srv/fai/nfsroot/etc/dracut.conf+ in
+the line +add_drivers+++=+.
 
-C'est le message d'erreur que vous verrez, lorsque votre carte réseau fonctionne, mais le serveur d'installation n'exporte pas le répertoire nfsroot vers les clients d'installation. Cela est souvent dû aux permissions NFS manquantes du côté serveur.
 
+This is the error message you will see, when your network card is
+working, but the install server does not export the nfsroot
+directory to the install clients, This is often caused by missing
+NFS permissions on the server side.
+
+----
 Starting dhcp for interface eth0
 dhcp: PREINIT eth0 up
 dhcp: BOND setting eth
@@ -1479,30 +2403,16 @@ dracut Warning: Could not boot
 .
 Dropping to debug shell
 dracut:/#
+----
 
-Maintenant, vous êtes à l'intérieur du shell d'urgence de l'initrd qui a été créé par dracut(8). Vous obtiendrez une invite du shell et pourrez consulter les fichiers journaux. Pour plus d'informations sur le débogage du processus de démarrage précoce à l'aide de dracut, consultez dracut.cmdline(7)
+Now, you are inside the emergency shell of the initrd which was created
+by 'dracut(8)'. You will get a shell prompt, and can look at the log files.
+For more information about debugging the early boot process using
+dracut see `dracut.cmdline(7)`
 
-Utilisez la commande suivante sur le serveur d'installation pour voir quels répertoires sont exportés à partir du serveur d'installation (nommé faiserver):
+Use the following command on the install server to see which directories are exported
+from the install server (named faiserver):
 
+----
 $ showmount -e faiserver
-
-1. Solaris 8 Advanced Installation Guide at https://docs.oracle.com/cd/E19455-01/806-0957/806-0957.pdf
-2. http://www.science.uva.nl/pub/solaris/auto-install
-3. fai-kvm a besoin de beaucoup de ram pour la vm, à cause de la mise en cache de /var, 2GB sont OK
-4. Cette installation consommera environ 2 Go d'espace dans /tmp.
-5. Il est également possible d'utiliser uniquement le fichier de configuration avec la plus haute priorité puisque l'ordre des classes définit une priorité de bas à haut dans la liste des classes.
-6. Si vous souhaitez utiliser un miroir plus rapide, ajustez l'URL dans /etc/fai/apt/sources.list et FAI_DEBOOTSTRAP in /etc/fai/nfsroot.conf avant d'appeler fai-setup.
-7. Ceci appellera fai-make-nfsroot(8) interne.
-8. Ces fichiers ne doivent pas appartenir au compte racine.
-9. Vous pouvez également ajouter ceci dans votre système de noms de domaine (DNS)
-10. Puisque le système de fichiers racine sur les clients est monté via NFS, fai est localisé in /srv/fai/nfsroot/usr/sbin sur le servuer d'installation.
-11. $FAI est une variable interne utilisée par les scripts FAI. Par défaut, le chemin est /var/lib/fai/config.
-12. /srv/fai/nfsroot depuis le serveur d'installation via NFS
-13. Il a été défini sur la ligne de commande du noyau
-14. /var/lib/fai/config
-15. /var/log/fai/localhost/install/ est un lien vers ce répertoire.
-16. Je recommande d'écrire les adresses MAC (les trois derniers octets suffiront si vous avez des cartes réseau du même fournisseur) et le nom d'hôte à l'avant de chaque châssis.
-17. Pour le débogage, il peut être utile d'entrer l'environnement chroot manuellement à l'aide de cette commande. faiserver# chroot /srv/fai/nfsroot bash
-18. Vous pouvez trouver le script dans /usr/share/doc/fai-doc/examples/utils/
-Version 5.3
-Last updated 2017-01-24 15:09:25 CET
+----
