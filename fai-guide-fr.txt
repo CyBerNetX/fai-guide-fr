@@ -236,33 +236,33 @@ les tâches::
 L'installation d'un client se compose de plusieurs parties, appelées tâches. Les tâches sont des sous-programmes prédéfinis qui effectuent une certaine partie de la FAI. Les tâches FAI suivantes sont exécutées au cours d'une installation sur les clients d'installation.
 
 ____
-confdir               # get the config space
-setup                 # some initialization, start sshd on demand
-defclass              # define FAI classes
-defvar                # define variables
-action                # evaluate FAI_ACTION
-install               # Start the installation
-partition             # partition the harddisks, create file systems
-mountdisks            # mount the file systems
-extrbase              # extract the base.tar.xz
-debconf               # do the Debian debconf preseeding
-repository            # prepare access to the package repository
-updatebase            # Set up package tools and update packages
-instsoft              # install software packages
-configure             # call customization scripts
-finish                # do some cleanup, show installation statistics
-tests                 # call tests if defined
-chboot                # call fai-chboot on the install server
-savelog               # save log files to local and remote location
-faiend                # reboot host, eject CD if needed
+	confdir               # get the config space
+	setup                 # some initialization, start sshd on demand
+	defclass              # define FAI classes
+	defvar                # define variables
+	action                # evaluate FAI_ACTION
+	install               # Start the installation
+	partition             # partition the harddisks, create file systems
+	mountdisks            # mount the file systems
+	extrbase              # extract the base.tar.xz
+	debconf               # do the Debian debconf preseeding
+	repository            # prepare access to the package repository
+	updatebase            # Set up package tools and update packages
+	instsoft              # install software packages
+	configure             # call customization scripts
+	finish                # do some cleanup, show installation statistics
+	tests                 # call tests if defined
+	chboot                # call fai-chboot on the install server
+	savelog               # save log files to local and remote location
+	faiend                # reboot host, eject CD if needed
 ____
 ____
 Il s'agit de tâches qui ne sont exécutées que lorsqu'une action différente est exécutée
 
-dirinstall           # install a chroot environment
-softupdate           # only do the system configuration
-sysinfo              # print detailed system information
-inventory            # print short hardware inventory list
+	dirinstall           # install a chroot environment
+	softupdate           # only do the system configuration
+	sysinfo              # print detailed system information
+	inventory            # print short hardware inventory list
 ____
 
 Pour une description plus détaillée des _tâches_ , voir <<tasks>>.
@@ -298,7 +298,7 @@ Les classes déterminent comment l'installation est effectuée. Par exemple, un 
 
 Souvent, une configuration client est créée en modifiant ou en ajoutant uniquement les classes auxquelles ce client appartient, ce qui rend l'installation d'un nouveau client très facile. Ainsi, aucune information supplémentaire ne doit être ajoutée à l'espace de configuration si les classes existantes suffisent à vos besoins.
 
-Comme vous pouvez le voir, les classes sont un pilier central de la personnalisation de votre espace de configuration et de l'installation de votre client. Pour définir vos propres classes, reportez-vous à <<defining classes>>.
+Comme vous pouvez le voir, les classes sont un pilier central de la personnalisation de votre espace de configuration et de l'installation de votre client. Pour définir vos propres classes, reportez-vous à <<defining_classes>>.
 
 == [[setup]]Configurer votre faiserver
 
@@ -479,9 +479,9 @@ Writing file /srv/tftp/fai/pxelinux.cfg/C0A82164 for demohost
 
 Dans la section suivante, vous pouvez lire la planification de votre installation, adapter votre espace de configuration à vos besoins particuliers et étendre FAI à l'aide de hooks.
 
-=== [[custom server]]Serveur personnalisé
+=== [[custom_server]]Serveur personnalisé
 
-Le faiseur et sa configuration n'est nullement statique. Il est possible de personnaliser et d'étendre votre serveur. Pour cela, reportez-vous à la section <<Customizing your install server setup>> dans <<advanced>>.
+Le fai serveur et sa configuration n'est nullement statique. Il est possible de personnaliser et d'étendre votre serveur. Pour cela, reportez-vous à la section <<Customizing_your_install_server_setup>> dans <<advanced>>.
 
 == [[plan]]Planifiez votre installation
 
@@ -531,7 +531,7 @@ _debconf/_::
 Ce répertoire contient toutes les données `debconf(7)`. Le format est le même que celui utilisé par `debconf-set-selections(8)`.
 
 _package_config/_::
-Les fichiers contenant des noms de classe contiennent des listes de progiciels à installer ou à désinstallé par `install_packages(8)`. Les fichiers nommés '<CLASS>.asc' sont ajoutés à la liste des clés utilisées par apt (à l'aide d' `apt-key(8)` ) pour les dépôts de paquets approuvés.
+Les fichiers contenant des noms de classe contiennent des listes de progiciels à installer ou à désinstallé par `install_packages(8)`. Les fichiers nommés '<CLASS>.asc' sont ajoutés à la liste des clés utilisées par apt (à l aide d `apt-key(8)` ) pour les dépôts de paquets approuvés.
 
 _scripts/_::
 Scripts pour la personnalisation de votre site local. Utilisé par `fai-do-scripts(1)`.
@@ -542,7 +542,7 @@ Les Fichiers utilisés par les scripts de personnalisation. La plupart des fichi
 _hooks/_::
     Les hooks sont des programmes ou des scripts définis par l'utilisateur, qui sont appelés pendant le processus d'installation. cela peut étendre ou remplacer les tâches par défaut. Le nom du fichier doit être de format 'taskname.CLASSNAME[.sh]'. Un hook appelé +updatebase.DEBIAN+ est exécuté avant la mise à jour de la tâche `updatebase` et seulement si l'installation du client appartient à la classe DEBIAN.
 
-=== [[defining classes]]Définition des classes
+=== [[defining_classes]]Définition des classes
 
 Il existe différentes possibilités pour définir des classes:
 . Certaines classes par défaut sont définies pour chaque hôte: DEFAULT, LAST et son nom d'hôte.
@@ -614,10 +614,13 @@ L'outil `setup-storage(8)` lit le fichier dans '$FAI/disk_config' pour la config
 Pendant le Processus d'installation de tous les Systèmes de Fichiers Locaux Sont Montés par rapport à '/target'. Par exemple, si vous Specifiez le Point de montage '/home' Dans un Fichier de configuration de disque, ce sera le répertoire '/target/home' pendant le Processus d'installation et deviendra '/home' pour le nouveau systéme Installé.
 
 === [[extrbase]]Extraction du fichier de base
+.
 
 === [[debconf]]Debconf préconfiguration
+.
 
 === [[repository]]L'Accès au dépôt de paquetages
+.
 
 === [[packageconfig]]configuration du progiciel
 
@@ -956,7 +959,7 @@ Voir '/usr/share/doc/syslinux/pxelinux.doc' pour des informations plus détaill�
 
 
 
-=== [[Customizing your install server setup]]Personnalisation de la configuration de votre serveur d'installation
+=== [[Customizing_your_install_server_setup]]Personnalisation de la configuration de votre serveur d'installation
 
 - Miroir de paquetage local/plus rapide
 - Loguser différent
