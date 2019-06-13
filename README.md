@@ -2416,3 +2416,5 @@ from the install server (named faiserver):
 ----
 $ showmount -e faiserver
 ----
+
+
